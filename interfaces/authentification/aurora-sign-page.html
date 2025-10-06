@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription- Aurora</title>
+    <link rel="stylesheet" href="../../styles/style_login.css">
+    <link rel="stylesheet" href="../../styles/shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <!-- Decorative Triangles -->
+    <div class="triangle triangle-1"></div>
+    <div class="triangle triangle-2"></div>
+    <div class="triangle triangle-3"></div>
+    <div class="triangle triangle-4"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Auro<span>r</span>a</div>
+        <ul class="nav-links">
+            <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+            <li><a href="#apropos">À propos</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Login Card -->
+     <div class="form">
+         <div class="login-card">
+        <div class="logo-container">
+            <i class="fa-regular fa-circle-user"></i>
+            <h2>Inscription</h2>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="nom-label">Nom</label>
+                <input 
+                    type="text" 
+                    placeholder="Saisir votre nom" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="prenom-label">Prenom</label>
+                <input 
+                    type="text" 
+                    placeholder="Saisir votre prenom" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="email-label">Adresse email</label>
+                <input 
+                    type="email" 
+                    placeholder="nom.prenom@aurora.edu" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="password-label">Mot de passe</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="passwordInput"
+                        placeholder="••••••••••••" 
+                        required
+                    >
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="password-label">Confirmer Mot de passe</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="passwordInput"
+                        placeholder="••••••••••••" 
+                        required
+                    >
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="select-label">Filiére</label>
+                <div class="input-wrapper">
+                    <select id="classeSelect" required>
+                        <option value="" disabled selected>Choisir votre filiére</option>
+                        <option value="1idsd">1 IDSD </option>
+                        <option value="2idsd">2 IDSD</option>
+                        <option value="3idsd">3 IDSD</option>
+                        <option value="1gt">1 GT</option>
+                        <option value="2gt">2 GT</option>
+                        <option value="3gt">3 GT</option>
+                        <option value="1gec">1 GEC</option>
+                        <option value="2gec">2 GEG</option>
+                        <option value="3gec">3 GEC</option>
+                    </select>
+                </div>
+            </div>
+           
+            <button type="submit" class="btn-primary">
+                S'inscrire
+            </button>
+        </form>
+
+        <div class="signup-section">
+            Vous avez de compte ? <a href="./aurora-login-page.html" class="signup-link">Connectez-vous ici</a>
+        </div>
+    </div>
+     </div>
+   
+     <!-- Footer -->
+    <footer>
+        <p>© 2025 Aurora. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+</body>
+</html>

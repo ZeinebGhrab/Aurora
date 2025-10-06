@@ -1,0 +1,58 @@
+/* Hero Section */
+.hero {
+    margin-top: 100px;
+    padding: 80px 60px;
+    text-align: center;
+    position: relative;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    padding: 12px 25px;
+    border-radius: 30px;
+    box-shadow: 0 5px 30px rgba(230, 57, 70, 0.15);
+    margin-bottom: 40px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.badge::before {
+    font-size: 20px;
+}
+
+.badge-text {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.brand-name {
+    color: var(--card);
+    display: block;
+    margin-top: 10px;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #666;
+    margin: 30px auto;
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+.highlight {
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+
+
+
+
