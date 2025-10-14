@@ -107,6 +107,11 @@
     background: transparent;
 }
 
+.title-content p {
+    color: #666;
+    font-size: 14px;
+}
+
 .header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -211,22 +216,20 @@
 }
 
 .stat-number {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
-    background: #bd5062;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 0.5rem;
-    position: relative;
-    z-index: 1;
+    color: #111827;
 }
 
 .stat-label {
-    font-size: 1.1rem;
-    font-weight: 600;
-    position: relative;
-    z-index: 1;
+    color: #6B7280;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-detail {
+    color: #9CA3AF;
+    font-size: 0.85rem;
 }
 
 .stat-icon {
@@ -242,6 +245,11 @@
     z-index: 1;
     transition: transform 0.3s ease;
 }
+
+.stat-icon.purple { background: linear-gradient(135deg, #DDD6FE, #8B5CF6); color: white; }
+.stat-icon.green { background: linear-gradient(135deg, #A7F3D0, #10B981); color: white; }
+.stat-icon.blue { background: linear-gradient(135deg, #bae1ff, #60A5FA); color: white; }
+.stat-icon.orange { background: linear-gradient(135deg, #FED7AA, #F59E0B); color: white; }
 
 .stat-card:hover .stat-icon {
     transform: scale(1.1) rotate(5deg);
@@ -493,6 +501,79 @@ tbody tr:hover {
     color: #6B7280;
 }
 
+/* Buttons */
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+/* Filters Section */
+.filters-section {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 250px;
+}
+
+select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e5e5e5;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: white;
+}
+
+select:focus {
+    outline: none;
+    border-color: #e63946;
+    box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.1);
+}
+
+.search-box {
+    flex: 1;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 0.8rem center;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(78, 144, 194, 0.1);
+}
+
 /* Animations */
 @keyframes fadeInUp {
     from { 
@@ -579,5 +660,14 @@ tbody tr:hover {
 
     .chart-placeholder {
         height: 250px;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filters-section {
+        flex-direction: column;
     }
 }

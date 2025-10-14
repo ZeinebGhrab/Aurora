@@ -1,0 +1,144 @@
+.calendar-controls {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.calendar-nav {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.calendar-nav button {
+    background: #F3F4F6;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.calendar-nav button:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.current-week {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.view-selector {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.view-btn {
+    padding: 0.6rem 1.2rem;
+    border: 2px solid #E5E7EB;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.schedule-grid {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow-x: auto;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.schedule-table th {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(96, 165, 250, 0.05));
+    padding: 1rem;
+    text-align: center;
+    font-weight: 700;
+    color: #111827;
+    border: 1px solid #E5E7EB;
+}
+
+.schedule-table td {
+    padding: 0.5rem;
+    border: 1px solid #E5E7EB;
+    vertical-align: top;
+    height: 100px;
+}
+
+.time-cell {
+    background: #F9FAFB;
+    font-weight: 600;
+    color: #6B7280;
+    text-align: center;
+    width: 100px;
+}
+
+.course-block {
+    background: linear-gradient(135deg, #bae1ff, #ffc0cb);
+    padding: 0.8rem;
+    border-radius: 10px;
+    margin: 0.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--accent);
+}
+
+.course-block:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.course-block.math {
+    background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+    border-left-color: #10B981;
+}
+
+.course-block.physics {
+    background: linear-gradient(135deg, #FED7AA, #FDE68A);
+    border-left-color: #F59E0B;
+}
+
+.course-block.info {
+    background: linear-gradient(135deg, #bae1ff, #60A5FA);
+    border-left-color: #2563EB;
+}
+
+.course-title {
+    font-weight: 700;
+    color: #111827;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+}
+
+.course-details {
+    font-size: 0.8rem;
+    color: #374151;
+}
+
+.course-room {
+    font-size: 0.75rem;
+    color: #6B7280;
+    margin-top: 0.3rem;
+}
+

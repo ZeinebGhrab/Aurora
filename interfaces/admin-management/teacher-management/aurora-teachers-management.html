@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Enseignants - Aurora</title>
+    <link rel="stylesheet" href="../../../styles/shared.css">
+    <link rel="stylesheet" href="../../../styles/style-dashboard.css">
+    <link rel="stylesheet" href="../../../styles/style-teacher.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+         <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <div class="logo">Auro<span>r</span>a</div>
+                </li>
+                <li class="nav-item">
+                    <a href="../aurora-admin-dashboard.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../teacher-management/aurora-teachers-management.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zM12 14c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z"/>
+                        </svg>
+                        Enseignants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../student-management/aurora-students-management.html" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        Étudiants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../course-management/aurora_courses.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                        </svg>
+                        Cours
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../planning-management/aurora_planning.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2.5-9H18V0h-2v2H8V0H6v2H4.5C3.12 2 2 3.12 2 4.5v15C2 20.88 3.12 22 4.5 22h15c1.38 0 2.5-1.12 2.5-2.5v-15C22 3.12 20.88 2 19.5 2z"/>
+                        </svg>
+                        Planning
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../exams-management/aurora_exams.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        Examens
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../report-management/aurora_reports.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                        </svg>
+                        Rapports
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header">
+                    <div class="title-content">
+                        <h2><i class="fa-regular fa-address-card"></i> Gestion des Enseignants</h2>
+                        <p>Gérez tous les enseignants de l'établissement</p>
+                    </div>
+               
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fa-solid fa-file-export"></i> Exporter
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fa-solid fa-user-plus"></i> Nouvel Enseignant
+                        </button>
+                    </div>
+                </div>
+         
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon purple"><i class="fa-solid fa-users"></i></div>
+                            <div>
+                                <div class="stat-number">89</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Total Enseignants</div>
+                        <div class="stat-detail">+3 ce mois</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon green"><i class="fa-solid fa-user-check"></i></div>
+                            <div>
+                                <div class="stat-number">82</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Enseignants Actifs</div>
+                        <div class="stat-detail">92% du total</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon blue"><i class="fa-solid fa-book-open"></i></div>
+                            <div>
+                                <div class="stat-number">156</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Cours Dispensés</div>
+                        <div class="stat-detail">Ce semestre</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon orange"><i class="fa-solid fa-star"></i></div>
+                            <div>
+                                <div class="stat-number">4.6</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Note Moyenne</div>
+                        <div class="stat-detail">Évaluations étudiants</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <select>
+                        <option>Tous les départements</option>
+                        <option>Ingénierie Spatiale & Aéronautique</option>
+                        <option>Sciences Cosmiques & Planétaires</option>
+                        <option>IA & Sciences des Données Spatiales</option>
+                        <option>Énergie Durable & Technologies Vertes</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select>
+                        <option>Tous les statuts</option>
+                        <option>Actif</option>
+                        <option>En congé</option>
+                        <option>Temps partiel</option>
+                    </select>
+                </div>
+                <div class="search-box">
+                    <input type="text" placeholder="Rechercher un enseignant...">
+                </div>
+            </div>
+            
+            <!-- Teachers Grid -->
+            <div class="teachers-grid">
+                <div class="teacher-card">
+                    <div class="teacher-header">
+                        <div class="teacher-avatar purple">
+                            MD
+                            <div class="online-badge"></div>
+                        </div>
+                        <div class="teacher-info">
+                            <h3>Prof. Martin Dubois</h3>
+                            <div class="teacher-title">Professeur d'Informatique</div>
+                            <span class="teacher-badge">Temps plein</span>
+                        </div>
+                    </div>
+                    <div class="teacher-details">
+                        <div class="detail-item">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span>martin.dubois@aurora.edu</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <span>+216 71 234 567</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-building"></i>
+                            <span>Département Informatique</span>
+                        </div>
+                    </div>
+                    <div class="teacher-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">6</div>
+                            <div class="stat-label-small">Cours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">142</div>
+                            <div class="stat-label-small">Étudiants</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.8</div>
+                            <div class="stat-label-small">Note</div>
+                        </div>
+                    </div>
+                    <div class="teacher-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-edit"><i class="fa-solid fa-pen"></i> Modifier</button>
+                    </div>
+                </div>
+
+                <div class="teacher-card">
+                    <div class="teacher-header">
+                        <div class="teacher-avatar blue">
+                            SL
+                            <div class="online-badge"></div>
+                        </div>
+                        <div class="teacher-info">
+                            <h3>Dr. Sophie Laurent</h3>
+                            <div class="teacher-title">Docteur en Mathématiques</div>
+                            <span class="teacher-badge">Temps plein</span>
+                        </div>
+                    </div>
+                    <div class="teacher-details">
+                        <div class="detail-item">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span>sophie.laurent@aurora.edu</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <span>+216 71 234 568</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-building"></i>
+                            <span>Département Mathématiques</span>
+                        </div>
+                    </div>
+                    <div class="teacher-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label-small">Cours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">98</div>
+                            <div class="stat-label-small">Étudiants</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.9</div>
+                            <div class="stat-label-small">Note</div>
+                        </div>
+                    </div>
+                    <div class="teacher-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-edit"><i class="fa-solid fa-pen"></i> Modifier</button>
+                    </div>
+                </div>
+
+                <div class="teacher-card">
+                    <div class="teacher-header">
+                        <div class="teacher-avatar green">
+                            AB
+                        </div>
+                        <div class="teacher-info">
+                            <h3>Prof. Ahmed Ben Salem</h3>
+                            <div class="teacher-title">Professeur d'IA</div>
+                            <span class="teacher-badge">Temps plein</span>
+                        </div>
+                    </div>
+                    <div class="teacher-details">
+                        <div class="detail-item">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span>ahmed.bensalem@aurora.edu</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <span>+216 71 234 569</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-building"></i>
+                            <span>Département Informatique</span>
+                        </div>
+                    </div>
+                    <div class="teacher-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label-small">Cours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label-small">Étudiants</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.7</div>
+                            <div class="stat-label-small">Note</div>
+                        </div>
+                    </div>
+                    <div class="teacher-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-edit"><i class="fa-solid fa-pen"></i> Modifier</button>
+                    </div>
+                </div>
+
+                <div class="teacher-card">
+                    <div class="teacher-header">
+                        <div class="teacher-avatar orange">
+                            JL
+                            <div class="online-badge"></div>
+                        </div>
+                        <div class="teacher-info">
+                            <h3>Dr. Jean Lefebvre</h3>
+                            <div class="teacher-title">Docteur en Physique</div>
+                            <span class="teacher-badge">Temps plein</span>
+                        </div>
+                    </div>
+                    <div class="teacher-details">
+                        <div class="detail-item">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span>jean.lefebvre@aurora.edu</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <span>+216 71 234 570</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-building"></i>
+                            <span>Département Physique</span>
+                        </div>
+                    </div>
+                    <div class="teacher-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label-small">Cours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">76</div>
+                            <div class="stat-label-small">Étudiants</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.6</div>
+                            <div class="stat-label-small">Note</div>
+                        </div>
+                    </div>
+                    <div class="teacher-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-edit"><i class="fa-solid fa-pen"></i> Modifier</button>
+                    </div>
+                </div>
+
+                <div class="teacher-card">
+                    <div class="teacher-header">
+                        <div class="teacher-avatar pink">
+                            MR
+                            <div class="online-badge"></div>
+                        </div>
+                        <div class="teacher-info">
+                            <h3>Prof. Marie Rousseau</h3>
+                            <div class="teacher-title">Professeur de Bases de Données</div>
+                            <span class="teacher-badge">Temps plein</span>
+                        </div>
+                    </div>
+                    <div class="teacher-details">
+                        <div class="detail-item">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span>marie.rousseau@aurora.edu</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <span>+216 71 234 571</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-building"></i>
+                            <span>Département Informatique</span>
+                        </div>
+                    </div>
+                    <div class="teacher-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label-small">Cours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">118</div>
+                            <div class="stat-label-small">Étudiants</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.5</div>
+                            <div class="stat-label-small">Note</div>
+                        </div>
+                    </div>
+                    <div class="teacher-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-edit"><i class="fa-solid fa-pen"></i> Modifier</button>
+                    </div>
+                </div>
+
+                <div class="teacher-card">
+                    <div class="teacher-header">
+                        <div class="teacher-avatar purple">
+                            TB
+                        </div>
+                        <div class="teacher-info">
+                            <h3>Dr. Thomas Bernard</h3>
+                            <div class="teacher-title">Docteur en Cybersécurité</div>
+                            <span class="teacher-badge">Temps plein</span>
+                        </div>
+                    </div>
+                    <div class="teacher-details">
+                        <div class="detail-item">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span>thomas.bernard@aurora.edu</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <span>+216 71 234 572</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fa-solid fa-building"></i>
+                            <span>Département Informatique</span>
+                        </div>
+                    </div>
+                    <div class="teacher-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label-small">Cours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">87</div>
+                            <div class="stat-label-small">Étudiants</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.8</div>
+                            <div class="stat-label-small">Note</div>
+                        </div>
+                    </div>
+                    <div class="teacher-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-edit"><i class="fa-solid fa-pen"></i> Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>© 2025 Aurora. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+</body>
+</html>

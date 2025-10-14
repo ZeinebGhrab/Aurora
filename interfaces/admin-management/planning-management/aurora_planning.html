@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planning - Aurora</title>
+    <link rel="stylesheet" href="../../../styles/shared.css">
+    <link rel="stylesheet" href="../../../styles/style-dashboard.css">
+    <link rel="stylesheet" href="../../../styles/style-planning.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <div class="logo">Auro<span>r</span>a</div>
+                </li>
+                <li class="nav-item">
+                    <a href="../aurora-admin-dashboard.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../teacher-management/aurora-teachers-management.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zM12 14c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z"/>
+                        </svg>
+                        Enseignants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../student-management/aurora-students-management.html" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        Étudiants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../course-management/aurora_courses.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                        </svg>
+                        Cours
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../planning-management/aurora_planning.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2.5-9H18V0h-2v2H8V0H6v2H4.5C3.12 2 2 3.12 2 4.5v15C2 20.88 3.12 22 4.5 22h15c1.38 0 2.5-1.12 2.5-2.5v-15C22 3.12 20.88 2 19.5 2z"/>
+                        </svg>
+                        Planning
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../exams-management/aurora_exams.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        Examens
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../report-management/aurora_reports.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                        </svg>
+                        Rapports
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header">
+                    <div class="title-content">
+                        <h2><i class="fa-regular fa-address-card"></i> Planning</h2>
+                        <p>Emploi du temps hebdomadaire</p>
+                    </div>
+               
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fa-solid fa-file-export"></i> Exporter
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i> Nouveau Créneau
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Calendar Controls -->
+            <div class="calendar-controls">
+                <div class="calendar-nav">
+                    <button><i class="fa-solid fa-chevron-left"></i></button>
+                    <span class="current-week">Semaine du 7 au 11 Octobre 2025</span>
+                    <button><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div class="view-selector">
+                    <button class="view-btn active">Semaine</button>
+                    <button class="view-btn">Mois</button>
+                </div>
+            </div>
+
+            <div class="schedule-grid">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Horaire</th>
+                            <th>Lundi</th>
+                            <th>Mardi</th>
+                            <th>Mercredi</th>
+                            <th>Jeudi</th>
+                            <th>Vendredi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="time-cell">08:00<br>09:30</td>
+                            <td>
+                                <div class="course-block math">
+                                    <div class="course-title">Algèbre Linéaire</div>
+                                    <div class="course-details">Dr. Sophie Laurent</div>
+                                    <div class="course-room"><i class="fa-solid fa-location-dot"></i> Salle A201</div>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td>
+                                <div class="course-block info">
+                                    <div class="course-title">Développement Web</div>
+                                    <div class="course-details">Prof. Martin Dubois</div>
+                                    <div class="course-room"><i class="fa-solid fa-location-dot"></i> Lab Informatique</div>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td>
+                                <div class="course-block physics">
+                                    <div class="course-title">Mécanique Quantique</div>
+                                    <div class="course-details">Dr. Jean Lefebvre</div>
+                                    <div class="course-room"><i class="fa-solid fa-location-dot"></i> Amphi B</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">10:00<br>11:30</td>
+                            <td></td>
+                            <td>
+                                <div class="course-block info">
+                                    <div class="course-title">Base de Données</div>
+                                    <div class="course-details">Prof. Marie Rousseau</div>
+                                    <div class="course-room"><i class="fa-solid fa-location-dot"></i> Salle C105</div>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td>
+                                <div class="course-block math">
+                                    <div class="course-title">Statistiques</div>
+                                    <div class="course-details">Dr. Sophie Laurent</div>
+                                    <div class="course-room"><i class="fa-solid fa-location-dot"></i> Salle A202</div>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">13:00<br>14:30</td>
+                            <td>
+                                <div class="course-block info">
+                                    <div class="course-title">Intelligence Artificielle</div>
+                                    <div class="course-details">Prof. Ahmed Ben Salem</div>
+                                    <div class="course-room"><i class="fa-solid fa-location-dot"></i> Lab IA</div>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td>
+                                <div class="course-block physics">
+                                    <div class="course-title">Optique</div>
+                                    <div class="course-details">Dr. Jean Lefebvre</div>
+                                    <div class="course-room"><i class="fa-solid fa-location-dot"></i> Amphi A</div>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td>
+                                <div class="course-block info">
+                                    <div class="course-title">Sécurité Informatique</div>
+                                    <div class="course-details">Dr. Thomas Bernard</div>
+                                    <div class="course-room"><i class="fa-solid fa-location-dot"></i> Salle C201</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">15:00<br>16:30</td>
+                            <td></td>
+                            <td>
+                                <div class="course-block math">
+                                    <div class="course-title">Analyse Numérique</div>
+                                    <div class="course-details">Dr. Sophie Laurent</div>
+                                    <div class="course-room"><i class="fa-solid fa-location-dot"></i> Salle A203</div>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td>
+                                <div class="course-block info">
+                                    <div class="course-title">Réseaux Informatiques</div>
+                                    <div class="course-details">Prof. Martin Dubois</div>
+                                    <div class="course-room"><i class="fa-solid fa-location-dot"></i> Lab Réseaux</div>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Aurora. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+</body>
+</html>
