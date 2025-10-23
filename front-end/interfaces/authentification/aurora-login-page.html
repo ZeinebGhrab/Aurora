@@ -34,11 +34,12 @@
         <p class=".subtitle-form">Accédez à votre espace : Étudiant, Ancien Étudiant, Enseignant ou Administration.</p>
         </div>
 
-        <form id="loginForm">
+        <form id="loginForm" action="../../../back-end/authentification/authentification.php" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label class="email-label">Adresse email</label>
                 <input 
                     type="email" 
+                    name="email"
                     placeholder="nom.prenom@aurora.edu" 
                     required
                 >
@@ -49,6 +50,7 @@
                 <div class="input-wrapper">
                     <input 
                         type="password" 
+                        name="mot_de_passe"
                         id="passwordInput"
                         placeholder="••••••••••••" 
                         required

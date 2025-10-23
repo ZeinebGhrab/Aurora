@@ -33,39 +33,43 @@
             <h2>Inscription</h2>
         </div>
 
-        <form id="loginForm">
+        <form id="signForm" action="../../../back-end/authentification/save.php" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label class="nom-label">Nom</label>
+                <label class="nom-label" required>Nom</label>
                 <input 
                     type="text" 
+                    name="nom"
                     placeholder="Saisir votre nom" 
                     required
                 >
             </div>
 
             <div class="form-group">
-                <label class="prenom-label">Prenom</label>
+                <label class="prenom-label" required>Prenom</label>
                 <input 
                     type="text" 
+                    name="prenom"
                     placeholder="Saisir votre prenom" 
                     required
                 >
             </div>
 
             <div class="form-group">
-                <label class="email-label">Adresse email</label>
+                <label class="email-label" required>Adresse email</label>
                 <input 
                     type="email" 
+                    name="email"
                     placeholder="nom.prenom@aurora.edu" 
                     required
                 >
             </div>
 
             <div class="form-group">
-                <label class="password-label">Mot de passe</label>
+                <label class="password-label" required>Mot de passe</label>
                 <div class="input-wrapper">
                     <input 
                         type="password" 
+                        name="mot_de_passe"
                         id="passwordInput"
                         placeholder="••••••••••••" 
                         required
@@ -73,10 +77,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="password-label">Confirmer Mot de passe</label>
+                <label class="password-label" required>Confirmer Mot de passe</label>
                 <div class="input-wrapper">
                     <input 
                         type="password" 
+                        name="confirm_mot_de_passe"
                         id="passwordInput"
                         placeholder="••••••••••••" 
                         required
@@ -84,15 +89,27 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="select-label">Filiére</label>
+                <label class="select-label" required>Filiére</label>
                 <div class="input-wrapper">
-                    <select id="classeSelect" required>
+                    <select id="classeSelect" name="filiere" required>
                         <option value="" disabled selected>Choisir votre filiére</option>
                         <option value="IAA">Ingénierie Spatiale & Aéronautique</option>
                         <option value="SPBE">Sciences Cosmiques & Planétaires</option>
                         <option value="IADS">IA & Sciences des Données Spatiales</option>
                         <option value="EDTV">Énergie Durable & Technologies Vertes</option>
                     </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="picture-label" required>Photo de profil</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="file" 
+                        name="photo_profil"
+                        id="passwordInput"
+                        placeholder="Importer votre photo de profil" 
+                        required
+                    >
                 </div>
             </div>
            
