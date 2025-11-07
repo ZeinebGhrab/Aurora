@@ -3,7 +3,10 @@
     flex-direction: column;
     gap: 1.5rem;
 }
-
+.status-badge.ongoing {
+    background: #E6F9EC;  
+    color: #19A974;       
+}
 .exam-card {
     background: white;
     border-radius: 20px;
@@ -188,6 +191,45 @@
 .exam-card:nth-child(3) { animation-delay: 0.2s; }
 .exam-card:nth-child(4) { animation-delay: 0.3s; }
 .exam-card:nth-child(5) { animation-delay: 0.4s; }
+.filters-section {
+    margin-bottom: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.filter-group {
+    width: 100%;
+    max-width: 400px;
+}
+
+.filter-group select {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #374151;
+    background-color: #F9FAFB;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.filter-group select:hover {
+    border-color: #D1D5DB;
+}
+
+.filter-group select:focus {
+    border-color: var(--accent);
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(78, 144, 194, 0.1);
+}
+
+.exams-list {
+    margin-top: 0;
+}
 
 @media (max-width: 1024px) {
     .exam-card {

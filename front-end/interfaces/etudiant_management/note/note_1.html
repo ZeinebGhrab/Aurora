@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>note - Aurora</title>
+    <link rel="stylesheet" href="../../../styles/shared.css">
+    <link rel="stylesheet" href="../../../styles/style-dashboard.css">
+    <link rel="stylesheet" href="../../../styles/style-course.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <div class="logo">Auro<span>r</span>a</div>
+                </li>
+                <li class="nav-item">
+                    <a href="./dashboard.html" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../etudiant_management/note/note_1.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
+                        </svg>
+                        Mes notes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../etudiant_management/cours/course_etudiant.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                        </svg>
+                        Mes cours
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../etudiant_management/Document/Document.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                        Documents
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../etudiant_management/Emploi du temps/Emploi_etudiant.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13"/>
+                        </svg>
+                        Emploi du temps
+                    </a>
+                </li>
+         <li class="nav-item">
+                    <a href="../etudiant_management/absence/absences.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/>
+                        </svg>
+                       Absences 
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header">
+                    <div class="title-content">
+                        <h2><i class="fa-solid fa-chart-column"></i> Mes Notes</h2>
+                        <p>Explorer vos résultats académiques</p>
+                    </div>
+               
+
+                </div>
+
+                 <!-- Stats Grid -->
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon blue"><i class="fa-solid fa-clipboard-list"></i></div>
+                            <div>
+                                <div class="stat-number">24</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Total devoirs</div>
+                    
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon green"><i class="fa-solid fa-chart-line"></i></div>
+                            <div>
+                                <div class="stat-number">15.42</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">MoyenneGénérale</div>
+                    
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon orange"><i class="fa-solid fa-ranking-star"></i></div>
+                            <div>
+                                <div class="stat-number">5/45</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Classement</div>
+                        
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon purple"><i class="fa-solid fa-square-check"></i></div>
+                            <div>
+                                <div class="stat-number">6</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Module Validés</div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <select>
+                        <option>Année scolaire </option>
+                        <option>Année scolaire 2025/2026</option>
+                        <option>Année scolaire 2024/2025</option>
+                        <option>Année scolaire 2023/2024</option>
+                        <option>Année scolaire 2022/2023</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="courses-grid">
+                <div class="course-card">
+                    <div class="course-header">
+                        <div class="course-code">S1</div>
+                        <div class="course-name">Premier Semestre</div>
+                        
+                    </div>
+                    <div class="course-body">
+                        <div class="course-info">
+                            <div class="info-row">
+                                <i class="fa-solid fa-users"></i>
+                                <span>45 étudiants inscrits</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>220 heures</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fa-solid fa-calendar"></i>
+                                <span>Semestre 1 - 2025/2026</span>
+                            </div>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                            <button class="btn btn-secondary">
+                            <i class="fa-solid fa-file-export"></i> Exporter
+                        </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <div class="course-code">S2</div>
+                        <div class="course-name">Deuxiéme Semestre</div>
+                    </div>
+                    <div class="course-body">
+                        <div class="course-info">
+                            <div class="info-row">
+                                <i class="fa-solid fa-users"></i>
+                                <span>28 étudiants inscrits</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>228 heures</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fa-solid fa-calendar"></i>
+                                <span>Semestre 2 - 2025/2026</span>
+                            </div>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                            <button class="btn btn-secondary">
+                            <i class="fa-solid fa-file-export"></i> Exporter</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>© 2025 Aurora. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+</body>
+</html>
