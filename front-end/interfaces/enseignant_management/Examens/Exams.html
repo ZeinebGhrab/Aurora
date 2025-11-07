@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examens - Aurora</title>
+    <link rel="stylesheet" href="../../../styles/shared.css">
+    <link rel="stylesheet" href="../../../styles/style-dashboard.css">
+    <link rel="stylesheet" href="../../../styles/style-exam.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+        <div class="dashboard">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <div class="logo">Auro<span>r</span>a</div>
+                </li>
+                <li class="nav-item">
+                    <a href="./dashboard.html" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./note/note_1.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zM12 14c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z"/>
+                        </svg>
+                        Mes cours
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./cours/course_etudiant.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        Présence & Absence
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./Document/Document.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                        </svg>
+                        Examens
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./Emploi du temps/Emploi_etudiant.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2.5-9H18V0h-2v2H8V0H6v2H4.5C3.12 2 2 3.12 2 4.5v15C2 20.88 3.12 22 4.5 22h15c1.38 0 2.5-1.12 2.5-2.5v-15C22 3.12 20.88 2 19.5 2z"/>
+                        </svg>
+                        Emploi du temps
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header">
+                    <div class="title-content">
+                        <h2><i class="fa-solid fa-file-pen"></i> Gestion des Examens</h2>
+                        <p>Planifiez et gérez tous les examens</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fa-solid fa-file-export"></i> Exporter
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i> Nouvel Examen
+                        </button>
+                    </div>
+                </div>
+            </div>
+                
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon purple"><i class="fa-solid fa-file-pen"></i></div>
+                            <div>
+                                <div class="stat-number">6</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Total Examens</div>
+                        
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon orange"><i class="fa-solid fa-hourglass-half"></i></div>
+                            <div>
+                                <div class="stat-number">3</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">À venir</div>
+                        <div class="stat-detail">Cette semaine</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon blue"><i class="fa-solid fa-clock"></i></div>
+                            <div>
+                                <div class="stat-number">3</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">En attente</div>
+                        
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div>
+                            <div>
+                                <div class="stat-number">3</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Terminés</div>
+                        
+                    </div>
+                </div>
+            
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <select>
+                        <option>Tous les examens</option>
+                        <option>À venir</option>
+                        <option>En attente</option>
+                        <option>Terminés</option>
+                </select>
+                </div>
+
+                <div class="search-box">
+                    <input type="text" placeholder="Rechercher un examen...">
+                </div>
+            </div>
+
+            <div class="exams-list">
+                <div class="exam-card">
+                    <div class="exam-date-block">
+                        <div class="exam-day">08</div>
+                        <div class="exam-month">OCT</div>
+                    </div>
+                    <div class="exam-info">
+                        <div class="exam-title">Contrôle- Data Mining
+                            <span class="status-badge completed">Terminé</span>
+                        </div>
+                        
+                        <div class="exam-details">
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>08:00 - 10:00</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span>Amphi B</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <span>Coefficient : 2 — Durée : 2h</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-users"></i>
+                                <span>28 étudiants</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="exam-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-download"><i class="fa-solid fa-file-arrow-dow"></i> Télécharger la liste des étudiants</button>
+                        <button class="btn-publish"><i class="fa-solid fa-check-circle"></i> Publier les notes</button>
+                    </div>
+                </div>
+
+                <div class="exam-card">
+                    <div class="exam-date-block">
+                        <div class="exam-day">10</div>
+                        <div class="exam-month">OCT</div>
+                    </div>
+                    <div class="exam-info">
+                        <div class="exam-title">Contrôle- Intelligence Artificielle
+                            <span class="status-badge completed">Terminé</span>
+                        </div>
+                        
+                        <div class="exam-details">
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>08:00 - 10:00</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span>INF205</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <span>Coefficient : 3 — Durée : 2h</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-users"></i>
+                                <span>32 étudiants</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="exam-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-download"><i class="fa-solid fa-file-arrow-dow"></i> Télécharger la liste des étudiants</button>
+                        <button class="btn-publish"><i class="fa-solid fa-check-circle"></i> Publier les notes</button>
+                    </div>
+                </div>
+                <div class="exam-card">
+                    <div class="exam-date-block">
+                        <div class="exam-day">11</div>
+                        <div class="exam-month">OCT</div>
+                    </div>
+                    <div class="exam-info">
+                        <div class="exam-title">Contrôle- Big Data
+                            <span class="status-badge completed">Terminé</span>
+                        </div>
+                        
+                        <div class="exam-details">
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>10:00 - 12:00</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span>INF201</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <span>Coefficient : 2 — Durée : 1h</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-users"></i>
+                                <span>28 étudiants</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="exam-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-download"><i class="fa-solid fa-file-arrow-dow"></i> Télécharger la liste des étudiants</button>
+                        <button class="btn-publish"><i class="fa-solid fa-check-circle"></i> Publier les notes</button>
+                    </div>
+                </div>
+                <div class="exam-card">
+                    <div class="exam-date-block">
+                        <div class="exam-day">15</div>
+                        <div class="exam-month">DEC</div>
+                    </div>
+                    <div class="exam-info">
+                        <div class="exam-title">Examen Final - Data Mining
+                            <span class="status-badge upcoming">En attente</span>
+                        </div>
+                        
+                        <div class="exam-details">
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>08:00 - 10:00</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span>Amphi B</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <span>Coefficient : 2 — Durée : 2h</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-users"></i>
+                                <span>28 étudiants</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="exam-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-download"><i class="fa-solid fa-file-arrow-dow"></i> Télécharger la liste des étudiants</button>
+                        <button class="btn-publish"><i class="fa-solid fa-check-circle"></i> Publier les notes</button>
+                    </div>
+                </div>
+                <div class="exam-card">
+                    <div class="exam-date-block">
+                        <div class="exam-day">12</div>
+                        <div class="exam-month">DEC</div>
+                    </div>
+                    <div class="exam-info">
+                        <div class="exam-title">Examen Final- Intelligence Artificielle
+                            <span class="status-badge upcoming">En attente</span>
+                        </div>
+                        
+                        <div class="exam-details">
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>12:00 - 14:00</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span>Amphi B</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <span>Coefficient : 2 — Durée : 2h</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-users"></i>
+                                <span>28 étudiants</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="exam-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-download"><i class="fa-solid fa-file-arrow-dow"></i> Télécharger la liste des étudiants</button>
+                        <button class="btn-publish"><i class="fa-solid fa-check-circle"></i> Publier les notes</button>
+                    </div>
+                </div>
+                <div class="exam-card">
+                    <div class="exam-date-block">
+                        <div class="exam-day">14</div>
+                        <div class="exam-month">DEC</div>
+                    </div>
+                    <div class="exam-info">
+                        <div class="exam-title">Examen Final- Big Data
+                            <span class="status-badge upcoming">En attente</span>
+                        </div>
+                        
+                        <div class="exam-details">
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>08:00 - 10:00</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span>INF207<span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <span>Coefficient : 2 — Durée : 2h</span>
+                            </div>
+                            <div class="exam-detail-item">
+                                <i class="fa-solid fa-users"></i>
+                                <span>28 étudiants</span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="exam-actions">
+                        <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
+                        <button class="btn-download"><i class="fa-solid fa-file-arrow-dow"></i> Télécharger la liste des étudiants</button>
+                        <button class="btn-publish"><i class="fa-solid fa-check-circle"></i> Publier les notes</button>
+                    </div>
+                </div>
+                
+            </div>    
+        </main>
+    </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Aurora. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+</body>
+</html>
