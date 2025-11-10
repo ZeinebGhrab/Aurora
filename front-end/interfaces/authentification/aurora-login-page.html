@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../styles/style-authentification.css">
     <link rel="stylesheet" href="../../styles/shared.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="module" src="../../scripts/authentification/login.js"></script>
 </head>
 <body>
     <!-- Decorative Triangles -->
@@ -34,7 +35,7 @@
         <p class=".subtitle-form">Accédez à votre espace : Étudiant, Ancien Étudiant, Enseignant ou Administration.</p>
         </div>
 
-        <form id="loginForm" action="../../../back-end/authentification/authentification.php" method="POST" enctype="multipart/form-data">
+        <form id="loginForm" action="/Aurora/back-end/user/api/auth/login.php" method="POST">
             <div class="form-group">
                 <label class="email-label">Adresse email</label>
                 <input 
@@ -50,7 +51,7 @@
                 <div class="input-wrapper">
                     <input 
                         type="password" 
-                        name="mot_de_passe"
+                        name="mot_passe"
                         id="passwordInput"
                         placeholder="••••••••••••" 
                         required
@@ -58,13 +59,9 @@
                 </div>
                 <a href="#" class="forgot-password">Mot de passe oublié ?</a>
             </div>
-            <div class="form-options">
-                <label class="remember-me">
-                    <input type="checkbox">
-                    <span>Se souvenir de moi</span>
-                </label>
-               
-            </div>
+
+            <!-- Zone pour afficher les erreurs -->
+            <div id="errorMessage" style="color: #ef4444; margin-bottom: 15px; display: none;"></div>
 
             <button type="submit" class="btn-primary">
                 Se connecter

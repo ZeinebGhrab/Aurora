@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Étudiants - Aurora</title>
+    <link rel="stylesheet" href="../../../styles/shared.css">
+    <link rel="stylesheet" href="../../../styles/style-dashboard.css">
+    <link rel="stylesheet" href="../../../styles/style-student.css">
+    <link rel="stylesheet" href="../../../styles/modal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="module" src="../../../scripts/student/student.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <div class="logo">Auro<span>r</span>a</div>
+                </li>
+                <li class="nav-item">
+                    <a href="../aurora-admin-dashboard.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../teacher-management/aurora-teacher.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zM12 14c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z"/>
+                        </svg>
+                        Enseignants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../student-management/aurora-student.html" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        Étudiants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../course-management/aurora-course.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                        </svg>
+                        Cours
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header">
+                    <div class="title-content">
+                        <h2><i class="fa-regular fa-address-card"></i> Gestion des Étudiants</h2>
+                        <p>Gérez tous les étudiants de l'établissement</p>
+                    </div>
+               
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fa-solid fa-file-export"></i> Exporter
+                        </button>
+                        <button class="btn btn-primary btn-new-student">
+                            <i class="fa-solid fa-user-plus"></i> Nouvel Étudiant
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon purple"><i class="fa-solid fa-users"></i></div>
+                            <div>
+                                <div class="stat-number">1,245</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Total Étudiants</div>
+                        <div class="stat-detail">+15 ce mois</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon green"><i class="fa-solid fa-user-check"></i></div>
+                            <div>
+                                <div class="stat-number">1,198</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Étudiants Actifs</div>
+                        <div class="stat-detail">96% du total</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon blue"><i class="fa-solid fa-user-plus"></i></div>
+                            <div>
+                                <div class="stat-number">47</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Nouveaux</div>
+                        <div class="stat-detail">Cette semaine</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <select>
+                        <option>Toutes les filières</option>
+                        <option>Ingénierie Spatiale & Aéronautique</option>
+                        <option>Sciences Cosmiques & Planétaires</option>
+                        <option>IA & Sciences des Données Spatiales</option>
+                        <option>Énergie Durable & Technologies Vertes</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select>
+                        <option>Tous les niveaux</option>
+                        <option>Niveau 1</option>
+                        <option>Niveau 2</option>
+                        <option>Niveau 3</option>
+                    </select>
+                </div>
+                <div class="search-box">
+                    <input type="text" placeholder="Rechercher un étudiant...">
+                </div>
+            </div>
+
+            <!-- Students Grid -->
+            <div class="students-grid">
+                <!-- Les étudiants seront rendus ici dynamiquement -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Aurora. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+
+    <!-- Modal New Student -->
+    <div id="newStudentModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-user-plus"></i> Ajouter un nouvel étudiant</h3>
+                <p class="modal-subtitle">Remplissez les informations de l'étudiant</p>
+                <button class="modal-close">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="newStudentForm">
+                    <div class="form-grid single-column">
+                        <div class="form-group full-width">
+                            <label for="studentFirstName" class="form-label required">Prénom</label>
+                            <input type="text" id="studentFirstName" name="prenom" class="form-input" placeholder="Ex: Ahmed" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="studentLastName" class="form-label required">Nom</label>
+                            <input type="text" id="studentLastName" name="nom" class="form-input" placeholder="Ex: Ben Salem" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="studentEmail" class="form-label required">Email</label>
+                            <input type="email" id="studentEmail" name="email" class="form-input" placeholder="Ex: ahmed.bensalem@aurora.edu" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="studentPassword" class="form-label required">Mot de passe</label>
+                            <input type="password" id="studentPassword" name="mot_de_passe" class="form-input" placeholder="********" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="studentFiliere" class="form-label">Filière</label>
+                            <select id="studentFiliere" name="id_filiere" class="form-select">
+                                <option value="">Sélectionner une filière...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="studentNiveau" class="form-label">Niveau</label>
+                            <select id="studentNiveau" name="niveau" class="form-select"  required>
+                                <option value="">Sélectionner un niveau...</option>
+                                <option value="niveau1">Niveau 1</option>
+                                <option value="niveau2">Niveau 2</option>
+                                <option value="niveau3">Niveau 3</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="studentStatut" class="form-label required">Statut</label>
+                            <select id="studentStatut" name="statut" class="form-select" required>
+                                <option value="actif">Actif</option>
+                                <option value="inactif">Inactif</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel close-modal">Annuler</button>
+                <button type="submit" form="newStudentForm" class="btn btn-save">Ajouter l'étudiant</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Student -->
+    <div id="editStudentModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-pen"></i> Modifier l'étudiant</h3>
+                <p class="modal-subtitle">Modifiez les informations de l'étudiant</p>
+                <button class="modal-close">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="editStudentForm">
+                    <input type="hidden" id="editStudentId" name="id_utilisateur">
+                    <div class="form-grid single-column">
+                        <div class="form-group full-width">
+                            <label for="editStudentFirstName" class="form-label required">Prénom</label>
+                            <input type="text" id="editStudentFirstName" name="prenom" class="form-input" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="editStudentLastName" class="form-label required">Nom</label>
+                            <input type="text" id="editStudentLastName" name="nom" class="form-input" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="editStudentEmail" class="form-label required">Email</label>
+                            <input type="email" id="editStudentEmail" name="email" class="form-input" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="editStudentPassword" class="form-label">Mot de passe</label>
+                            <input type="text" id="editStudentPassword" name="mot_de_passe" class="form-input">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="editStudentFiliere" class="form-label">Filière</label>
+                            <select id="editStudentFiliere" name="id_filiere" class="form-select">
+                                <option value="">Sélectionner une filière...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="editStudentNiveau" class="form-label">Niveau</label>
+                               <select id="editStudentNiveau" name="niveau"  class="form-select" required>
+                                <option value="">Sélectionner un niveau...</option>
+                                <option value="niveau1">Niveau 1</option>
+                                <option value="niveau2">Niveau 2</option>
+                                <option value="niveau3">Niveau 3</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="editStudentStatut" class="form-label required">Statut</label>
+                            <select id="editStudentStatut" name="statut" class="form-select" required>
+                                <option value="actif">Actif</option>
+                                <option value="inactif">Inactif</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel close-modal">Annuler</button>
+                <button type="submit" form="editStudentForm" class="btn btn-save">Enregistrer les modifications</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal View Student -->
+    <div id="viewStudentModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-eye"></i> Informations de l'étudiant</h3>
+                <p class="modal-subtitle">Détails complets de l'étudiant</p>
+                <button class="modal-close">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="teacher-view-grid">
+                    <div class="view-item">
+                        <span class="view-label">Prénom :</span>
+                        <span id="viewStudentFirstName" class="view-value"></span>
+                    </div>
+                    <div class="view-item">
+                        <span class="view-label">Nom :</span>
+                        <span id="viewStudentLastName" class="view-value"></span>
+                    </div>
+                    <div class="view-item">
+                        <span class="view-label">Email :</span>
+                        <span id="viewStudentEmail" class="view-value"></span>
+                    </div>
+                    <div class="view-item">
+                        <span class="view-label">Niveau :</span>
+                        <span id="viewStudentNiveau" class="view-value"></span>
+                    </div>
+                    <div class="view-item">
+                        <span class="view-label">Statut :</span>
+                        <span id="viewStudentStatut" class="view-value"></span>
+                    </div>
+                    <div class="view-item">
+                        <span class="view-label">Date de création :</span>
+                        <span id="viewStudentDate" class="view-value"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-close close-modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

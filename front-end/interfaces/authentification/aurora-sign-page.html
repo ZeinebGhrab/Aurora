@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../styles/style-authentification.css">
     <link rel="stylesheet" href="../../styles/shared.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="module" src="../../script/authentification/sign.js"></script>
 </head>
 <body>
     <!-- Decorative Triangles -->
@@ -33,7 +34,7 @@
             <h2>Inscription</h2>
         </div>
 
-        <form id="signForm" action="../../../back-end/authentification/save.php" method="POST" enctype="multipart/form-data">
+        <form id="signForm" action="/Aurora/back-end/user/api/user/student/save.php" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label class="nom-label" required>Nom</label>
                 <input 
@@ -69,7 +70,7 @@
                 <div class="input-wrapper">
                     <input 
                         type="password" 
-                        name="mot_de_passe"
+                        name="mot_passe"
                         id="passwordInput"
                         placeholder="••••••••••••" 
                         required
@@ -81,7 +82,7 @@
                 <div class="input-wrapper">
                     <input 
                         type="password" 
-                        name="confirm_mot_de_passe"
+                        name="confirme_mot_passe"
                         id="passwordInput"
                         placeholder="••••••••••••" 
                         required
@@ -106,12 +107,14 @@
                     <input 
                         type="file" 
                         name="photo_profil"
-                        id="passwordInput"
+                        id="profileInput"
                         placeholder="Importer votre photo de profil" 
                         required
                     >
                 </div>
             </div>
+
+            <div id="errorMessage" style="display:none;color:red;"></div>
            
             <button type="submit" class="btn-primary">
                 S'inscrire
