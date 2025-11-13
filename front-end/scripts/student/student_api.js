@@ -1,20 +1,32 @@
 const API_BASE = "/Aurora/back-end";
 
-export async function getAllStudents() {
+export async function getAllStudents(page = 1, limit = 6, filters = {}) {
     try {
-        const res = await fetch(`${API_BASE}/user/api/student/get_all_students.php`);
+        console.log(filters);
+        const res = await fetch(`${API_BASE}/user/api/student/get_all_students.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ page, limit, ...filters })
+        });
+
         const data = await res.json();
-        console.log('Students:', data);
-        
-        if (data.students && Array.isArray(data.students)) return data.students;
-        if (Array.isArray(data)) return data;
-        return [];
-        
+        console.log('Students with pagination:', data);
+
+        if (data.success) {
+            return {
+                students: data.students|| [],
+                pagination: data.pagination || {}
+            };
+        }
+
+        return { students: [], pagination: {} };
     } catch (error) {
         console.error('Erreur getAllStudents:', error);
-        return [];
+        return { students: [], pagination: {} };
     }
 }
+
+
 
 export async function addStudent(studentData) {
     try {
@@ -26,7 +38,7 @@ export async function addStudent(studentData) {
         });
         
         const data = await res.json();
-        
+
         return data;
 
     } catch (error) {

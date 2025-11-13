@@ -35,6 +35,25 @@ export async function getCountStudents() {
 
 
 
+export async function getCountStudentsByNiveau() {
+    try {
+        const res = await fetch(`${API_BASE}/user/api/student/get_count_students_niveau.php`);
+        const data = await res.json();
+        console.log('Students:', data);
+        
+        if (data.students && Array.isArray(data.students)) return data.students;
+        if (Array.isArray(data)) return data;
+        return [];
+        
+    } catch (error) {
+        console.error('Erreur getCountStudents:', error);
+        return [];
+    }
+}
+
+
+
+
 export async function getCountCourses() {
     try {
         const res = await fetch(`${API_BASE}/course/api/get_count_courses.php`);

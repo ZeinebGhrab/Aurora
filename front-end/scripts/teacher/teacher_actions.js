@@ -1,21 +1,52 @@
 import { deleteTeacher } from "./teacher_api.js";
-import { renderTeachers } from "./teacher_render.js";
+import { renderTeachers, renderPagination } from "./teacher_render.js";
 import { fillEditForm, fillViewModal } from "./teacher_form.js";
 import { showNotification } from "../utils.js";
 
-export async function loadAndRenderTeachers() {
+// État de pagination et filtrage
+let currentState = {
+    page: 1,
+    limit: 4,
+    filters: {
+        search: '',
+        statut: null
+    }
+};
+
+export async function loadAndRenderTeachers(page = currentState.page) {
     const { getAllTeachers } = await import("./teacher_api.js");
-    const teachers = await getAllTeachers();
-    
-    // ✅ FIX : Ajouter le container
+
+    // Mettre à jour l'état actuel
+    currentState.page = page;
+
+    const { teachers, pagination } = await getAllTeachers(
+        currentState.page,
+        currentState.limit,
+        currentState.filters
+    );
+
     const container = document.querySelector(".teachers-grid");
     if (!container) {
         console.error("Container .teachers-grid introuvable !");
         return;
     }
-    
+
     renderTeachers(teachers, container);
+
+    // Pagination
+    let paginationContainer = document.querySelector("#teachers-pagination");
+    if (!paginationContainer) {
+        paginationContainer = document.createElement("div");
+        paginationContainer.id = "teachers-pagination";
+        container.after(paginationContainer);
+    }
+
+    renderPagination(pagination, paginationContainer, loadAndRenderTeachers);
+
+    updateStats(pagination);
+
 }
+
 
 export function handleTeacherActions() {
     const container = document.querySelector(".teachers-grid");
@@ -51,4 +82,42 @@ export function handleTeacherActions() {
             }
         }
     });
+}
+
+export function initFilters() {
+    const searchInput = document.querySelector(".search-box input");
+    const statutSelect = document.getElementById("statutSelect");
+
+    
+    // Debounce pour la recherche
+    let searchTimeout;
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(async () => {
+                currentState.filters.search = e.target.value;
+                currentState.page = 1;
+                await loadAndRenderTeachers(1);
+            }, 500);
+        });
+    }
+    
+    
+    // Filtre par statut
+    if (statutSelect) {
+        statutSelect.addEventListener("change", async (e) => {
+            const value = e.target.value;
+            currentState.filters.statut = value !== "" ? value : null;
+            currentState.page = 1;
+            await loadAndRenderTeachers(1);
+        });
+    }
+}
+
+// Mettre à jour les statistiques
+function updateStats(pagination) {
+    const totalElement = document.querySelector(".stat-card:first-child .stat-number");
+    if (totalElement && pagination.total) {
+        totalElement.textContent = pagination.total.toLocaleString();
+    }
 }

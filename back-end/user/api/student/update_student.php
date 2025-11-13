@@ -21,9 +21,11 @@ try {
     $email = $data['email'] ?? '';
     $id_filiere = $data['id_filiere'] ?? null;
     $niveau = $data['niveau'] ?? '';
+    $statut = $data['statut'] ?? '';
+
 
     if ($id && $nom && $prenom && $email) {
-        $success = $sm->updateStudent($id, $nom, $prenom, $email, $id_filiere, $niveau);
+        $success = $sm->updateStudent($id, $nom, $prenom, $email, $id_filiere, $niveau, $statut);
         echo json_encode(['success' => $success]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Paramètres requis manquants']);

@@ -16,17 +16,4 @@ export async function populateTeacherForm(formId) {
             gradeSelect.appendChild(opt);
         });
     }
-
-    // Filières
-    const filiereSelect = form.querySelector("select[name='id_filiere']");
-    if (filiereSelect) {
-        const filieres = await getAllFilieres();
-        filiereSelect.innerHTML = '<option value="">Sélectionner une filière...</option>';
-        filieres.forEach(f => {
-            const opt = document.createElement("option");
-            opt.value = f.id_filiere;
-            opt.textContent = f.nom_complet;
-            filiereSelect.appendChild(opt);
-        });
-    }
 }

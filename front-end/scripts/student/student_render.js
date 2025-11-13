@@ -1,4 +1,3 @@
-// 📁 student_render.js
 export function renderStudents(students, container) {
     if (!students || !Array.isArray(students)) {
         console.warn("students n'est pas un tableau valide:", students);
@@ -10,7 +9,6 @@ export function renderStudents(students, container) {
 
     container.innerHTML = "";
 
-    // Si aucun étudiant trouvé
     if (students.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
@@ -22,7 +20,6 @@ export function renderStudents(students, container) {
         return;
     }
 
-    // Couleurs disponibles pour les avatars
     const avatarColors = ["avatar-red", "avatar-blue", "avatar-green", "avatar-purple", "avatar-orange"];
 
     students.forEach((student, index) => {
@@ -50,7 +47,7 @@ export function renderStudents(students, container) {
                     <div class="student-info">
                         <h3>${student.prenom || ""} ${student.nom || ""}</h3>
                         <div class="student-id">${student.id_utilisateur || "ID Inconnu"}</div>
-                        <span class="badge">${student.niveau || "Senior"}</span>
+                        <span class="badge">${student.niveau || "Non défini"}</span>
                     </div>
                 </div>
 
@@ -59,7 +56,7 @@ export function renderStudents(students, container) {
                         <i class="fa-regular fa-envelope"></i>${student.email || "Non renseigné"}
                     </div>
                     <div class="detail-row">
-                        <i class="fa-regular fa-clock"></i>${student.filiere || "Génération inconnue"}
+                        <i class="fa-regular fa-clock"></i>${student.filiere || "Filière inconnue"}
                     </div>
                 </div>
             `;
@@ -68,5 +65,81 @@ export function renderStudents(students, container) {
         } catch (error) {
             console.error("Erreur lors du rendu d'un étudiant:", error, student);
         }
+    });
+}
+
+export function renderPagination(pagination, parentElement, onPageChange) {
+    // Supprimer l'ancienne pagination
+    const oldPagination = parentElement.querySelector(".pagination-container");
+    if (oldPagination) oldPagination.remove();
+
+    if (!pagination || pagination.totalPages <= 1) return;
+
+    const paginationContainer = document.createElement("div");
+    paginationContainer.classList.add("pagination-container");
+
+    const currentPage = pagination.page;
+    const totalPages = pagination.totalPages;
+
+    let paginationHTML = '<div class="pagination">';
+
+    // Précédent
+    paginationHTML += `
+        <button class="pagination-btn ${currentPage === 1 ? 'disabled' : ''}" 
+                data-page="${currentPage - 1}" 
+                ${currentPage === 1 ? 'disabled' : ''}>
+            <i class="fa-solid fa-chevron-left"></i> Précédent
+        </button>
+    `;
+
+    // Pages visibles
+    const maxVisiblePages = 7;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    if (startPage > 1) {
+        paginationHTML += `<button class="pagination-btn page-number" data-page="1">1</button>`;
+        if (startPage > 2) paginationHTML += `<span class="pagination-ellipsis">...</span>`;
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `
+            <button class="pagination-btn page-number ${i === currentPage ? 'active' : ''}" 
+                    data-page="${i}">
+                ${i}
+            </button>
+        `;
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) paginationHTML += `<span class="pagination-ellipsis">...</span>`;
+        paginationHTML += `<button class="pagination-btn page-number" data-page="${totalPages}">${totalPages}</button>`;
+    }
+
+    // Suivant
+    paginationHTML += `
+        <button class="pagination-btn ${currentPage === totalPages ? 'disabled' : ''}" 
+                data-page="${currentPage + 1}" 
+                ${currentPage === totalPages ? 'disabled' : ''}>
+            Suivant <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    `;
+
+    paginationHTML += '</div>';
+
+    paginationContainer.innerHTML = paginationHTML;
+    parentElement.appendChild(paginationContainer);
+
+    // Événements clic sur les boutons
+    paginationContainer.querySelectorAll("button[data-page]").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const page = parseInt(btn.dataset.page);
+            if (!isNaN(page) && page >= 1 && page <= totalPages && page !== currentPage) {
+                onPageChange(page);
+            }
+        });
     });
 }

@@ -1,18 +1,29 @@
 const API_BASE = "/Aurora/back-end";
 
-export async function getAllTeachers() {
+export async function getAllTeachers(page = 1, limit = 4, filters = {}) {
     try {
-        const res = await fetch(`${API_BASE}/user/api/teacher/get_all_teachers.php`);
+        console.log(filters);
+        const res = await fetch(`${API_BASE}/user/api/teacher/get_all_teachers.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ page, limit, ...filters })
+        });
         const data = await res.json();
-        console.log('Teachers:', data);
+        console.log('Teachers with pagination:', data);
+
         
-        if (data.teachers && Array.isArray(data.teachers)) return data.teachers;
-        if (Array.isArray(data)) return data;
-        return [];
+        
+        if (data.success) {
+            return {
+                teachers: data.teachers|| [],
+                pagination: data.pagination || {}
+            };
+        }
+        return { teachers: [], pagination: {} };
         
     } catch (error) {
         console.error('Erreur getAllTeachers:', error);
-        return [];
+        return { teachers: [], pagination: {} };
     }
 }
 

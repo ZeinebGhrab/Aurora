@@ -8,7 +8,7 @@ export async function populateSelects() {
     const teachers = await getAllTeachers();
     teachers.forEach(t => {
         const opt = document.createElement("option");
-        opt.value = t.email;
+        opt.value = t.id_utilisateur;
         opt.textContent = `${t.nom} ${t.prenom}`;
         teacherSelect.appendChild(opt);
     });
@@ -29,7 +29,7 @@ export function handleFormSubmit() {
         const data = {
             nom_cours: form.courseName.value,
             code_cours: form.courseCode.value,
-            mail_enseignant: form.teacher.value,
+            id_enseignant: form.teacher.value,
             id_filiere: parseInt(form.filiere.value),
             niveau: form.niveau.value
         };

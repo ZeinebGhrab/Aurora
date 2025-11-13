@@ -1,6 +1,4 @@
-// course_modal.js
 export function initCourseModal() {
-    console.log('Initialisation du modal...');
     
     const newCourseBtn = document.querySelector('.btn-new-course');
     const newCourseModal = document.getElementById('newCourseModal');
@@ -11,19 +9,16 @@ export function initCourseModal() {
         return;
     }
     
-    console.log('Éléments trouvés ✓');
     
     // Ouvrir le modal
     newCourseBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Ouverture du modal');
         newCourseModal.classList.add('active');
         document.body.style.overflow = 'hidden';
     });
     
     // Fonction de fermeture
     const closeModal = () => {
-        console.log('Fermeture du modal');
         newCourseModal.classList.remove('active');
         document.body.style.overflow = '';
     };

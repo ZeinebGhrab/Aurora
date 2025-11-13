@@ -1,71 +1,69 @@
-import { getCountTeachers, getCountStudents, getCountCourses } from './admin_api.js';
+import { getCountTeachers, getCountStudents, getCountCourses, getCountStudentsByNiveau } from './admin_api.js';
+import { updateNiveauChart } from './chart.js';
 
-// Fonction pour mettre à jour les statistiques
+/**
+ * Fonction pour mettre à jour les statistiques du tableau de bord
+ */
 async function updateDashboardStats() {
     try {
-        // Récupérer les données des APIs
-        const [teachers, students, courses] = await Promise.all([
+        // Récupérer les données des APIs en parallèle
+        const [teachers, students, courses, studentsByNiveau] = await Promise.all([
             getCountTeachers(),
             getCountStudents(),
-            getCountCourses()
+            getCountCourses(),
+            getCountStudentsByNiveau()
         ]);
 
         // Mettre à jour le nombre d'étudiants
-        const studentsCount = students || 0;
-        const studentsElement = document.querySelector('.stat-card:nth-child(1) .stat-number');
-        if (studentsElement) {
-            studentsElement.textContent = studentsCount.toLocaleString('fr-FR');
-        }
+        updateStatCard(1, students);
 
         // Mettre à jour le nombre de professeurs
-        const teachersCount = teachers || 0;
-        const teachersElement = document.querySelector('.stat-card:nth-child(2) .stat-number');
-        if (teachersElement) {
-            teachersElement.textContent = teachersCount.toLocaleString('fr-FR');
-        }
+        updateStatCard(2, teachers);
 
         // Mettre à jour le nombre de cours
-        const coursesCount = courses || 0;
-        const coursesElement = document.querySelector('.stat-card:nth-child(3) .stat-number');
-        if (coursesElement) {
-            coursesElement.textContent = coursesCount.toLocaleString('fr-FR');
-        }
+        updateStatCard(3, courses);
+
+        // Mettre à jour le graphique des niveaux
+        updateNiveauChart(studentsByNiveau);
 
         console.log('Statistiques mises à jour:', {
-            students: studentsCount,
-            teachers: teachersCount,
-            courses: coursesCount
+            students,
+            teachers,
+            courses,
+            studentsByNiveau
         });
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour des statistiques:', error);
-        
-        // Afficher un message d'erreur à l'utilisateur (optionnel)
-        const statsCards = document.querySelectorAll('.stat-number');
-        statsCards.forEach(card => {
-            if (card.textContent.includes(',')) return; // Ne pas modifier si déjà mis à jour
-            card.textContent = '--';
-            card.style.color = '#999';
-        });
+        displayError();
     }
 }
 
-// Fonction pour animer le compteur (optionnel - effet visuel)
-function animateCounter(element, target) {
-    const duration = 1000; // 1 seconde
-    const start = 0;
-    const increment = target / (duration / 16); // 60 FPS
-    let current = start;
+/**
+ * Met à jour une carte de statistique
+ * @param {Number} cardIndex - Index de la carte (1, 2, 3)
+ * @param {Number} value - Valeur à afficher
+ */
+function updateStatCard(cardIndex, value) {
+    const count = value || 0;
+    const element = document.querySelector(`.stat-card:nth-child(${cardIndex}) .stat-number`);
+    
+    if (element) {
+        element.textContent = count.toLocaleString('fr-FR');
+        element.style.color = ''; // Reset color
+    }
+}
 
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            element.textContent = target.toLocaleString('fr-FR');
-            clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(current).toLocaleString('fr-FR');
-        }
-    }, 16);
+/**
+ * Affiche un message d'erreur sur les cartes de statistiques
+ */
+function displayError() {
+    const statsCards = document.querySelectorAll('.stat-number');
+    statsCards.forEach(card => {
+        if (card.textContent.includes(',')) return; // Ne pas modifier si déjà mis à jour
+        card.textContent = '--';
+        card.style.color = '#999';
+    });
 }
 
 // Initialiser le tableau de bord au chargement de la page

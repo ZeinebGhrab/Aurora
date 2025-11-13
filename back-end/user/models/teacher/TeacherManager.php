@@ -2,12 +2,28 @@
 require_once __DIR__ . '/../../../config/Database.php';
 require_once 'Teacher.php';
 require_once __DIR__ . '/../User.php';
+require_once __DIR__ . '/../../../MailService/MailService.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once __DIR__ . '/../../../phpmailer/src/Exception.php';
+require_once __DIR__ . '/../../../phpmailer/src/PHPMailer.php';
+require_once __DIR__ . '/../../../phpmailer/src/SMTP.php';
+
+
+require_once __DIR__ . '/../../../../vendor/autoload.php'; // Composer autoload
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../..');
+$dotenv->load();
 
 class TeacherManager {
     private $db;
+    private $MailService;
 
     public function __construct($database) {
         $this->db = $database;
+        $this->mailService = new MailService();
     }
 
     // Récupérer le nombre des enseignants
@@ -25,27 +41,108 @@ class TeacherManager {
         return $teachers;
     }
 
-    // Récupérer tous les enseignants
-    public function getAllTeachers() {
+    // Récupérer tous les enseignants avec filière et statut
+    public function getAllTeachers($filters = []) {
         $conn = $this->db->connect();
-        $stmt = $conn->prepare("
-            SELECT u.id_utilisateur, u.nom, u.prenom, u.email, u.type_compte, e.grade, e.specialite
+
+        $page = isset($filters['page']) ? (int)$filters['page'] : 1;
+        $limit = isset($filters['limit']) ? (int)$filters['limit'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $query = "
+            SELECT u.id_utilisateur, u.nom, u.prenom, u.email, u.date_creation, u.type_compte, u.statut, e.grade, e.specialite
             FROM enseignant e
             JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
-        ");
+            WHERE 1=1
+        ";
+
+        $params = [];
+        $types = '';
+
+
+        // Filtre par statut
+        if (isset($filters['statut']) && $filters['statut'] !== '') {
+            $query .= " AND u.statut = ?";
+            $params[] = $filters['statut'];
+            $types .= 's';
+        }
+
+        // Filtre par recherche (nom ou prénom)
+        if (!empty($filters['search'])) {
+            $query .= " AND (u.nom LIKE ? OR u.prenom LIKE ?)";
+            $searchTerm = "%" . $filters['search'] . "%";
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $types .= 'ss';
+        }
+
+        // Pagination
+        $query .= " LIMIT ?, ?";
+        $params[] = $offset;
+        $params[] = $limit;
+        $types .= 'ii';
+
+        $stmt = $conn->prepare($query);
+        if ($params) {
+            $stmt->bind_param($types, ...$params);
+        }
+        
         $stmt->execute();
         $result = $stmt->get_result();
         $teachers = $result->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
 
-        return $teachers;
+        // Total pour pagination
+        $countQuery = "
+            SELECT COUNT(*) AS total
+            FROM enseignant e
+            JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
+            WHERE 1=1
+        ";
+
+        $countParams = [];
+        $countTypes = '';
+
+        if (isset($filters['statut']) && $filters['statut'] !== '') {
+            $countQuery .= " AND u.statut = ?";
+            $countParams[] = $filters['statut'];
+            $countTypes .= 's';
+        }
+
+        if (!empty($filters['search'])) {
+            $countQuery .= " AND (u.nom LIKE ? OR u.prenom LIKE ?)";
+            $searchTerm = "%" . $filters['search'] . "%";
+            $countParams[] = $searchTerm;
+            $countParams[] = $searchTerm;
+            $countTypes .= 'ss';
+        }
+
+        $countStmt = $conn->prepare($countQuery);
+        if ($countParams) {
+            $countStmt->bind_param($countTypes, ...$countParams);
+        }
+
+        $countStmt->execute();
+        $countResult = $countStmt->get_result();
+        $total = $countResult->fetch_assoc()['total'] ?? 0;
+        $countStmt->close();
+
+        return [
+            "teachers" => $teachers,
+            "pagination" => [
+                "total" => $total,
+                "page" => $page,
+                "limit" => $limit,
+                "totalPages" => ceil($total / $limit)
+            ]
+        ];
     }
 
     // Récupérer un enseignant par ID
     public function getTeacherById($id_enseignant) {
         $conn = $this->db->connect();
         $stmt = $conn->prepare("
-            SELECT u.id_utilisateur, u.nom, u.prenom, u.email, u.type_compte, e.grade, e.specialite
+            SELECT u.id_utilisateur, u.nom, u.prenom, u.email, u.statut, u.date_creation, u.type_compte, e.grade, e.specialite
             FROM enseignant e
             JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
             WHERE u.id_utilisateur = ?
@@ -70,9 +167,9 @@ class TeacherManager {
         ");
         $hashedPassword = password_hash($mot_de_passe, PASSWORD_DEFAULT);
         $stmt->bind_param("ssss", $nom, $prenom, $email, $hashedPassword);
-        $success = $stmt->execute();
+        $successUser = $stmt->execute();
 
-        if ($success) {
+        if ($successUser) {
             $id_utilisateur = $conn->insert_id;
             $stmt->close();
 
@@ -82,21 +179,35 @@ class TeacherManager {
                 VALUES (?, ?, ?)
             ");
             $stmt2->bind_param("iss", $id_utilisateur, $grade, $specialite);
-            $success = $stmt2->execute();
+            $successTeacher = $stmt2->execute();
             $stmt2->close();
         }
 
-        return $success;
+        if ($successUser && $successTeacher) {
+            // Envoyer email de bienvenue
+            $this->mailService->sendEmail(
+                $email, $prenom, $nom,
+                'Bienvenue sur Aurora 🎉',
+                "Bonjour $prenom $nom,<br><br>
+                Votre compte sur <b>Aurora</b> a été créé avec succès.<br>
+                Vous pouvez maintenant vous connecter et profiter de nos services.<br><br>
+                Merci de votre confiance.<br><br>
+                <i>L’équipe Aurora</i>"
+            );
+        }
+
+        return $successUser && $successTeacher;
+
     }
 
     // Mettre à jour un enseignant
-    public function updateTeacher($id_enseignant, $nom, $prenom, $email, $grade = null, $specialite = null) {
+    public function updateTeacher($id_enseignant, $nom, $prenom, $email, $grade = null, $specialite = null, $statut= null) {
         $conn = $this->db->connect();
 
         $stmt = $conn->prepare("
-            UPDATE utilisateur SET nom = ?, prenom = ?, email = ? WHERE id_utilisateur = ?
+            UPDATE utilisateur SET nom = ?, prenom = ?, email = ? , statut = ? WHERE id_utilisateur = ?
         ");
-        $stmt->bind_param("sssi", $nom, $prenom, $email, $id_enseignant);
+        $stmt->bind_param("ssssi", $nom, $prenom, $email, $statut, $id_enseignant);
         $success = $stmt->execute();
         $stmt->close();
 
@@ -109,16 +220,45 @@ class TeacherManager {
             $stmt2->close();
         }
 
+         // Si la mise à jour a réussi, envoyer un email de notification
+        if ($success) {
+            $this->mailService->sendEmail(
+                $email,
+                $prenom,
+                $nom,
+                'Mise à jour de votre profil Aurora ✏️',
+                "Bonjour $prenom $nom,<br><br>
+                Votre profil sur <b>Aurora</b> a été mis à jour avec succès.<br>
+                Vous pouvez vérifier vos informations sur la plateforme.<br><br>
+                Merci de votre confiance.<br><br>
+                <i>L’équipe Aurora</i>"
+            );
+        }
+
         return $success;
     }
 
     // Supprimer un enseignant
     public function deleteTeacher($id_enseignant) {
         $conn = $this->db->connect();
+        // Récupérer l'enseignant avant suppression
+        $teacher = $this->getTeacherById($id_enseignant);
         $stmt = $conn->prepare("DELETE FROM utilisateur WHERE id_utilisateur = ?");
         $stmt->bind_param("i", $id_enseignant);
         $success = $stmt->execute();
         $stmt->close();
+
+        if ($success) {
+            // Envoyer email de suppression
+            $this->mailService->sendEmail(
+                $teacher['email'], $teacher['prenom'], $teacher['nom'],
+                'Compte supprimé ❌',
+                "Bonjour {$teacher['prenom']} {$teacher['nom']},<br><br>
+                Votre compte sur <b>Aurora</b> a été définitivement supprimé.<br>
+                Nous vous remercions d’avoir utilisé notre plateforme.<br><br>
+                <i>L’équipe Aurora</i>"
+            );
+        }
 
         return $success;
     }

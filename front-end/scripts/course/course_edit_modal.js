@@ -79,7 +79,7 @@ export async function initEditCourseModal() {
         // Récupérer les valeurs directement depuis le formulaire
         const teacherValue = editForm.editTeacher.value;
         const filiereValue = editForm.editFiliere.value;
-
+        
         const data = {
             id_cours: editForm.editCourseId.value,
             code_cours: editForm.editCourseCode.value,
@@ -88,7 +88,7 @@ export async function initEditCourseModal() {
             id_filiere: filiereValue ? Number(filiereValue) : null,
             niveau: editForm.editNiveau.value
         };
-
+        console.log("data",data);
         const res = await updateCourse(data.id_cours, data);
   
         if (res.success) {
@@ -109,11 +109,11 @@ async function populateEditSelects() {
 
     const teachers = await getAllTeachers();
     const filieres = await getAllFilieres();
-
+    console.log("teachers",teachers);
     teacherSelect.innerHTML = '<option value="">Sélectionner un enseignant...</option>';
     teachers.forEach(t => {
         const opt = document.createElement("option");
-        opt.value = t.id_enseignant; 
+        opt.value = t.id_utilisateur; 
         opt.textContent = `${t.nom} ${t.prenom}`;
         teacherSelect.appendChild(opt);
     });

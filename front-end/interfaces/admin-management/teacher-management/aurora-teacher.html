@@ -65,9 +65,6 @@
                     </div>
                
                     <div class="header-actions">
-                        <button class="btn btn-secondary">
-                            <i class="fa-solid fa-file-export"></i> Exporter
-                        </button>
                         <button class="btn btn-primary btn-new-teacher">
                             <i class="fa-solid fa-user-plus"></i> Nouvel Enseignant
                         </button>
@@ -80,52 +77,43 @@
                         <div class="stat-header">
                             <div class="stat-icon purple"><i class="fa-solid fa-users"></i></div>
                             <div>
-                                <div class="stat-number">89</div>
+                                <div class="stat-number"></div>
                             </div>
                         </div>
                         <div class="stat-label">Total Enseignants</div>
-                        <div class="stat-detail">+3 ce mois</div>
+                        <div class="stat-detail"></div>
                     </div>
 
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon green"><i class="fa-solid fa-user-check"></i></div>
                             <div>
-                                <div class="stat-number">82</div>
+                                <div class="stat-number"></div>
                             </div>
                         </div>
                         <div class="stat-label">Enseignants Actifs</div>
-                        <div class="stat-detail">92% du total</div>
+                        <div class="stat-detail"></div>
                     </div>
 
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon blue"><i class="fa-solid fa-book-open"></i></div>
                             <div>
-                                <div class="stat-number">156</div>
+                                <div class="stat-number"></div>
                             </div>
                         </div>
-                        <div class="stat-label">Cours</div>
-                        <div class="stat-detail">Ce semestre</div>
+                        <div class="stat-label">Nouveaux</div>
+                        <div class="stat-detail">Cette semaine</div>
                     </div>
             </div>
 
             <!-- Filters Section -->
             <div class="filters-section">
                 <div class="filter-group">
-                    <select>
-                        <option>Tous les départements</option>
-                        <option>Ingénierie Spatiale & Aéronautique</option>
-                        <option>Sciences Cosmiques & Planétaires</option>
-                        <option>IA & Sciences des Données Spatiales</option>
-                        <option>Énergie Durable & Technologies Vertes</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <select>
+                    <select id="statutSelect">
                         <option>Tous les statuts</option>
-                        <option>Actif</option>
-                        <option>Inactif</option>
+                        <option value="activé">Actif</option>
+                        <option value="désactivé">Inactif</option>
                     </select>
                 </div>
                 <div class="search-box">
@@ -135,8 +123,10 @@
             
             <!-- Teachers Grid -->
             <div class="teachers-grid">
-              
             </div>
+
+            <!-- Pagination -->
+            <div id="teachers-pagination"></div>
         </main>
     </div>
 

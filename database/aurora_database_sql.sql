@@ -20,17 +20,6 @@ CREATE TABLE utilisateur (
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
--- Table etudiant
-
-CREATE TABLE etudiant (
-    id_etudiant INT PRIMARY KEY,
-    niveau VARCHAR(50) NOT NULL,
-    id_filiere INT,
-    FOREIGN KEY (id_etudiant) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE
-);
-
-
 -- Table enseignant
 
 CREATE TABLE enseignant (
@@ -39,6 +28,26 @@ CREATE TABLE enseignant (
     specialite VARCHAR(100),
     FOREIGN KEY (id_enseignant) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE
 );
+
+-- Table filiere 
+
+CREATE TABLE filiere (
+    id_filiere INT AUTO_INCREMENT PRIMARY KEY,
+    code_filiere VARCHAR(10) UNIQUE NOT NULL,  -- Ex: IADS, SPBE...
+    nom_complet VARCHAR(100) NOT NULL
+);
+
+
+-- Table etudiant
+
+CREATE TABLE etudiant (
+    id_etudiant INT PRIMARY KEY,
+    niveau ENUM('Niveau 1', 'Niveau 2', 'Niveau 3') DEFAULT 'Niveau 1',
+    id_filiere INT,
+    FOREIGN KEY (id_filiere) REFERENCES filiere(id_filiere) ON DELETE SET NULL,
+    FOREIGN KEY (id_etudiant) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE
+);
+
 
 -- Table cours
 
@@ -53,14 +62,6 @@ CREATE TABLE cours (
     FOREIGN KEY (id_filiere) REFERENCES filiere(id_filiere) ON DELETE SET NULL
 );
 
--- Table filiere 
-
-CREATE TABLE filiere (
-    id_filiere INT AUTO_INCREMENT PRIMARY KEY,
-    code_filiere VARCHAR(10) UNIQUE NOT NULL,  -- Ex: IADS, SPBE...
-    nom_complet VARCHAR(100) NOT NULL
-);
-
 
 -- ============================================
 -- Données de test
@@ -69,9 +70,9 @@ CREATE TABLE filiere (
 -- Filiéres de test
 
 INSERT INTO filiere (code_filiere, nom_complet) VALUES
-('IADS', 'IA & Sciences des Données Spatiales'),
-('SPBE', 'Sciences Cosmiques & Planétaires'),
 ('ESA', 'Ingénierie Spatiale & Aéronautique'),
+('SPBE', 'Sciences Cosmiques & Planétaires'),
+('IADS', 'IA & Sciences des Données Spatiales'),
 ('EDTV', 'Énergie Durable & Technologies Vertes');
 
 

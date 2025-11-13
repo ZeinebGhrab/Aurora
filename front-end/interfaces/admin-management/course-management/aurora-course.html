@@ -65,9 +65,6 @@
                     </div>
                
                     <div class="header-actions">
-                        <button class="btn btn-secondary">
-                            <i class="fa-solid fa-file-export"></i> Exporter
-                        </button>
                         <button class="btn btn-primary btn-new-course">
                             <i class="fa-solid fa-plus"></i> Nouveau Cours
                         </button>
@@ -96,29 +93,7 @@
                             </div>
                         </div>
                         <div class="stat-label">Cours Actifs</div>
-                        <div class="stat-detail">91% du total</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon orange"><i class="fa-solid fa-users"></i></div>
-                            <div>
-                                <div class="stat-number">3,245</div>
-                            </div>
-                        </div>
-                        <div class="stat-label">Total Inscriptions</div>
-                        <div class="stat-detail">Tous cours confondus</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon purple"><i class="fa-solid fa-clock"></i></div>
-                            <div>
-                                <div class="stat-number">1,280</div>
-                            </div>
-                        </div>
-                        <div class="stat-label">Heures Totales</div>
-                        <div class="stat-detail">Ce semestre</div>
+                        <div class="stat-detail">100% du total</div>
                     </div>
                 </div>
             </div>
@@ -126,12 +101,12 @@
             <!-- Filters Section -->
             <div class="filters-section">
                 <div class="filter-group">
-                    <select>
-                        <option>Tous les départements</option>
-                        <option>Ingénierie Spatiale & Aéronautique</option>
-                        <option>Sciences Cosmiques & Planétaires</option>
-                        <option>IA & Sciences des Données Spatiales</option>
-                        <option>Énergie Durable & Technologies Vertes</option>
+                    <select id="filiereSelect">
+                        <option value="">Toutes les filières</option>
+                        <option value="1">Ingénierie Spatiale & Aéronautique</option>
+                        <option value="2">Sciences Cosmiques & Planétaires</option>
+                        <option value="3">IA & Sciences des Données Spatiales</option>
+                        <option value="4">Énergie Durable & Technologies Vertes</option>
                     </select>
                 </div>
                 <div class="search-box">
@@ -140,8 +115,10 @@
             </div>
 
             <div class="courses-grid">
-                
             </div>
+
+            <!-- Pagination -->
+            <div id="courses-pagination"></div>
         </main>
     </div>
 
@@ -179,8 +156,8 @@
                     </div>
 
                     <div class="form-group full-width">
-                        <label for="teacher" class="form-label required">Enseignant (email)</label>
-                        <select id="teacher" name="mail_enseignant" class="form-select" required>
+                        <label for="teacher" class="form-label required">Enseignant</label>
+                        <select id="teacher" name="id_enseignant" class="form-select" required>
                             <option value="">Sélectionner un enseignant...</option>
                         </select>
                     </div>
@@ -194,7 +171,12 @@
 
                     <div class="form-group full-width">
                         <label for="niveau" class="form-label required">Niveau</label>
-                        <input type="text" id="niveau" name="niveau" class="form-input" placeholder="Ex: Semestre 1" required>
+                        <select id="niveau" name="niveau" class="form-select"  required>
+                            <option value="">Sélectionner un niveau...</option>
+                             <option value="niveau1">Niveau 1</option>
+                             <option value="niveau2">Niveau 2</option>
+                             <option value="niveau3">Niveau 3</option>
+                        </select>
                     </div>
                 </div>
             </form>

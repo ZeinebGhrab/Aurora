@@ -24,8 +24,8 @@ try {
 
     $nom_cours = $data['nom_cours'] ?? '';
     $code_cours = $data['code_cours'] ?? '';
-    $id_enseignant = $data['id_enseignant'] ?? null;
-    $id_filiere = $data['id_filiere'] ?? null;
+    $id_enseignant = isset($data['id_enseignant']) ? (int)$data['id_enseignant'] : null;
+    $id_filiere = isset($data['id_filiere']) ? (int)$data['id_filiere'] : null;
     $niveau = $data['niveau'] ?? '';
 
     if (empty($nom_cours) || empty($code_cours)) {

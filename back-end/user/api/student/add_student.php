@@ -26,11 +26,10 @@ try {
     $prenom = $data ['prenom'] ?? '';
     $email = $data ['email'] ?? '';
     $mot_de_passe = $data ['mot_de_passe'] ?? '';
-    $id_filiere = $data['id_filiere'] ?? null;
-    $niveau = $data['niveau'] ?? '';
+    $id_filiere = isset($data['id_filiere']) ? (int)$data['id_filiere'] : null;
 
     if ($nom && $prenom && $email && $mot_de_passe) { 
-        $success = $tm->addStudent($nom, $prenom, $email, $mot_de_passe, $id_filiere, $niveau);
+        $success = $tm->addStudent($nom, $prenom, $email, $mot_de_passe, $id_filiere);
         echo json_encode([
             'success' => true,
             'message' => 'Etudiant ajouté avec succès',

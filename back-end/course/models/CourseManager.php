@@ -1,18 +1,35 @@
 <?php
 require_once __DIR__ . '/../../config/Database.php';
 require_once 'Course.php';
+require_once __DIR__ . '/../../MailService/MailService.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once __DIR__ . '/../../phpmailer/src/Exception.php';
+require_once __DIR__ . '/../../phpmailer/src/PHPMailer.php';
+require_once __DIR__ . '/../../phpmailer/src/SMTP.php';
+
+
+require_once __DIR__ . '/../../../vendor/autoload.php'; // Composer autoload
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../..');
+$dotenv->load();
+
 
 class CourseManager {
     private $db;
 
     public function __construct($database) {
         $this->db = $database;
+        $this->mailService = new MailService();
     }
 
-    // Ajouter un nouveau cours
+    // Ajouter un nouveau cours et notifier
     public function addCourse($nom_cours, $code_cours, $id_enseignant, $id_filiere, $niveau) {
         $conn = $this->db->connect();
 
+        // Ajouter le cours
         $stmt = $conn->prepare("
         INSERT INTO cours (nom_cours, code_cours, id_enseignant, id_filiere, niveau)
         VALUES (?, ?, ?, ?, ?)
@@ -22,6 +39,57 @@ class CourseManager {
 
         $success = $stmt->execute();
         $stmt->close();
+
+        if ($success) {
+            // Récupérer l'email de l'enseignant
+            $stmt = $conn->prepare("
+                SELECT u.email, u.nom, u.prenom
+                FROM enseignant e
+                JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
+                WHERE e.id_enseignant = ?
+            ");
+            $stmt->bind_param("i", $id_enseignant);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $enseignant = $result->fetch_assoc();
+            $stmt->close();
+
+            // Envoyer email à l'enseignant
+            if ($enseignant) {
+                $this->mailService->sendEmail(
+                    $enseignant['email'],
+                    $enseignant['prenom'],
+                    $enseignant['nom'],
+                    "Nouveau cours assigné 🎓",
+                    "Bonjour {$enseignant['prenom']} {$enseignant['nom']},<br><br>
+                     Vous avez été assigné comme enseignant du cours <b>$nom_cours</b> ($code_cours) pour le niveau $niveau, filière $id_filiere.<br><br>
+                     Merci."
+                );
+            }
+            // Récupérer les étudiants du niveau et de la filière
+            $stmt = $conn->prepare("
+                SELECT u.email, u.nom, u.prenom
+                FROM etudiant e
+                JOIN utilisateur u ON e.id_etudiant = u.id_utilisateur
+                WHERE e.niveau = ? AND e.id_filiere = ?
+            ");
+            $stmt->bind_param("si", $niveau, $id_filiere);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            while ($etudiant = $result->fetch_assoc()) {
+                $this->mailService->sendEmail(
+                    $etudiant['email'],
+                    $etudiant['prenom'],
+                    $etudiant['nom'],
+                    "Nouveau cours disponible 📚",
+                    "Bonjour {$etudiant['prenom']} {$etudiant['nom']},<br><br>
+                     Un nouveau cours <b>$nom_cours</b> ($code_cours) a été ajouté pour votre niveau $niveau et votre filière.<br><br>
+                     Connectez-vous pour consulter le cours."
+                );
+            }
+            $stmt->close();
+        }
 
         return $success;
     }
@@ -41,52 +109,118 @@ class CourseManager {
         return $courses;
     }
 
-    // Récupérer tous les cours
-    public function getAllCourses() {
-        $conn = $this->db->connect();
-        $stmt = $conn->prepare("
-            SELECT 
-                c.id_cours, c.nom_cours, c.code_cours, c.id_enseignant, c.id_filiere, c.niveau,
-                CONCAT(COALESCE(u.nom,''), ' ', COALESCE(u.prenom,'')) AS nom_enseignant,
-                f.nom_complet AS nom_filiere
-            FROM cours c
-            LEFT JOIN enseignant e ON c.id_enseignant = e.id_enseignant
-            LEFT JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
-            LEFT JOIN filiere f ON c.id_filiere = f.id_filiere
-        ");
-        $stmt->execute();
+// Récupérer tous les cours avec filtres et pagination
+public function getAllCourses($filters = []) {
+    $conn = $this->db->connect();
 
-        $result = $stmt->get_result();
-        $courses = [];
+    $page = isset($filters['page']) ? (int)$filters['page'] : 1;
+    $limit = isset($filters['limit']) ? (int)$filters['limit'] : 1000; // grande valeur par défaut
+    $offset = ($page - 1) * $limit;
 
-        while ($row = $result->fetch_assoc()) {
-            $course = new Course(
-                $row['nom_cours'],
-                $row['code_cours'],
-                $row['id_enseignant'] ?? null,
-                $row['id_filiere'] ?? null,
-                $row['niveau'] ?? '',
-                $row['id_cours'] ?? null
-            );
+    $query = "
+        SELECT 
+            c.id_cours, c.nom_cours, c.code_cours, c.id_enseignant, c.id_filiere, c.niveau,
+            u.nom AS nom_enseignant,
+            u.prenom AS prenom_enseignant,
+            u.email AS email_enseignant,
+            f.nom_complet AS nom_filiere
+        FROM cours c
+        LEFT JOIN enseignant e ON c.id_enseignant = e.id_enseignant
+        LEFT JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
+        LEFT JOIN filiere f ON c.id_filiere = f.id_filiere
+        WHERE 1=1
+    ";
 
+    $params = [];
+    $types = '';
 
-            $courses[] = [
-                'course' => [
-                    'id_cours' => $course->getId(),
-                    'nom_cours' => $course->getNom(),
-                    'code_cours' => $course->getCode(),
-                    'id_enseignant' => $course->getIdEnseignant(),
-                    'id_filiere' => $course->getIdFiliere(),
-                    'niveau' => $course->getNiveau()
-                ],
-                'enseignant' => !empty(trim($row['nom_enseignant'])) ? $row['nom_enseignant'] : 'Non assigné',
-                'filiere' => !empty($row['nom_filiere']) ? $row['nom_filiere'] : 'N/A'
-            ];
-        }
-
-        $stmt->close();
-        return $courses;
+    // Filtre par recherche uniquement sur le nom du cours
+    if (!empty($filters['search'])) {
+        $query .= " AND c.nom_cours LIKE ?";
+        $searchTerm = "%" . $filters['search'] . "%";
+        $params[] = $searchTerm;
+        $types .= 's';
     }
+
+    // Filtre par filière
+    if (!empty($filters['filiere'])) {
+        $query .= " AND c.id_filiere = ?";
+        $params[] = $filters['filiere'];
+        $types .= 'i';
+    }
+
+    // Pagination
+    $query .= " LIMIT ?, ?";
+    $params[] = $offset;
+    $params[] = $limit;
+    $types .= 'ii';
+
+    $stmt = $conn->prepare($query);
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $courses = [];
+    while ($row = $result->fetch_assoc()) {
+        $courses[] = [
+            'id_cours' => $row['id_cours'],
+            'nom_cours' => $row['nom_cours'],
+            'code_cours' => $row['code_cours'],
+            'id_enseignant' => $row['id_enseignant'],
+            'email_enseignant' => $row['email_enseignant'],
+            'id_filiere' => $row['id_filiere'],
+            'niveau' => $row['niveau'],
+            'enseignant' => $row['nom_enseignant'] ? $row['nom_enseignant'] . " " . $row['prenom_enseignant'] : 'Non assigné',
+            'filiere' => $row['nom_filiere'] ?? 'N/A'
+        ];
+    }
+
+    $stmt->close();
+
+    // Total pour pagination (même filtre search et filière)
+    $countQuery = "SELECT COUNT(*) AS total FROM cours c
+                   LEFT JOIN enseignant e ON c.id_enseignant = e.id_enseignant
+                   LEFT JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
+                   LEFT JOIN filiere f ON c.id_filiere = f.id_filiere
+                   WHERE 1=1";
+
+    $countParams = [];
+    $countTypes = '';
+
+    if (!empty($filters['search'])) {
+        $countQuery .= " AND c.nom_cours LIKE ?";
+        $countParams[] = $searchTerm;
+        $countTypes .= 's';
+    }
+
+    if (!empty($filters['filiere'])) {
+        $countQuery .= " AND c.id_filiere = ?";
+        $countParams[] = $filters['filiere'];
+        $countTypes .= 'i';
+    }
+
+    $countStmt = $conn->prepare($countQuery);
+    if (!empty($countParams)) {
+        $countStmt->bind_param($countTypes, ...$countParams);
+    }
+    $countStmt->execute();
+    $countResult = $countStmt->get_result();
+    $total = $countResult->fetch_assoc()['total'] ?? 0;
+    $countStmt->close();
+
+    return [
+        'courses' => $courses,
+        'pagination' => [
+            'total' => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'totalPages' => ceil($total / $limit)
+        ]
+    ];
+}
+
 
     // Récupérer un cours par ID
     public function getCourseById($id_cours) {
@@ -95,11 +229,12 @@ class CourseManager {
         $sql = "SELECT 
                 c.*, 
                 u.email AS mail_enseignant, 
+                u.id_utilisateur AS id_enseignant ,
                 u.nom AS nom_enseignant, 
-                u.prenom AS prenom_enseignant
+                u.prenom AS prenom_enseignant,
+                u.email AS mail_enseignant
             FROM cours c
-            LEFT JOIN enseignant e ON c.id_enseignant = e.id_enseignant
-            LEFT JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
+            LEFT JOIN utilisateur u ON c.id_enseignant = u.id_utilisateur
             WHERE c.id_cours = ?";
 
         $stmt = $conn->prepare($sql);

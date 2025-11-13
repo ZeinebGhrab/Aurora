@@ -1,8 +1,12 @@
 const API_BASE = "/Aurora/back-end";
 
-export async function getAllCourses() {
+export async function getAllCourses(page = 1, limit = 12, filters = {}) {
     try {
-        const res = await fetch(`${API_BASE}/course/api/get_all_courses.php`);
+        const res = await fetch(`${API_BASE}/course/api/get_all_courses.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ page, limit, ...filters })
+        });
         
         if (!res.ok) {
             throw new Error(`HTTP error! status: ${res.status}`);
@@ -11,22 +15,26 @@ export async function getAllCourses() {
         const data = await res.json();
         console.log('Données brutes de l\'API:', data);
         
-        if (data.courses && Array.isArray(data.courses)) {
-            console.log('Données extraites:', data.courses);
-            return data.courses;
+        if (data.success) {
+            return {
+                courses: data.courses|| [],
+                pagination: data.pagination || {}
+            };
         }
+
+        return { courses: [], pagination: {} };
         
     } catch (error) {
         console.error('Erreur getAllCourses:', error);
-        return [];
+        return { courses: [], pagination: {} };
     }
 }
+
 
 export async function getAllTeachers() {
     try {
         const res = await fetch(`${API_BASE}/user/api/teacher/get_all_teachers.php`);
         const data = await res.json();
-        console.log('Teachers:', data);
         
         if (data.teachers && Array.isArray(data.teachers)) return data.teachers;
         if (Array.isArray(data)) return data;
@@ -56,6 +64,7 @@ export async function getAllFilieres() {
 
 export async function addCourse(courseData) {
     try {
+        console.log(courseData);
         const res = await fetch(`${API_BASE}/course/api/add_course.php`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -81,7 +90,7 @@ export async function getCourseById(id_cours) {
             body: JSON.stringify({ id_cours })
         });
         const data = await res.json();
-        console.log(data);
+        console.log("getCourseById",data);
         if (data.success && data.course) return data.course;
         return null;
     } catch (error) {

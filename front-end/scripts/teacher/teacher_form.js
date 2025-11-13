@@ -15,7 +15,6 @@ export function handleFormSubmit(formId, modal) {
             mot_de_passe: form.querySelector("[name='mot_de_passe']")?.value || "",
             grade: form.querySelector("[name='grade']").value || "",
             specialite: form.querySelector("[name='specialite']").value || "",
-            id_filiere: form.querySelector("[name='id_filiere']")?.value ? parseInt(form.querySelector("[name='id_filiere']").value) : null,
             statut: form.querySelector("[name='statut']").value || "activé"
         };
 
@@ -59,7 +58,7 @@ export async function fillEditForm(teacherId) {
     form.querySelector("#editTeacherStatut").value = teacher.statut || "activé";
 }
 
-// ✅ AJOUT : Fonction pour afficher les détails dans le modal de visualisation
+// Fonction pour afficher les détails dans le modal de visualisation
 export async function fillViewModal(teacherId) {
     const teacher = await getTeacherById(teacherId);
     if (!teacher) {
@@ -74,7 +73,5 @@ export async function fillViewModal(teacherId) {
     document.getElementById("viewTeacherGrade").textContent = teacher.grade || "N/A";
     document.getElementById("viewTeacherSpecialite").textContent = teacher.specialite || "N/A";
     document.getElementById("viewTeacherStatut").textContent = teacher.statut || "N/A";
-    document.getElementById("viewTeacherDate").textContent = teacher.date_creation 
-        ? new Date(teacher.date_creation).toLocaleDateString('fr-FR')
-        : "N/A";
+    document.getElementById("viewTeacherDate").textContent = teacher.date_creation;
 }

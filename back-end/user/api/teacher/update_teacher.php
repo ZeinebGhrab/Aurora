@@ -28,9 +28,10 @@ try {
     $email = $data['email'] ?? '';
     $grade = $data['grade'] ?? null;
     $specialite = $data['specialite'] ?? null;
+    $statut = $data['statut'] ?? '';
 
     if ($id && $nom && $prenom && $email) {
-        $success = $tm->updateTeacher($id, $nom, $prenom, $email, $grade, $specialite);
+        $success = $tm->updateTeacher($id, $nom, $prenom, $email, $grade, $specialite, $statut);
         echo json_encode(['success' => $success]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Paramètres requis manquants']);

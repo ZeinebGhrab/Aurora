@@ -65,9 +65,6 @@
                     </div>
                
                     <div class="header-actions">
-                        <button class="btn btn-secondary">
-                            <i class="fa-solid fa-file-export"></i> Exporter
-                        </button>
                         <button class="btn btn-primary btn-new-student">
                             <i class="fa-solid fa-user-plus"></i> Nouvel Étudiant
                         </button>
@@ -80,29 +77,29 @@
                         <div class="stat-header">
                             <div class="stat-icon purple"><i class="fa-solid fa-users"></i></div>
                             <div>
-                                <div class="stat-number">1,245</div>
+                                <div class="stat-number"></div>
                             </div>
                         </div>
                         <div class="stat-label">Total Étudiants</div>
-                        <div class="stat-detail">+15 ce mois</div>
+                        <div class="stat-detail"></div>
                     </div>
 
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon green"><i class="fa-solid fa-user-check"></i></div>
                             <div>
-                                <div class="stat-number">1,198</div>
+                                <div class="stat-number"></div>
                             </div>
                         </div>
                         <div class="stat-label">Étudiants Actifs</div>
-                        <div class="stat-detail">96% du total</div>
+                        <div class="stat-detail"></div>
                     </div>
 
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon blue"><i class="fa-solid fa-user-plus"></i></div>
                             <div>
-                                <div class="stat-number">47</div>
+                                <div class="stat-number"></div>
                             </div>
                         </div>
                         <div class="stat-label">Nouveaux</div>
@@ -114,16 +111,16 @@
             <!-- Filters -->
             <div class="filters-section">
                 <div class="filter-group">
-                    <select>
-                        <option>Toutes les filières</option>
-                        <option>Ingénierie Spatiale & Aéronautique</option>
-                        <option>Sciences Cosmiques & Planétaires</option>
-                        <option>IA & Sciences des Données Spatiales</option>
-                        <option>Énergie Durable & Technologies Vertes</option>
+                    <select id="filiereSelect">
+                        <option value="">Toutes les filières</option>
+                        <option value="1">Ingénierie Spatiale & Aéronautique</option>
+                        <option value="2">Sciences Cosmiques & Planétaires</option>
+                        <option value="3">IA & Sciences des Données Spatiales</option>
+                        <option value="4">Énergie Durable & Technologies Vertes</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <select>
+                    <select id="niveauSelect">
                         <option>Tous les niveaux</option>
                         <option>Niveau 1</option>
                         <option>Niveau 2</option>
@@ -139,6 +136,9 @@
             <div class="students-grid">
                 <!-- Les étudiants seront rendus ici dynamiquement -->
             </div>
+
+            <!-- Pagination -->
+            <div id="students-pagination"></div>
         </main>
     </div>
 
@@ -204,8 +204,8 @@
                         <div class="form-group full-width">
                             <label for="studentStatut" class="form-label required">Statut</label>
                             <select id="studentStatut" name="statut" class="form-select" required>
-                                <option value="actif">Actif</option>
-                                <option value="inactif">Inactif</option>
+                                <option value="activé">Activé</option>
+                                <option value="désactivé">Désactivé</option>
                             </select>
                         </div>
                     </div>
@@ -248,11 +248,6 @@
                         </div>
 
                         <div class="form-group full-width">
-                            <label for="editStudentPassword" class="form-label">Mot de passe</label>
-                            <input type="text" id="editStudentPassword" name="mot_de_passe" class="form-input">
-                        </div>
-
-                        <div class="form-group full-width">
                             <label for="editStudentFiliere" class="form-label">Filière</label>
                             <select id="editStudentFiliere" name="id_filiere" class="form-select">
                                 <option value="">Sélectionner une filière...</option>
@@ -262,18 +257,14 @@
                         <div class="form-group full-width">
                             <label for="editStudentNiveau" class="form-label">Niveau</label>
                                <select id="editStudentNiveau" name="niveau"  class="form-select" required>
-                                <option value="">Sélectionner un niveau...</option>
-                                <option value="niveau1">Niveau 1</option>
-                                <option value="niveau2">Niveau 2</option>
-                                <option value="niveau3">Niveau 3</option>
                             </select>
                         </div>
 
                         <div class="form-group full-width">
                             <label for="editStudentStatut" class="form-label required">Statut</label>
                             <select id="editStudentStatut" name="statut" class="form-select" required>
-                                <option value="actif">Actif</option>
-                                <option value="inactif">Inactif</option>
+                                <option value="activé">Activé</option>
+                                <option value="désactivé">Désactivé</option>
                             </select>
                         </div>
                     </div>

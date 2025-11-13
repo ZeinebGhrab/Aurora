@@ -1,7 +1,7 @@
 import { addStudent, updateStudent, getStudentById } from "./student_api.js";
 import { showNotification } from "../utils.js";
 
-// 🔹 Gérer la soumission du formulaire (ajout ou modification)
+// Gérer la soumission du formulaire (ajout ou modification)
 export function handleFormSubmit(formId, modal) {
     const form = document.getElementById(formId);
     if (!form) return;
@@ -13,14 +13,11 @@ export function handleFormSubmit(formId, modal) {
             prenom: form.querySelector("[name='prenom']").value,
             nom: form.querySelector("[name='nom']").value,
             email: form.querySelector("[name='email']").value,
-            mot_de_passe: form.querySelector("[name='mot_de_passe']")
-                ? form.querySelector("[name='mot_de_passe']").value
-                : "",
             id_filiere: form.querySelector("[name='id_filiere']").value
                 ? parseInt(form.querySelector("[name='id_filiere']").value)
                 : null,
             niveau: form.querySelector("[name='niveau']").value || "",
-            statut: form.querySelector("[name='statut']").value || "actif",
+            statut: form.querySelector("[name='statut']").value == "activé" ? "activé" : "désactivé",
         };
 
         const editingId = form.dataset.editingId;
@@ -42,7 +39,7 @@ export function handleFormSubmit(formId, modal) {
     });
 }
 
-// 🔹 Préremplir le formulaire d’édition
+// Préremplir le formulaire d’édition
 export async function fillEditForm(id) {
     const student = await getStudentById(id);
     if (!student) return;
@@ -50,21 +47,20 @@ export async function fillEditForm(id) {
     const form = document.getElementById("editStudentForm");
     form.dataset.editingId = id;
 
-    form.querySelector("[name='prenom']").value = student.prenom || "";
-    form.querySelector("[name='nom']").value = student.nom || "";
-    form.querySelector("[name='email']").value = student.email || "";
-    form.querySelector("[name='mot_de_passe']").value = student.mot_de_passe || "";
-    form.querySelector("[name='niveau']").value = student.niveau || "";
-    form.querySelector("[name='statut']").value = student.statut || "actif";
+    form.querySelector("#editStudentFirstName").value = student.prenom || "";
+    form.querySelector("#editStudentLastName").value = student.nom || "";
+    form.querySelector("#editStudentEmail").value = student.email || "";
+    form.querySelector("#editStudentNiveau").value = student.niveau || "";
+    form.querySelector("#editStudentStatut").value = student.statut || "actif";
 
     // Remplir filière si disponible
-    const filiereSelect = form.querySelector("[name='id_filiere']");
+    const filiereSelect = form.querySelector("editStudentFiliere");
     if (filiereSelect && student.id_filiere) {
         filiereSelect.value = student.id_filiere;
     }
 }
 
-// 🔹 Afficher les infos dans le modal de visualisation
+// Afficher les infos dans le modal de visualisation
 export async function fillViewModal(id) {
     const student = await getStudentById(id);
     if (!student) return;
