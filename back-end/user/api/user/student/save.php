@@ -8,7 +8,7 @@ if (!$link) {
 }
 
 // Champs obligatoires
-$required = ['nom', 'prenom', 'email', 'mot_passe', 'confirme_mot_passe', 'filiere'];
+$required = ['nom', 'prenom', 'email', 'mot_de_passe', 'confirme_mot_passe', 'id_filiere'];
 foreach ($required as $field) {
     if (!isset($_POST[$field]) || trim($_POST[$field]) === '') {
         echo json_encode(['success' => false, 'message' => 'Tous les champs sont obligatoires.']);
@@ -25,9 +25,9 @@ if (!isset($_FILES['photo_profil']) || $_FILES['photo_profil']['error'] !== UPLO
 $nom = trim($_POST['nom']);
 $prenom = trim($_POST['prenom']);
 $email = trim($_POST['email']);
-$mot_de_passe = $_POST['mot_passe'];
+$mot_de_passe = $_POST['mot_de_passe'];
 $confirme_mot_passe = $_POST['confirme_mot_passe'];
-$filiere = $_POST['filiere'];
+$filiere = $_POST['id_filiere'];
 
 // Vérifications
 if ($mot_de_passe !== $confirme_mot_passe) {

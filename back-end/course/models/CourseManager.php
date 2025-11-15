@@ -38,6 +38,7 @@ class CourseManager {
         $stmt->bind_param("ssiss", $nom_cours, $code_cours, $id_enseignant, $id_filiere, $niveau);
 
         $success = $stmt->execute();
+        
         $stmt->close();
 
         if ($success) {

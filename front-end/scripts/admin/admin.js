@@ -60,7 +60,7 @@ function updateStatCard(cardIndex, value) {
 function displayError() {
     const statsCards = document.querySelectorAll('.stat-number');
     statsCards.forEach(card => {
-        if (card.textContent.includes(',')) return; // Ne pas modifier si déjà mis à jour
+        if (card.textContent.includes(',')) return; 
         card.textContent = '--';
         card.style.color = '#999';
     });

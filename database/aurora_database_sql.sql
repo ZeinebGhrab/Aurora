@@ -62,6 +62,30 @@ CREATE TABLE cours (
     FOREIGN KEY (id_filiere) REFERENCES filiere(id_filiere) ON DELETE SET NULL
 );
 
+-- Table séance 
+
+CREATE TABLE seance (
+    id_seance INT AUTO_INCREMENT PRIMARY KEY,
+    id_cours INT NOT NULL,
+    date_heure DATETIME NOT NULL,
+    duree INT DEFAULT 60,
+    FOREIGN KEY (id_cours) REFERENCES cours(id_cours) ON DELETE CASCADE
+);
+
+
+-- Table présence
+
+CREATE TABLE presence (
+    id_presence INT AUTO_INCREMENT PRIMARY KEY,
+    id_etudiant INT NOT NULL,
+    id_seance INT NOT NULL,
+    statut ENUM('présent', 'absent', 'retard', 'justifié') NOT NULL DEFAULT 'absent',
+    heure_arrivee TIME DEFAULT NULL,
+    justification TEXT DEFAULT NULL,
+    FOREIGN KEY (id_etudiant) REFERENCES etudiant(id_etudiant) ON DELETE CASCADE,
+    FOREIGN KEY (id_seance) REFERENCES seance(id_seance) ON DELETE CASCADE
+);
+
 
 -- ============================================
 -- Données de test

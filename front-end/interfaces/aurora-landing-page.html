@@ -7,19 +7,30 @@
     <link rel="stylesheet" href="../styles/style.css">
     <link rel="stylesheet" href="../styles/shared.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="../scripts/script.js"></script>
 </head>
 <body>
     <!-- Navigation -->
-    <nav>
-        <div class="logo">Auro<span>r</span>a</div>
-        <ul class="nav-links">
-            <li><a href="#fonctionnalites">Fonctionnalités</a></li>
-            <li><a href="#apropos">À propos</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <a href="./authentification/aurora-login-page.html" class="btn-connexion">Connexion</a>
-    </nav>
+<nav>
+  <div class="logo_picture">
+    <a href="index.html">
+      <img src="../pictures/logoo.png" alt="Logo Aurora" class="logo-img">
+    </a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+    <li><a href="#apropos">À propos</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="authentification/aurora-login-page.html" class="btn-connexion">Connexion</a>
+</nav>
 
+    <section class="intro-video">
+        <video autoplay muted loop playsinline class="background-video">
+            <source src="../videos/video.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la vidéo HTML5.
+        </video>
+    </section>
     <!-- Hero Section -->
     <section class="hero">
         <!-- Decorative Triangles -->
@@ -44,20 +55,194 @@
             L’aurore qui perce l’obscurité de l’ignorance,<br>
             <span class="highlight"> guidant vers la lumière</span> de la connaissance.
         </p>
+    </section>
+<!-- Section À propos -->
+<section id="apropos" class="mission-section">
+    <div class="mission-content">
+        <div class="about-text">
+            <h2><i class="fa-solid fa-lightbulb"></i> À Propos d'Aurora</h2>
+            <p class="about-description">
+                Aurora transforme l'apprentissage en une aventure spatiale inoubliable. Chaque utilisateur devient un <strong>Aurora Explorer</strong>, naviguant dans un univers virtuel où la science, la technologie, l'ingénierie et les mathématiques (STEM) prennent vie.
+            </p>
+            <p class="about-description">
+                Le nom <strong>Aurora</strong> incarne l'éveil de la curiosité, comme une aurore boréale perçant l'obscurité, et l'audace de l'innovation, à l'image des lancements de fusées éclairant le ciel.
+            </p>
+        </div>
+    </div>
+    <div class="mission-image">
+        <video autoplay muted loop playsinline>
+            <source src="../videos/propos.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la vidéo HTML5.
+        </video>
+    </div>
+</section>
 
-        <div class="cta-buttons">
-            <a href="./authentification/aurora-sign-page.html" class="btn-primary">Commencer maintenant <i class="fa-regular fa-circle-right"></i></a>
-            <a href="#decouvrir" class="btn-secondary">Découvrir la plateforme</a>
+    
+<section class="mission-section">
+  <div class="mission-content">
+    <h2><i class="fa-solid fa-rocket"></i> Notre mission</h2>
+    <p>
+      Inspirer une nouvelle génération d'explorateurs à repousser les frontières de  
+      la connaissance, tout en contribuant à un avenir durable pour notre planète.  
+      <br><br>
+      Rejoignez <strong>Aurora</strong> pour illuminer votre esprit et explorer l'univers !
+    </p>
+  </div>
+
+  <div class="mission-image">
+    <div class="mission-carousel">
+      <img src="../pictures/propos.webp" alt="Exploration spatiale Aurora" class="carousel-image active">
+      <img src="../pictures/mission1.jfif" alt="Innovation Aurora" class="carousel-image">
+      <img src="../pictures/mission2.jfif" alt="Apprentissage Aurora" class="carousel-image">
+      <img src="../pictures/mission3.jfif" alt="Technologie Aurora" class="carousel-image">
+    </div>
+  </div>
+</section>
+
+<!-- Section Nos Valeurs -->
+<section class="valeurs-section">
+    <h2 class="section-title">Nos Valeurs</h2>
+    <p class="section-subtitle-valeur">Engagement, créativité et excellence</p>
+    
+    <div class="valeurs-container">
+        <!-- Images à gauche -->
+        <div class="valeurs-left">
+            <img src="../pictures/innovation.jfif" alt="Innovation" class="valeur-image active" data-index="0">
+            <img src="../pictures/Apprentissage.jpg" alt="Apprentissage" class="valeur-image" data-index="1">
+            <img src="../pictures/inclusion.jpg" alt="Diversité" class="valeur-image" data-index="2">
+            <img src="../pictures/Résilience.jfif" alt="Amélioration" class="valeur-image" data-index="3">
+            <img src="../pictures/Respect.jfif" alt="Équipe" class="valeur-image" data-index="4">
+            <img src="../pictures/Responsabilité.jfif" alt="Responsabilité" class="valeur-image" data-index="5">
+        </div>
+
+        <!-- Contenu à droite -->
+        <div class="valeurs-right">
+            <div class="valeur-item active" data-index="0">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar0"></div>
+                </div>
+                <div class="valeur-header">
+                    <div class="icon"><i class="fa-solid fa-lightbulb"></i></div>
+                    <h3>Intégrité et Innovation</h3>
+                </div>
+                <div class="valeur-content">
+                    <p>Nous valorisons la transparence, la créativité et l'innovation dans toutes nos actions éducatives et technologiques.</p>
+                </div>
+            </div>
+
+            <div class="valeur-item" data-index="1">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar1"></div>
+                </div>
+                <div class="valeur-header">
+                    <div class="icon"><i class="fa-solid fa-book-open-reader"></i></div>
+                    <h3>Curiosité et Apprentissage Pratique</h3>
+                </div>
+                <div class="valeur-content">
+                    <p>Notre recherche allie innovation et curiosité intellectuelle, avec un apprentissage expérientiel préparant les étudiants à résoudre des problèmes concrets.</p>
+                </div>
+            </div>
+
+            <div class="valeur-item" data-index="2">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar2"></div>
+                </div>
+                <div class="valeur-header">
+                    <div class="icon"><i class="fa-solid fa-people-group"></i></div>
+                    <h3>Ouverture, Diversité et Inclusion</h3>
+                </div>
+                <div class="valeur-content">
+                    <p>Notre cadre académique promeut la diversité cognitive et le partage du savoir. Il offre à chacun une place, indépendamment de son origine, genre ou parcours.</p>
+                </div>
+            </div>
+
+            <div class="valeur-item" data-index="3">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar3"></div>
+                </div>
+                <div class="valeur-header">
+                    <div class="icon"><i class="fa-solid fa-sync-alt"></i></div>
+                    <h3>Résilience et Amélioration Continue</h3>
+                </div>
+                <div class="valeur-content">
+                    <p>Nous adaptons nos programmes aux évolutions du secteur pour assurer une progression constante et une excellence durable.</p>
+                </div>
+            </div>
+
+            <div class="valeur-item" data-index="4">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar4"></div>
+                </div>
+                <div class="valeur-header">
+                    <div class="icon"><i class="fa-solid fa-handshake"></i></div>
+                    <h3>Respect et Esprit d'Équipe</h3>
+                </div>
+                <div class="valeur-content">
+                    <p>Nous croyons en la force du collectif et à la collaboration bienveillante pour accomplir de grandes choses.</p>
+                </div>
+            </div>
+
+            <div class="valeur-item" data-index="5">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar5"></div>
+                </div>
+                <div class="valeur-header">
+                    <div class="icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                    <h3>Responsabilité Sociale et Conduite Professionnelle</h3>
+                </div>
+                <div class="valeur-content">
+                    <p>Nous formons des professionnels responsables, conscients de leur impact et engagés dans une approche éthique et durable.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    <!-- Section Contact -->
+    <section id="contact" class="contact-section">
+        <div class="section-header">
+            <h2><i class="fa-solid fa-envelope"></i> Rejoignez l'Aventure</h2>
+            <p class="section-subtitle">Prêt à illuminer votre esprit et explorer l'univers ?</p>
+        </div>
+        <div class="contact-cta">
+            <a href="authentification/aurora-sign-page.html" class="btn-primary btn-large">
+                <i class="fa-solid fa-rocket"></i>
+                Devenir un Aurora Explorer
+            </a>
+            <p class="contact-text">ou contactez-nous à <a href="mailto:contact@aurora-edu.com">contact@aurora-edu.com</a></p>
         </div>
     </section>
-
     <!-- Footer -->
     <footer>
-        <p>© 2025 Aurora. Tous droits réservés.</p>
-        <div class="footer-links">
-            <a href="#confidentialite">Politique de confidentialité</a>
-            <a href="#conditions">Conditions d'utilisation</a>
-            <a href="#support">Support</a>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo-container">
+                    <img src="../pictures/logoo.png" alt="Logo Aurora" class="logo-img">
+                </div>
+                <p class="footer-tagline">Illumine ton esprit, explore l'univers.</p>
+            </div>
+            <div class="footer-links-grid">
+                <div class="footer-column">
+                    <h4>Plateforme</h4>
+                    <a href="#fonctionnalites">Fonctionnalités</a>
+                    <a href="#apropos">À propos</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Missions</h4>
+                    <a href="#">Ingénierie Aérospatiale</a>
+                    <a href="#">Sciences Planétaires</a>
+                    <a href="#">Programmation & IA</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Légal</h4>
+                    <a href="#confidentialite">Confidentialité</a>
+                    <a href="#conditions">Conditions</a>
+                    <a href="#support">Support</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Aurora. Tous droits réservés.</p>
         </div>
     </footer>
 </body>

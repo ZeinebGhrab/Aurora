@@ -25,7 +25,8 @@ export function handleFormSubmit(formId, modal) {
         if (editingId) {
             res = await updateStudent(editingId, formData);
         } else {
-            res = await addStudent(formData);
+            mot_de_passe: form.querySelector("[name='mot_de_passe']").value,
+            res = await addStudent({mot_de_passe, ...formData});
         }
 
         if (res.success) {
