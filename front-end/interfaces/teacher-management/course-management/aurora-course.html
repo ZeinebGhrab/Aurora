@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="../../../styles/style-dashboard.css">
     <link rel="stylesheet" href="../../../styles/style-course.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="module" src="../../../scripts/course/teacher/course_teacher.js"></script>
+    <script type="module" src="../../../scripts/authentification/logout.js"></script>
 </head>
 <body>
     <div class="dashboard">
@@ -18,7 +20,7 @@
                     <div class="logo">Auro<span>r</span>a</div>
                 </li>
                 <li class="nav-item">
-                    <a href="../dashboard.html" class="nav-link active">
+                    <a href="../aurora-teacher-dashoard.html" class="nav-link">
                         <svg class="nav-icon" viewBox="0 0 24 24">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
@@ -26,11 +28,19 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="../course-management/aurora-course.html" class="nav-link">
+                    <a href="../course-management/aurora-course.html" class="nav-link active">
                         <svg class="nav-icon" viewBox="0 0 24 24">
                             <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
                         </svg>
                         Mes cours
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../session-management/aurora-session.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                        Mes Séances
                     </a>
                 </li>
                 <li class="nav-item">
@@ -41,20 +51,13 @@
                         Présence & Absence
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="../examen-management/aurora-exam.html" class="nav-link">
+                <!-- Bouton de déconnexion -->
+                <li>
+                    <a href="#" id="logoutBtn" class="nav-link logout-btn">
                         <svg class="nav-icon" viewBox="0 0 24 24">
-                            <path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/>
+                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
                         </svg>
-                        Examens
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="../timetable-management/aurora-timetable.html" class="nav-link">
-                        <svg class="nav-icon" viewBox="0 0 24 24">
-                            <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2.5-9H18V0h-2v2H8V0H6v2H4.5C3.12 2 2 3.12 2 4.5v15C2 20.88 3.12 22 4.5 22h15c1.38 0 2.5-1.12 2.5-2.5v-15C22 3.12 20.88 2 19.5 2z"/>
-                        </svg>
-                        Emploi du temps
+                    Déconnexion
                     </a>
                 </li>
             </ul>
@@ -120,79 +123,29 @@
                 </div>
             </div>
 
-            <div class="courses-grid">
-                <div class="course-card">
-                    <div class="course-header">
-                        <div class="course-code">INF301</div>
-                        <div class="course-name">Big Data</div>
-
-                    </div>
-                    <div class="course-body">
-                        <div class="course-info">
-                            <div class="info-row">
-                                <i class="fa-solid fa-users"></i>
-                                <span>45 étudiants inscrits</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>4:30 heures</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-calendar"></i>
-                                <span>Semestre 1 - 2025/2026</span>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <select id="filiereSelect">
+                        <option value="">Toutes les filières</option>
+                        <option value="1">Ingénierie Spatiale & Aéronautique</option>
+                        <option value="2">Sciences Cosmiques & Planétaires</option>
+                        <option value="3">IA & Sciences des Données Spatiales</option>
+                        <option value="4">Énergie Durable & Technologies Vertes</option>
+                    </select>
                 </div>
-
-                <div class="course-card">
-                    <div class="course-header">
-                        <div class="course-code">MAT201</div>
-                        <div class="course-name">Intelligence Artificielle</div>
-                    </div>
-                    <div class="course-body">
-                        <div class="course-info">
-                            <div class="info-row">
-                                <i class="fa-solid fa-users"></i>
-                                <span>38 étudiants inscrits</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>4:30 heures</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-calendar"></i>
-                                <span>Semestre 1 - 2025/2026</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="search-box">
+                    <input type="text" placeholder="Rechercher un cours...">
                 </div>
-
-                <div class="course-card">
-                    <div class="course-header">
-                        <div class="course-code">INF405</div>
-                        <div class="course-name">Data Mining</div>
-                    </div>
-                    <div class="course-body">
-                        <div class="course-info">
-                            <div class="info-row">
-                                <i class="fa-solid fa-users"></i>
-                                <span>52 étudiants inscrits</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>3 heures</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-calendar"></i>
-                                <span>Semestre 1 - 2025/2026</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            
             </div>
+
+
+            <div class="courses-grid" id="coursesContainer">
+            <!-- Les cartes seront générées ici -->
+            </div>
+            </div>
+            <!-- Pagination -->
+            <div id="courses-pagination"></div>
         </main>
     </div>
 

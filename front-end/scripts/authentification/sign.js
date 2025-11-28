@@ -1,7 +1,7 @@
 import { showNotification } from '../utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('loginForm');
+    const form = document.getElementById('signForm');
     const errorMsg = document.getElementById('errorMessage');
 
     if (!form) return; 
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.success) {
                
-                window.location.href = '/Aurora/front-end/interfaces/main.html';
+                window.location.href = '/Aurora/front-end/interfaces/student-management/aurora-student-dashboard.html';
             } else {
                 // Afficher l'erreur dans la page 
                 if (errorMsg) {

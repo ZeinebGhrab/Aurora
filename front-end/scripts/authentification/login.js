@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.href = '/Aurora/front-end/interfaces/teacher-management/aurora-teacher-dashboard.html';
                         break;
                     case 'admin':
-                        window.location.href = '/Aurora/front-end/interfaces/admin-management/aurora-admin-dashboard.html';
+                        window.location.href = '/Aurora/front-end/interfaces/admin-management/course-management/aurora-course.html';
                         break;
                     default:
                         window.location.href = '/Aurora/front-end/interfaces/aurora-landing-page.html';

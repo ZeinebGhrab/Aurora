@@ -62,13 +62,6 @@ try {
             break;
 
         case 'disabled':
-            $response = [
-                'success' => false,
-                'message' => "Votre compte est désactivé. Veuillez contacter l’administrateur."
-            ];
-            break;
-
-        case 'disabled':
             // Vérifier le statut du compte
             if (($_SESSION['statut'] ?? '') === 'désactivé') {
                 $response = [
@@ -80,6 +73,14 @@ try {
 
         case 'success':
             $userData = $loginResult['data'];
+            
+            // Enregistrer l'utilisateur dans la session
+            $_SESSION['connect'] = true;
+            $_SESSION['id_utilisateur'] = $userData['id_utilisateur'];
+            $_SESSION['role'] = $userData['type_compte'];
+            $_SESSION['statut'] = $userData['statut'] ?? 'activé'; 
+            $_SESSION['email'] = $userData['email'];
+
             $response = [
             'success' => true,
             'user' => [

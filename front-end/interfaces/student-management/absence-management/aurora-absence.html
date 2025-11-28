@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../../../styles/style-course.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../../styles/absences.css">
+    <script type="module" src="../../../scripts/authentification/logout.js"></script>
 </head>
 <body>
     <div class="dashboard">
@@ -19,7 +20,7 @@
                     <div class="logo">Auro<span>r</span>a</div>
                 </li>
                 <li class="nav-item">
-                    <a href="../aurora-student-dashboard.html" class="nav-link active">
+                    <a href="#" class="nav-link">
                         <svg class="nav-icon" viewBox="0 0 24 24">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
@@ -34,12 +35,29 @@
                         Mes cours
                     </a>
                 </li>
-         <li class="nav-item">
-                    <a href="../absence-management/aurora-absence.html" class="nav-link">
+                <li class="nav-item">
+                    <a href="../session-management/aurora-session.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                        Mes Séances
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../absence-management/aurora-absence.html" class="nav-link active">
                         <svg class="nav-icon" viewBox="0 0 24 24">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/>
                         </svg>
                        Absences 
+                    </a>
+                </li>
+                <!-- Bouton de déconnexion -->
+                <li>
+                    <a href="#" id="logoutBtn" class="nav-link logout-btn">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                    Déconnexion
                     </a>
                 </li>
             </ul>

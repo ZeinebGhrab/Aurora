@@ -9,42 +9,106 @@ try {
     $db = new Database();
     $pm = new PresenceManager($db);
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        echo json_encode(['success' => false, 'message' => 'Méthode non autorisée']);
+    // Vérifie si une image est uploadée
+    if (!isset($_FILES['probe'])) {
+        echo json_encode(['success' => false, 'message' => 'Aucune image reçue']);
         exit;
     }
 
-    // Récupérer les données JSON envoyées depuis JS
-    $data = json_decode(file_get_contents("php://input"), true);
+    // Créer dossier probe si inexistant
+    $uploadDir = __DIR__ . '/uploads/probe/';
+    if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-    if (!$data) {
-        echo json_encode(['success' => false, 'message' => 'Aucune donnée reçue']);
+    $ext = pathinfo($_FILES['probe']['name'], PATHINFO_EXTENSION);
+    $filename = uniqid('probe_') . '.' . $ext;
+    $path = $uploadDir . $filename;
+
+    if (!move_uploaded_file($_FILES['probe']['tmp_name'], $path)) {
+        echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'upload']);
         exit;
     }
 
-    $id_etudiant = isset($data['id_etudiant']) ? (int)$data['id_etudiant'] : null;
-    $id_cours = isset($data['id_cours']) ? (int)$data['id_cours'] : null;
-    $date_presence = $data['date_presence'] ?? null;
-    $statut = $data['statut'] ?? 'absent';
-    $heure_arrivee = $data['heure_arrivee'] ?? null;
-    $justification = $data['justification'] ?? null;
+    // Récupérer infos étudiant et séance depuis POST
+    $id_etudiant = (int)($_POST['id_etudiant'] ?? 0);
+    $id_seance   = (int)($_POST['id_seance'] ?? 0);
 
-    if (!$id_etudiant || !$id_cours || !$date_presence) {
+    if ($id_etudiant <= 0 || $id_seance <= 0) {
         echo json_encode(['success' => false, 'message' => 'Paramètres requis manquants']);
         exit;
     }
 
-    $presence = new Presence($id_etudiant, $id_cours, $date_presence, $statut, $heure_arrivee, $justification);
-    $success = $pm->addPresence($presence);
+    // ---- APPEL AU SCRIPT PYTHON ---- //
+    $pythonPath   = "C:\\Users\\Lenovo\\AppData\\Local\\Programs\\Python\\Python311\\python.exe";
+    $pythonScript = __DIR__ . "\\../models/check_face.py";
 
-    if ($success) {
+    $image_arg = escapeshellarg($path);
+    $id_arg    = escapeshellarg($id_etudiant);
+
+    $cmd = "\"$pythonPath\" \"$pythonScript\" $image_arg $id_arg";
+    $output = shell_exec($cmd);
+
+    if (!$output || trim($output) === "") {
         echo json_encode([
-            'success' => true,
-            'message' => 'Présence ajoutée avec succès',
-            'presence' => $data
+            'success' => false,
+            'message' => 'Aucune sortie Python',
+            'cmd' => $cmd
         ]);
+        exit;
+    }
+
+    // -------------------------
+    // Extraire uniquement le JSON de la sortie Python
+    // -------------------------
+    $lines = explode("\n", trim($output));
+    $json_line = null;
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if (str_starts_with($line, '{') && str_ends_with($line, '}')) {
+            $json_line = $line;
+            break;
+        }
+    }
+
+    if (!$json_line) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Aucun JSON valide trouvé dans la sortie Python',
+            'output_raw' => $output
+        ]);
+        exit;
+    }
+
+    $result = json_decode($json_line, true);
+
+    if (!$result) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Erreur lors du décodage du JSON',
+            'json_line' => $json_line
+        ]);
+        exit;
+    }
+
+    // --------- GESTION DES RÉSULTATS --------- //
+    // Valider uniquement si status = 'found' et identity_verified = true (si présent)
+    if (isset($result['status']) && $result['status'] === 'found' && (!isset($result['identity_verified']) || $result['identity_verified'] === true)) {
+        $statut = "present";
+        $heure_arrivee = date("H:i:s");
+
+        $presence = new Presence($id_etudiant, $id_seance, $statut, $heure_arrivee, "");
+
+        if ($pm->addPresence($presence)) {
+            echo json_encode(['success' => true, 'message' => 'Présence validée par DeepFace']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Erreur ajout présence']);
+        }
+
     } else {
-        echo json_encode(['success' => false, 'message' => 'Échec de l\'ajout de la présence']);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Reconnaissance faciale échouée',
+            'details' => $result
+        ]);
     }
 
 } catch (Exception $e) {

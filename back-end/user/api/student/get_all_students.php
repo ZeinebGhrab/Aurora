@@ -13,8 +13,8 @@ try {
     $filters = [
         'page' => $input['page'] ?? 1,
         'limit' => $input['limit'] ?? 12,
-        'filiere' => $input['filiere'] ?? null,
-        'niveau' => $input['niveau'] ?? null,
+        'filiere' => $input['filiere'] ?? '',
+        'niveau' => $input['niveau'] ?? '',
         'search' => $input['search'] ?? ''
     ];
 

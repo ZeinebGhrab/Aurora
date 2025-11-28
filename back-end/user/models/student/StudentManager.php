@@ -198,17 +198,17 @@ class StudentManager {
     }
 
     // Ajouter un étudiant
-    public function addStudent($nom, $prenom, $email, $mot_de_passe, $id_filiere, $niveau=null) {
+    public function addStudent($nom, $prenom, $email, $mot_de_passe, $id_filiere, $niveau=null, $photo_profil= null) {
         $conn = $this->db->connect();
         $successStudent = false;
 
         // Créer l'utilisateur
         $stmt = $conn->prepare("
-            INSERT INTO utilisateur (nom, prenom, email, mot_de_passe, type_compte)
-            VALUES (?, ?, ?, ?, 'etudiant')
+            INSERT INTO utilisateur (nom, prenom, email, mot_de_passe, type_compte, photo_profil)
+            VALUES (?, ?, ?, ?, 'etudiant', ?)
         ");
         $hashedPassword = password_hash($mot_de_passe, PASSWORD_DEFAULT);
-        $stmt->bind_param("ssss", $nom, $prenom, $email, $hashedPassword);
+        $stmt->bind_param("sssss", $nom, $prenom, $email, $hashedPassword, $photo_profil);
         $successUser = $stmt->execute();;
         $stmt->close();
 

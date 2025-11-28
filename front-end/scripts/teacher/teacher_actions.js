@@ -1,7 +1,7 @@
 import { deleteTeacher } from "./teacher_api.js";
-import { renderTeachers, renderPagination } from "./teacher_render.js";
+import { renderTeachers } from "./teacher_render.js";
 import { fillEditForm, fillViewModal } from "./teacher_form.js";
-import { showNotification } from "../utils.js";
+import { showNotification, renderPagination } from "../utils.js";
 
 // État de pagination et filtrage
 let currentState = {

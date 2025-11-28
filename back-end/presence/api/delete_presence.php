@@ -1,11 +1,15 @@
 <?php
 require_once __DIR__ . '/../../config/Database.php';
 require_once '../models/PresenceManager.php';
+require_once '../../user/api/auth/check_session_logic.php';
 
 header('Content-Type: application/json');
 
 $db = new Database();
 $pm = new PresenceManager($db);
+
+requireLogin();
+requireAdmin();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Lire les données JSON envoyées

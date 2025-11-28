@@ -18,6 +18,7 @@ export function handleFormSubmit(formId, modal) {
                 : null,
             niveau: form.querySelector("[name='niveau']").value || "",
             statut: form.querySelector("[name='statut']").value == "activé" ? "activé" : "désactivé",
+            photo_profil: form.querySelector("[name='photo_profil']").value || "",
         };
 
         const editingId = form.dataset.editingId;
@@ -25,7 +26,7 @@ export function handleFormSubmit(formId, modal) {
         if (editingId) {
             res = await updateStudent(editingId, formData);
         } else {
-            mot_de_passe: form.querySelector("[name='mot_de_passe']").value,
+            const mot_de_passe = form.querySelector("[name='mot_de_passe']").value;
             res = await addStudent({mot_de_passe, ...formData});
         }
 

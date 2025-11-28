@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Présences - Aurora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">>
+    <link rel="stylesheet" href="../../../styles/shared.css">
+    <link rel="stylesheet" href="../../../styles/style-dashboard.css">
+    <link rel="stylesheet" href="../../../styles/style-absence.css">
+    <link rel="stylesheet" href="../../../styles/modal.css">
+    <script type="module" src="../../../scripts/authentification/logout.js"></script>
+    <script type="module" src="../../../scripts/presence/presence.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+     <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <div class="logo">Auro<span>r</span>a</div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../teacher-management/aurora-teacher.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zM12 14c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z"/>
+                        </svg>
+                        Enseignants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../student-management/aurora-student.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        Étudiants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../course-management/aurora-course.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                        </svg>
+                        Cours
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../session-management/aurora-session.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                        </svg>
+                        Séances
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../absence-management/aurora-absence.html" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                        </svg>
+                        Présence & Absence
+                    </a>
+                </li>
+                <!-- Bouton de déconnexion -->
+                <li>
+                    <a href="#" id="logoutBtn" class="nav-link logout-btn">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                    Déconnexion
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header">
+                    <div class="title-content">
+                        <h2><i class="fa-regular fa-address-card"></i> Gestion des Présences</h2>
+                        <p></p>
+                    </div>
+               
+           
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-value">892</span>
+                        <span class="stat-label">Présences totales</span>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-icon red">
+                        <i class="fa-solid fa-user-xmark"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-value">128</span>
+                        <span class="stat-label">Absences totales</span>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-icon orange">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-value">45</span>
+                        <span class="stat-label">Retards</span>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-value">32</span>
+                        <span class="stat-label">Absences justifiées</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label><i class="fa-solid fa-book"></i> Cours</label>
+                    <select id="courseSelect" class="filter-input">
+                        <option value="">Tous les cours</option>
+                    </select>
+                </div>
+                
+               <div class="filter-group">
+                    <select id="filiereSelect" class="filter-input">
+                        <option value="">Toutes les filières</option>
+                        <option value="1">Ingénierie Spatiale & Aéronautique</option>
+                        <option value="2">Sciences Cosmiques & Planétaires</option>
+                        <option value="3">IA & Sciences des Données Spatiales</option>
+                        <option value="4">Énergie Durable & Technologies Vertes</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <select id="niveauSelect" class="filter-input">
+                        <option value="">Tous les niveaux</option>
+                        <option value="Niveau 1">Niveau 1</option>
+                        <option value="Niveau 2">Niveau 2</option>
+                        <option value="Niveau 3">Niveau 3</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label><i class="fa-solid fa-filter"></i> Statut</label>
+                    <select id="statutSelect" class="filter-input">
+                        <option value="">Tous</option>
+                        <option value="présent">Présent</option>
+                        <option value="absent">Absent</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Contenu dynamique depuis API -->
+            <div class="presence-grid"></div>
+
+            <!-- Pagination dynamique -->
+            <div id="presence-pagination"></div>
+        </main>
+    </div>
+    <footer>
+        <p>© 2025 Aurora. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+
+    <!-- Modal Edit Présence - À ajouter dans aurora-absence.html avant </main> -->
+<div class="modal-overlay" id="editPresenceModal">
+    <div class="modal-container">
+        <!-- Header -->
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <i class="fa-solid fa-user-check"></i>
+                Modifier la Présence
+            </h2>
+            <p class="modal-subtitle">Mettre à jour le statut de présence de l'étudiant</p>
+            <button class="modal-close" id="closeEditModalBtn">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+            <!-- Student Info Card -->
+            <div style="background: linear-gradient(135deg, #F0F9FF 0%, #FFF1F2 100%); padding: 1.5rem; border-radius: 16px; margin-bottom: 2rem; border: 2px solid #E0E7FF;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #5299cf, #c14b5f); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 700;" id="studentAvatar">
+                        MA
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.3rem; color: #111827; margin-bottom: 0.3rem;" id="studentName">Mohamed Ali</h3>
+                        <div style="display: flex; gap: 1.5rem; font-size: 0.9rem; color: #6B7280;">
+                            <span style="display: flex; align-items: center; gap: 0.4rem;">
+                                <i class="fa-solid fa-id-card"></i>
+                                <span id="studentId">INS123456</span>
+                            </span>
+                            <span style="display: flex; align-items: center; gap: 0.4rem;">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                                <span id="studentLevel">2ème année</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; font-size: 0.9rem; color: #6B7280; flex-wrap: wrap;">
+                    <span style="display: flex; align-items: center; gap: 0.4rem;">
+                        <i class="fa-solid fa-book"></i>
+                        <span id="courseName">Mathématiques Avancées</span>
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 0.4rem;">
+                        <i class="fa-solid fa-calendar"></i>
+                        <span id="courseDate">28 Nov 2025</span>
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 0.4rem;">
+                        <i class="fa-solid fa-clock"></i>
+                        <span id="courseTime">08:00 - 10:00</span>
+                    </span>
+                </div>
+            </div>
+
+            <form id="editPresenceForm">
+                <input type="hidden" id="presenceId" name="id_presence">
+                <input type="hidden" id="etudiantId" name="id_etudiant">
+                <input type="hidden" id="seanceId" name="id_seance">
+
+                <!-- Statut Section -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                        Statut de Présence
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Statut</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="statusPresent" name="statut" value="présent" checked>
+                                <label for="statusPresent" style="color: var(--success);">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Présent
+                                </label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="statusAbsent" name="statut" value="absent">
+                                <label for="statusAbsent" style="color: var(--error);">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                    Absent
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="heureArrivee">
+                            <i class="fa-solid fa-clock"></i>
+                            Heure d'arrivée
+                        </label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-clock"></i>
+                            <input 
+                                type="time" 
+                                id="heureArrivee" 
+                                name="heure_arrivee"
+                                class="form-input"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Justification Section -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fa-solid fa-file-lines"></i>
+                        Justification
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="justification">
+                            <i class="fa-solid fa-comment"></i>
+                            Notes / Justification
+                        </label>
+                        <textarea 
+                            id="justification" 
+                            name="justification"
+                            class="form-textarea"
+                            placeholder="Ajouter une justification ou des notes (optionnel)..."
+                        ></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel" id="cancelEditBtn">
+                <i class="fa-solid fa-xmark"></i>
+                Annuler
+            </button>
+            <button type="button" class="btn btn-save" id="savePresenceBtn">
+                <i class="fa-solid fa-check"></i>
+                Enregistrer
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

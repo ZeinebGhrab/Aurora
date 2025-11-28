@@ -17,13 +17,18 @@ if ($id_presence) {
         echo json_encode([
             'success' => true,
             'presence' => [
-                'id_presence' => $presence->getId(),
-                'id_etudiant' => $presence->getIdEtudiant(),
-                'id_cours' => $presence->getIdCours(),
-                'date_presence' => $presence->getDatePresence(),
-                'statut' => $presence->getStatut(),
-                'heure_arrivee' => $presence->getHeureArrivee(),
-                'justification' => $presence->getJustification()
+                'id_presence'   => $presence['id_presence'],
+                'id_etudiant'   => $presence['id_etudiant'],
+                'full_name'     => $presence['prenom'] . ' ' . $presence['nom'],
+                'niveau'        => $presence['niveau'],
+                'id_seance'     => $presence['id_seance'],
+                'course'        => $presence['nom_cours'],
+                'statut'        => $presence['statut'],
+                'heure_arrivee' => $presence['heure_arrivee'],
+                'justification' => $presence['justification'],
+                'titre'         => $presence['titre'],
+                'date_heure'    => $presence['date_heure'],
+                'heure_fin'   => $presence['heure_fin']
             ]
         ]);
     } else {

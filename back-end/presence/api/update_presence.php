@@ -2,52 +2,55 @@
 require_once __DIR__ . '/../../config/Database.php';
 require_once '../models/PresenceManager.php';
 require_once '../models/Presence.php';
+require_once '../../user/api/auth/check_session_logic.php';
+require_once '../../user/api/auth/check_session_logic.php';
 
 header('Content-Type: application/json');
 
 try {
+
+    requireLogin();
+    requireAdmin();
+
     $db = new Database();
     $pm = new PresenceManager($db);
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        echo json_encode(['success' => false, 'message' => 'Méthode non autorisée']);
+    // Récupérer les données depuis POST/JSON
+    $input = json_decode(file_get_contents("php://input"), true) ?? [];
+
+    $id_presence   = $input['id_presence'] ?? null;
+    $id_etudiant   = $input['id_etudiant'] ?? null;
+    $id_seance     = $input['id_seance'] ?? null;
+    $statut        = $input['statut'] ?? null;
+    $heure_arrivee = $input['heure_arrivee'] ?? null;
+    $justification = $input['justification'] ?? "";
+
+    // Validation des champs requis
+    if (!$id_presence || !$id_etudiant || !$id_seance || !$statut) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Paramètres requis manquants (id_presence, id_etudiant, id_seance, statut)'
+        ]);
         exit;
     }
 
-    $data = json_decode(file_get_contents("php://input"), true);
+    // Correction : passer un tableau au lieu d'arguments séparés
+    $presence = new Presence([
+        'id_presence'   => $id_presence,
+        'id_etudiant'   => $id_etudiant,
+        'id_seance'     => $id_seance,
+        'statut'        => $statut,
+        'heure_arrivee' => $heure_arrivee,
+        'justification' => $justification
+    ]);
 
-    $id_presence = $data['id_presence'] ?? null;
-    $id_etudiant = $data['id_etudiant'] ?? null;
-    $id_cours = $data['id_cours'] ?? null;
-    $date_presence = $data['date_presence'] ?? null;
-    $statut = $data['statut'] ?? 'absent';
-    $heure_arrivee = $data['heure_arrivee'] ?? null;
-    $justification = $data['justification'] ?? null;
-
-    if (!$id_presence || !$id_etudiant || !$id_cours || !$date_presence) {
-        echo json_encode(['success' => false, 'message' => 'Paramètres requis manquants']);
-        exit;
-    }
-
-    $presence = new Presence(
-        $id_etudiant,
-        $id_cours,
-        $date_presence,
-        $statut,
-        $heure_arrivee,
-        $justification,
-        $id_presence
-    );
-
-    $success = $pm->updatePresence($presence);
-
-    if ($success) {
-        echo json_encode(['success' => true, 'presence' => $data]);
+    if ($pm->updatePresence($presence)) {
+        echo json_encode(['success' => true, 'message' => 'Présence mise à jour avec succès']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Échec de la mise à jour de la présence']);
+        echo json_encode(['success' => false, 'message' => 'Erreur lors de la mise à jour']);
     }
 
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Erreur serveur : ' . $e->getMessage()]);
 }
 ?>

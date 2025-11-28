@@ -1,47 +1,41 @@
 <?php
 require_once __DIR__ . '/../../config/Database.php';
 require_once '../models/PresenceManager.php';
-require_once '../models/Presence.php';
+require_once '../../user/api/auth/check_session_logic.php';
 
 header('Content-Type: application/json');
 
 try {
-    $db = new Database();
-    $pm = new PresenceManager($db);
+    requireLogin();
+    requireAdmin();
 
     $input = json_decode(file_get_contents("php://input"), true) ?? [];
 
     $filters = [
-        'id_etudiant' => $input['id_etudiant'] ?? null,
+        'page' => isset($input['page']) ? (int)$input['page'] : 1,
+        'limit' => isset($input['limit']) ? (int)$input['limit'] : 10,
+        'filiere' => $input['filiere'] ?? null,
+        'niveau' => $input['niveau'] ?? null,
         'id_cours' => $input['id_cours'] ?? null,
-        'date' => $input['date'] ?? null
+        'statut' => $input['statut'] ?? null
     ];
 
-    $presences = $pm->getAllPresences($filters);
+    $db = new Database();
+    $pm = new PresenceManager($db);
 
-    // Convertir les objets Presence en tableaux associatifs pour JSON
-    $data = array_map(function($presence) {
-        return [
-            'id_presence' => $presence->getId(),
-            'id_etudiant' => $presence->getIdEtudiant(),
-            'id_cours' => $presence->getIdCours(),
-            'date_presence' => $presence->getDatePresence(),
-            'statut' => $presence->getStatut(),
-            'heure_arrivee' => $presence->getHeureArrivee(),
-            'justification' => $presence->getJustification()
-        ];
-    }, $presences);
+    $result = $pm->getAllPresences($filters);
 
     echo json_encode([
-        'success' => true,
-        'presences' => $data,
-        'total' => count($data)
+        "success" => true,
+        "presences" => $result['presences'],
+        "pagination" => $result['pagination']
     ]);
 
 } catch (Exception $e) {
+    http_response_code(500);
     echo json_encode([
-        'success' => false,
-        'message' => 'Erreur serveur : ' . $e->getMessage()
+        "success" => false,
+        "message" => "Erreur serveur : " . $e->getMessage()
     ]);
 }
 ?>

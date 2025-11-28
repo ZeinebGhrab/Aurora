@@ -3,85 +3,152 @@ require_once __DIR__ . '/../../config/Database.php';
 require_once 'Presence.php';
 
 class PresenceManager {
+
     private $db;
 
     public function __construct($database) {
         $this->db = $database;
     }
 
+
     // Ajouter une présence
+
     public function addPresence(Presence $presence) {
         $conn = $this->db->connect();
 
         $stmt = $conn->prepare("
-            INSERT INTO presence (id_etudiant, id_cours, date_presence, statut, heure_arrivee, justification)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO presence (id_etudiant, id_seance, statut, heure_arrivee, justification)
+            VALUES (?, ?, ?, ?, ?)
         ");
 
-        $id_etudiant = $presence->getIdEtudiant();
-        $id_cours = $presence->getIdCours();
-        $date_presence = $presence->getDatePresence();
-        $statut = $presence->getStatut();
-        $heure_arrivee = $presence->getHeureArrivee();
-        $justification = $presence->getJustification();
+        $stmt->bind_param(
+            "iisss",
+            $presence->getIdEtudiant(),
+            $presence->getIdSeance(),
+            $presence->getStatut(),
+            $presence->getHeureArrivee(),
+            $presence->getJustification()
+        );
 
-        $stmt->bind_param("iissss", $id_etudiant, $id_cours, $date_presence, $statut, $heure_arrivee, $justification);
         $success = $stmt->execute();
         $stmt->close();
 
         return $success;
     }
 
-    // Récupérer une présence par ID
+
+
+    // Récupérer une présence
+
     public function getPresenceById($id_presence) {
         $conn = $this->db->connect();
 
-        $stmt = $conn->prepare("SELECT * FROM presence WHERE id_presence = ?");
+        $sql = "
+        SELECT 
+            p.*, 
+            s.titre,
+            s.date_heure,
+            s.heure_fin,
+            e.niveau, 
+            u.nom, u.prenom, 
+            c.nom_cours
+        FROM presence p
+        JOIN etudiant e ON p.id_etudiant = e.id_etudiant
+        JOIN utilisateur u ON e.id_etudiant = u.id_utilisateur
+        JOIN seance s ON p.id_seance = s.id_seance
+        JOIN cours c ON s.id_cours = c.id_cours
+        WHERE p.id_presence = ?
+        ";
+
+        $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id_presence);
         $stmt->execute();
         $result = $stmt->get_result();
+
         $row = $result->fetch_assoc();
         $stmt->close();
 
-        if ($row) {
-            return new Presence(
-                $row['id_etudiant'],
-                $row['id_cours'],
-                $row['date_presence'],
-                $row['statut'],
-                $row['heure_arrivee'],
-                $row['justification'],
-                $row['id_presence']
-            );
-        }
-
-        return null;
+        return $row;
     }
 
-    // Récupérer toutes les présences d'un cours ou d'un étudiant
+
+    // Récupérer toutes les présences (filters + pagination)
+   
     public function getAllPresences($filters = []) {
         $conn = $this->db->connect();
-        $query = "SELECT * FROM presence WHERE 1=1";
+
+        $page = isset($filters['page']) ? (int)$filters['page'] : 1;
+        $limit = isset($filters['limit']) ? (int)$filters['limit'] : 10;
+        $offset = ($page - 1) * $limit;
+
+        $query = "
+        SELECT 
+            p.id_presence,
+            p.id_etudiant,
+            p.id_seance,
+            p.statut,
+            p.heure_arrivee,
+            p.justification,
+            s.id_cours,
+            s.salle,
+            s.date_heure,
+            s.heure_fin,
+            c.nom_cours,
+            c.code_cours,
+            c.id_filiere,
+            c.niveau,
+            u.nom AS nom_etudiant,
+            u.prenom AS prenom_etudiant,
+            ue.nom AS nom_enseignant,
+            ue.prenom AS prenom_enseignant
+        FROM presence p
+        INNER JOIN seance s ON p.id_seance = s.id_seance
+        INNER JOIN cours c ON s.id_cours = c.id_cours
+        LEFT JOIN etudiant e ON p.id_etudiant = e.id_etudiant
+        LEFT JOIN utilisateur u ON e.id_etudiant = u.id_utilisateur
+        LEFT JOIN enseignant ens ON c.id_enseignant = ens.id_enseignant
+        LEFT JOIN utilisateur ue ON ens.id_enseignant = ue.id_utilisateur
+        WHERE 1=1
+        ";
+
+        $query .= " AND s.statut = 'terminée'";
+
         $params = [];
         $types = '';
 
-        if (!empty($filters['id_etudiant'])) {
-            $query .= " AND id_etudiant = ?";
-            $params[] = $filters['id_etudiant'];
+        // Filtrage par filière
+        if (isset($filters['filiere']) && $filters['filiere'] !== '') {
+            $query .= " AND c.id_filiere = ?";
+            $params[] = $filters['filiere'];
             $types .= 'i';
         }
 
-        if (!empty($filters['id_cours'])) {
-            $query .= " AND id_cours = ?";
+        // Filtrage par niveau
+        if (isset($filters['niveau']) && $filters['niveau'] !== '') {
+            $query .= " AND c.niveau = ?";
+            $params[] = $filters['niveau'];
+            $types .= 's';
+        }
+
+        // Filtrage par cours
+        if (isset($filters['id_cours']) && $filters['id_cours'] !== '') {
+            $query .= " AND s.id_cours = ?";
             $params[] = $filters['id_cours'];
             $types .= 'i';
         }
 
-        if (!empty($filters['date'])) {
-            $query .= " AND date_presence = ?";
-            $params[] = $filters['date'];
+        // Filtrage par statut
+        if (isset($filters['statut']) && $filters['statut'] !== '') {
+            $query .= " AND p.statut = ?";
+            $params[] = $filters['statut'];
             $types .= 's';
         }
+
+        // Pagination
+        $query .= " ORDER BY p.id_presence DESC LIMIT ?, ?";
+        $params[] = $offset;
+        $params[] = $limit;
+        $types .= 'ii';
 
         $stmt = $conn->prepare($query);
         if (!empty($params)) {
@@ -93,40 +160,153 @@ class PresenceManager {
 
         $presences = [];
         while ($row = $result->fetch_assoc()) {
-            $presences[] = new Presence(
-                $row['id_etudiant'],
-                $row['id_cours'],
-                $row['date_presence'],
-                $row['statut'],
-                $row['heure_arrivee'],
-                $row['justification'],
-                $row['id_presence']
-            );
+            $full_name = trim($row['prenom_etudiant'] . ' ' . $row['nom_etudiant']);
+            $teacher_name = trim($row['prenom_enseignant'] . ' ' . $row['nom_enseignant']);
+
+            $presence_data = [
+                'id_presence'   => $row['id_presence'],
+                'id_etudiant'   => $row['id_etudiant'],
+                'id_seance'     => $row['id_seance'],
+                'statut'        => $row['statut'],
+                'heure_arrivee' => $row['heure_arrivee'],
+                'justification' => $row['justification'],
+            ];
+
+            $presences[] = (new Presence($presence_data))->toArray() + [
+                'full_name'    => $full_name,
+                'course'       => $row['nom_cours'],
+                'course_code'  => $row['code_cours'],
+                'teacher_name' => $teacher_name,
+                'date_heure'   => $row['date_heure'],
+                'heure_fin'    => $row['heure_fin'],
+                'salle'        => $row['salle'],
+                'niveau'       => $row['niveau']
+            ];
+        }
+        $stmt->close();
+
+        // Requête COUNT pour la pagination
+        $countQuery = "
+            SELECT COUNT(*) AS total
+            FROM presence p
+            INNER JOIN seance s ON p.id_seance = s.id_seance
+            INNER JOIN cours c ON s.id_cours = c.id_cours
+            LEFT JOIN etudiant e ON p.id_etudiant = e.id_etudiant
+            LEFT JOIN utilisateur u ON e.id_etudiant = u.id_utilisateur
+            LEFT JOIN enseignant ens ON c.id_enseignant = ens.id_enseignant
+            LEFT JOIN utilisateur ue ON ens.id_enseignant = ue.id_utilisateur
+            WHERE 1=1
+        ";
+
+        $countQuery .= " AND s.statut = 'terminée'";
+
+        $countParams = [];
+        $countTypes = '';
+
+        if (isset($filters['filiere']) && $filters['filiere'] !== '') {
+            $countQuery .= " AND c.id_filiere = ?";
+            $countParams[] = $filters['filiere'];
+            $countTypes .= 'i';
         }
 
-        $stmt->close();
-        return $presences;
+        if (isset($filters['niveau']) && $filters['niveau'] !== '') {
+            $countQuery .= " AND c.niveau = ?";
+            $countParams[] = $filters['niveau'];
+            $countTypes .= 's';
+        }
+
+        if (isset($filters['id_cours']) && $filters['id_cours'] !== '') {
+            $countQuery .= " AND s.id_cours = ?";
+            $countParams[] = $filters['id_cours'];
+            $countTypes .= 'i';
+        }
+
+        if (isset($filters['statut']) && $filters['statut'] !== '') {
+            $countQuery .= " AND p.statut = ?";
+            $countParams[] = $filters['statut'];
+            $countTypes .= 's';
+        }
+
+        $countStmt = $conn->prepare($countQuery);
+        if (!empty($countParams)) {
+            $countStmt->bind_param($countTypes, ...$countParams);
+        }
+        $countStmt->execute();
+        $total = $countStmt->get_result()->fetch_assoc()['total'] ?? 0;
+        $countStmt->close();
+
+        return [
+            'presences' => $presences,
+            'pagination' => [
+                'total' => $total,
+                'page' => $page,
+                'limit' => $limit,
+                'totalPages' => ceil($total / $limit)
+            ]
+        ];
     }
 
-    // Mettre à jour une présence
+    // Présences par étudiant
+
+    public function getPresenceByStudent($id_etudiant, $page = 1, $limit = 10) {
+        return $this->getAllPresences(['id_etudiant' => $id_etudiant], $page, $limit);
+    }
+
+
+    // Présences par enseignant (tous ses cours → toutes ses séances)
+  
+    public function getPresenceByTeacher($id_enseignant, $page = 1, $limit = 10) {
+        return $this->getAllPresences(['id_enseignant' => $id_enseignant], $page, $limit);
+    }
+
+
+
+    // Présences par séance
+
+    public function getPresenceBySession($id_seance, $page = 1, $limit = 10) {
+        return $this->getAllPresences(['id_seance' => $id_seance], $page, $limit);
+    }
+
+
+ 
+    // Présences par cours (toutes ses séances)
+ 
+    public function getPresenceByCourse($id_cours, $page = 1, $limit = 10) {
+        return $this->getAllPresences(['id_cours' => $id_cours], $page, $limit);
+    }
+
+
+
+    // Update
+
     public function updatePresence(Presence $presence) {
         $conn = $this->db->connect();
 
         $stmt = $conn->prepare("
             UPDATE presence
-            SET id_etudiant = ?, id_cours = ?, date_presence = ?, statut = ?, heure_arrivee = ?, justification = ?
+            SET id_etudiant = ?, id_seance = ?, statut = ?, heure_arrivee = ?, justification = ?
             WHERE id_presence = ?
         ");
 
+        $idEtudiant    = $presence->getIdEtudiant();
+        $idSeance      = $presence->getIdSeance();
+        $statut        = $presence->getStatut();
+        $heureArrivee  = $presence->getHeureArrivee();
+        $justification = $presence->getJustification();
+        $idPresence    = $presence->getId();
+
+        if ($heureArrivee === null || $heureArrivee === "") {
+            $heureArrivee = NULL;
+        }
+
         $stmt->bind_param(
-            "isssssi",
-            $presence->getIdEtudiant(),
-            $presence->getIdCours(),
-            $presence->getDatePresence(),
-            $presence->getStatut(),
-            $presence->getHeureArrivee(),
-            $presence->getJustification(),
-            $presence->getId()
+            "iisssi",
+            $idEtudiant,
+            $idSeance,
+            $statut,
+            $heureArrivee,
+            $justification,
+            $idPresence
         );
 
         $success = $stmt->execute();
@@ -135,16 +315,18 @@ class PresenceManager {
         return $success;
     }
 
-    // Supprimer une présence
+    // Delete
+ 
     public function deletePresence($id_presence) {
         $conn = $this->db->connect();
+
         $stmt = $conn->prepare("DELETE FROM presence WHERE id_presence = ?");
         $stmt->bind_param("i", $id_presence);
-
         $success = $stmt->execute();
         $stmt->close();
 
         return $success;
     }
+
 }
 ?>

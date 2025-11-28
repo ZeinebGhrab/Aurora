@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="../../../styles/style-dashboard.css">
     <link rel="stylesheet" href="../../../styles/style-course.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="module" src="../../../scripts/course/student/course_student.js"></script>
+    <script type="module" src="../../../scripts/authentification/logout.js"></script>
+
 </head>
 <body>
     <div class="dashboard">
@@ -18,7 +21,7 @@
                     <div class="logo">Auro<span>r</span>a</div>
                 </li>
                 <li class="nav-item">
-                    <a href="../aurora-student-dashboard.html" class="nav-link active">
+                    <a href="#" class="nav-link">
                         <svg class="nav-icon" viewBox="0 0 24 24">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
@@ -26,15 +29,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="../note-management/aurora-note.html" class="nav-link">
-                        <svg class="nav-icon" viewBox="0 0 24 24">
-                            <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
-                        </svg>
-                        Mes notes
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="../course-management/aurora-course.html" class="nav-link">
+                    <a href="../course-management/aurora-course.html" class="nav-link active">
                         <svg class="nav-icon" viewBox="0 0 24 24">
                             <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
                         </svg>
@@ -42,27 +37,28 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="../document-management/aurora-document.html" class="nav-link">
+                    <a href="../session-management/aurora-session.html" class="nav-link">
                         <svg class="nav-icon" viewBox="0 0 24 24">
-                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
                         </svg>
-                        Documents
+                        Mes Séances
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="../timetable-management/aurora-timetable.html" class="nav-link">
-                        <svg class="nav-icon" viewBox="0 0 24 24">
-                            <path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13"/>
-                        </svg>
-                        Emploi du temps
-                    </a>
-                </li>
-         <li class="nav-item">
                     <a href="../absence-management/aurora-absence.html" class="nav-link">
                         <svg class="nav-icon" viewBox="0 0 24 24">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/>
                         </svg>
                        Absences 
+                    </a>
+                </li>
+                <!-- Bouton de déconnexion -->
+                <li>
+                    <a href="#" id="logoutBtn" class="nav-link logout-btn">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                    Déconnexion
                     </a>
                 </li>
             </ul>
@@ -126,125 +122,17 @@
                 </div>
             </div>
 
-            <div class="courses-grid">
-                <div class="course-card">
-                    <div class="course-header">
-                        <div class="course-code">Sécurité Informatique</div>
-                        <div class="course-name">CHapitre 4</div>
-                        <div class="course-teacher"><i class="fa-solid fa-user"></i> Prof. Thomas Bernard</div>
-                    </div>
-                    <div class="course-body">
-                        <div class="course-info">
-                            <div class="info-row">
-                                <i class="fa-solid fa-chart-line"></i>
-                                <span>Progression du cours : 80%</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>il y a une heure </span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-calendar"></i>
-                                <span>Semestre 1 - 2025/2026</span>
-                            </div>
-                        </div>
-                        <div class="course-actions">
-                            <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
-                            <button class="btn btn-secondary">
-                            <i class="fa-solid fa-file-export"></i> Exporter</button>
-                        </div>
-                    </div>
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="search-box">
+                    <input type="text" placeholder="Rechercher un cours...">
                 </div>
-
-                <div class="course-card">
-                    <div class="course-header">
-                        <div class="course-code">Algèbre Linéaire</div>
-                        <div class="course-name">Chapitre 2</div>
-                        <div class="course-teacher"><i class="fa-solid fa-user"></i> Dr. Sophie Laurent</div>
-                    </div>
-                    <div class="course-body">
-                        <div class="course-info">
-                            <div class="info-row">
-                                <i class="fa-solid fa-chart-line"></i>
-                                <span>Progression du cours : 25%</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>Il y a 5 jours</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-calendar"></i>
-                                <span>Semestre 1 - 2025/2026</span>
-                            </div>
-                        </div>
-                        <div class="course-actions">
-                            <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
-                            <button class="btn btn-secondary">
-                            <i class="fa-solid fa-file-export"></i> Exporter</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="course-card">
-                    <div class="course-header">
-                        <div class="course-code">Mécanique Quantique</div>
-                        <div class="course-name">TD 1</div>
-                        <div class="course-teacher"><i class="fa-solid fa-user"></i>  Dr. Jean Lefebvre</div>
-                    </div>
-                    <div class="course-body">
-                        <div class="course-info">
-                            <div class="info-row">
-                                <i class="fa-solid fa-chart-line"></i>
-                                <span>Progression du cours : 30%</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>depuis 15 octobre 2025 </span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-calendar"></i>
-                                <span>Semestre 1 - 2024/2025</span>
-                            </div>
-                        </div>
-                        <div class="course-actions">
-                            <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
-                            <button class="btn btn-secondary">
-                            <i class="fa-solid fa-file-export"></i> Exporter</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="course-card">
-                    <div class="course-header">
-                        <div class="course-code">Base de Données</div>
-                        <div class="course-name">Chapitre 1</div>
-                        <div class="course-teacher"><i class="fa-solid fa-user"></i> Prof. Marie Rousseau</div>
-                    </div>
-                    <div class="course-body">
-                        <div class="course-info">
-                            <div class="info-row">
-                                <i class="fa-solid fa-chart-line"></i>
-                                <span>Progression du cours : 80%</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>Depuis 25 septembre 2025</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fa-solid fa-calendar"></i>
-                                <span>Semestre 1 - 2024/2025</span>
-                            </div>
-                        </div>
-                        <div class="course-actions">
-                            <button class="btn-view"><i class="fa-solid fa-eye"></i> Voir</button>
-                            <button class="btn btn-secondary">
-                            <i class="fa-solid fa-file-export"></i> Exporter</button>
-                        </div>
-                    </div>
-                </div>
-
-
             </div>
+
+            <div class="courses-grid" id="coursesContainer"></div>
+            </div>
+            <!-- Pagination -->
+            <div id="courses-pagination"></div>
         </main>
     </div>
 

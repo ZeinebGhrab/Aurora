@@ -1,6 +1,6 @@
 import { deleteCourse, getAllCourses } from "./course_api.js";
-import { renderCourses, renderPagination } from "./course_render.js";
-import { showNotification } from "../utils.js";
+import { renderCourses} from "./course_render.js";
+import { showNotification, renderPagination } from "../utils.js";
 
 // État de pagination et filtrage
 let currentState = {

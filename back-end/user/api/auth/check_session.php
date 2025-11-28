@@ -11,7 +11,7 @@ if (!isset($_SESSION['connecte']) || $_SESSION['connecte'] !== true) {
 
 // Utilisateur connecté
 echo json_encode([
-    'connected' => true,
+    'connecte' => true,
     'user' => [
         'id' => $_SESSION['user_id'],
         'nom' => $_SESSION['nom'],

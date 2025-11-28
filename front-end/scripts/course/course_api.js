@@ -81,7 +81,6 @@ export async function addCourse(courseData) {
 }
 
 
-
 export async function getCourseById(id_cours) {
     try {
         const res = await fetch(`${API_BASE}/course/api/get_course.php`, {
@@ -99,6 +98,46 @@ export async function getCourseById(id_cours) {
     }
 }
 
+export async function getCourseByStudent(page = 1, limit = 6, filters = {}) {
+    try {
+        const res = await fetch(`${API_BASE}/course/api/get_courses_by_student.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ page, limit, ...filters })
+        });
+        const data = await res.json();
+        console.log("getCourseByStudent",data);
+        if (data.success && data.courses) return {
+                courses: data.courses|| [],
+                pagination: data.pagination || {}
+            };
+        return { courses: [], pagination: {} };
+    } catch (error) {
+        console.error('Erreur getCourseByStudent:', error);
+        return { courses: [], pagination: {} };
+    }
+}
+
+
+export async function getCourseByTeacher(page = 1, limit = 6, filters = {}) {
+    try {
+        const res = await fetch(`${API_BASE}/course/api/get_courses_by_teacher.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ page, limit, ...filters })
+        });
+        const data = await res.json();
+        console.log("getCourseByTeacher",data);
+        if (data.success && data.courses)  return {
+                courses: data.courses|| [],
+                pagination: data.pagination || {}
+            };
+        return { courses: [], pagination: {} };
+    } catch (error) {
+        console.error('Erreur getCourseByTeacher:', error);
+        return { courses: [], pagination: {} };
+    }
+}
 
 export async function updateCourse(id_cours, courseData) {
     try {

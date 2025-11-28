@@ -67,8 +67,13 @@ CREATE TABLE cours (
 CREATE TABLE seance (
     id_seance INT AUTO_INCREMENT PRIMARY KEY,
     id_cours INT NOT NULL,
+    titre VARCHAR(150) NOT NULL,
     date_heure DATETIME NOT NULL,
-    duree INT DEFAULT 60,
+    duree INT DEFAULT 60,                
+    heure_fin TIME DEFAULT NULL,          
+    salle VARCHAR(50) DEFAULT NULL,
+    description TEXT DEFAULT NULL,
+    statut ENUM('planifiée', 'en_cours', 'terminée') DEFAULT 'planifiée',
     FOREIGN KEY (id_cours) REFERENCES cours(id_cours) ON DELETE CASCADE
 );
 
@@ -79,7 +84,7 @@ CREATE TABLE presence (
     id_presence INT AUTO_INCREMENT PRIMARY KEY,
     id_etudiant INT NOT NULL,
     id_seance INT NOT NULL,
-    statut ENUM('présent', 'absent', 'retard', 'justifié') NOT NULL DEFAULT 'absent',
+    statut ENUM('présent', 'absent') NOT NULL DEFAULT 'absent',
     heure_arrivee TIME DEFAULT NULL,
     justification TEXT DEFAULT NULL,
     FOREIGN KEY (id_etudiant) REFERENCES etudiant(id_etudiant) ON DELETE CASCADE,

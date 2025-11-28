@@ -124,11 +124,13 @@ public function getAllCourses($filters = []) {
             u.nom AS nom_enseignant,
             u.prenom AS prenom_enseignant,
             u.email AS email_enseignant,
-            f.nom_complet AS nom_filiere
+            f.nom_complet AS nom_filiere,
+            COUNT(e.id_etudiant) AS nb_etudiants
         FROM cours c
-        LEFT JOIN enseignant e ON c.id_enseignant = e.id_enseignant
-        LEFT JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
+        LEFT JOIN enseignant t ON c.id_enseignant = t.id_enseignant
+        LEFT JOIN utilisateur u ON t.id_enseignant = u.id_utilisateur
         LEFT JOIN filiere f ON c.id_filiere = f.id_filiere
+        LEFT JOIN etudiant e ON e.id_filiere = c.id_filiere
         WHERE 1=1
     ";
 
@@ -151,7 +153,7 @@ public function getAllCourses($filters = []) {
     }
 
     // Pagination
-    $query .= " LIMIT ?, ?";
+    $query .= " GROUP BY c.id_cours ORDER BY c.nom_cours ASC LIMIT ?, ?";
     $params[] = $offset;
     $params[] = $limit;
     $types .= 'ii';
@@ -174,7 +176,8 @@ public function getAllCourses($filters = []) {
             'id_filiere' => $row['id_filiere'],
             'niveau' => $row['niveau'],
             'enseignant' => $row['nom_enseignant'] ? $row['nom_enseignant'] . " " . $row['prenom_enseignant'] : 'Non assigné',
-            'filiere' => $row['nom_filiere'] ?? 'N/A'
+            'filiere' => $row['nom_filiere'] ?? 'N/A',
+            'nb_etudiants' => (int)$row['nb_etudiants']
         ];
     }
 
@@ -299,5 +302,224 @@ public function getAllCourses($filters = []) {
 
         return $success;
     }
-}
+    
+    // récupérer les cours d’un étudiant
+    public function getCoursesByStudent($id_etudiant, $filters = []) {
+
+        $page = isset($filters['page']) ? (int)$filters['page'] : 1;
+        $limit = isset($filters['limit']) ? (int)$filters['limit'] : 6;
+        $offset = ($page - 1) * $limit;
+
+        $conn = $this->db->connect();
+
+        $query = "
+        SELECT 
+            c.id_cours,
+            c.nom_cours,
+            c.code_cours,
+            c.niveau,
+            f.nom_complet AS nom_filiere,
+            u.nom AS nom_enseignant,
+            u.prenom AS prenom_enseignant,
+            u.email AS email_enseignant
+        FROM etudiant e
+        JOIN cours c ON c.id_filiere = e.id_filiere AND c.niveau = e.niveau
+        LEFT JOIN enseignant ens ON c.id_enseignant = ens.id_enseignant
+        LEFT JOIN utilisateur u ON ens.id_enseignant = u.id_utilisateur
+        LEFT JOIN filiere f ON c.id_filiere = f.id_filiere
+        WHERE e.id_etudiant = ?
+        ";
+
+        $params = [$id_etudiant];
+        $types = 'i';
+
+        // Filtre recherche sur le nom du cours
+        if (!empty($filters['search'])) {
+            $query .= " AND c.nom_cours LIKE ?";
+            $searchTerm = "%" . $filters['search'] . "%";
+            $params[] = $searchTerm;
+            $types .= 's';
+        }
+
+
+        // Pagination
+        $query .= " LIMIT ?, ?";
+        $params[] = $offset;
+        $params[] = $limit;
+        $types .= 'ii';
+
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $courses = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $courses[] = [
+                'id_cours' => $row['id_cours'],
+                'nom_cours' => $row['nom_cours'],
+                'code_cours' => $row['code_cours'],
+                'niveau' => $row['niveau'],
+                'enseignant' => $row['nom_enseignant'] ? $row['nom_enseignant'] . " " . $row['prenom_enseignant'] : 'Non assigné',
+                'email_enseignant' => $row['email_enseignant'],
+                'filiere' => $row['nom_filiere'] ?? 'N/A'
+            ];
+        }
+
+        $stmt->close();
+
+        // Total pour pagination (même filtres)
+        $countQuery = "
+            SELECT COUNT(*) AS total
+            FROM etudiant e
+            JOIN cours c ON c.id_filiere = e.id_filiere AND c.niveau = e.niveau
+            WHERE e.id_etudiant = ?
+        ";
+        $countParams = [$id_etudiant];
+        $countTypes = 'i';
+
+        if (!empty($filters['search'])) {
+            $countQuery .= " AND c.nom_cours LIKE ?";
+            $countParams[] = $searchTerm;
+            $countTypes .= 's';
+        }
+
+        $countStmt = $conn->prepare($countQuery);
+        $countStmt->bind_param($countTypes, ...$countParams);
+        $countStmt->execute();
+        $countResult = $countStmt->get_result();
+        $total = $countResult->fetch_assoc()['total'] ?? 0;
+        $countStmt->close();
+
+         return [
+            'courses' => $courses,
+            'pagination' => [
+                'total' => $total,
+                'page' => $page,
+                'limit' => $limit,
+                'totalPages' => ceil($total / $limit)
+            ]
+        ];
+    }
+
+    // récupérer les cours d’un enseignant
+    public function getCoursesByTeacher($id_enseignant, $filters) {
+        $page = isset($filters['page']) ? (int)$filters['page'] : 1;
+        $limit = isset($filters['limit']) ? (int)$filters['limit'] : 6; 
+        $offset = ($page - 1) * $limit;
+
+        $conn = $this->db->connect();
+
+        $query = "
+        SELECT 
+            c.id_cours,
+            c.nom_cours,
+            c.code_cours,
+            c.niveau,
+            c.id_enseignant,
+            c.id_filiere,
+            f.nom_complet AS nom_filiere,
+            u.nom AS nom_enseignant,
+            u.prenom AS prenom_enseignant,
+            u.email AS email_enseignant,
+            COUNT(et.id_etudiant) AS nb_etudiants
+            FROM cours c
+            LEFT JOIN enseignant en ON c.id_enseignant = en.id_enseignant
+            LEFT JOIN utilisateur u ON en.id_enseignant = u.id_utilisateur
+            LEFT JOIN filiere f ON c.id_filiere = f.id_filiere
+            LEFT JOIN etudiant et ON c.id_filiere = et.id_filiere
+            WHERE c.id_enseignant = ?
+            ";
+
+       $params = [$id_enseignant];
+       $types = 'i';
+
+       // Filtre par recherche sur le nom du cours
+       if (!empty($filters['search'])) {
+            $query .= " AND c.nom_cours LIKE ?";
+            $searchTerm = "%" . $filters['search'] . "%";
+            $params[] = $searchTerm;
+            $types .= 's';
+        }
+
+        // Filtre par filière
+        if (!empty($filters['filiere'])) {
+            $query .= " AND c.id_filiere = ?";
+            $params[] = $filters['filiere'];
+            $types .= 'i';
+        }
+
+        $query .= " GROUP BY c.id_cours";
+        // Pagination
+        $query .= " LIMIT ?, ?";
+        $params[] = $offset;
+        $params[] = $limit;
+        $types .= 'ii';
+
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $courses = [];
+        while ($row = $result->fetch_assoc()) {
+                $courses[] = [
+                'id_cours' => $row['id_cours'],
+                'nom_cours' => $row['nom_cours'],
+                'code_cours' => $row['code_cours'],
+                'id_enseignant' => $row['id_enseignant'],
+                'email_enseignant' => $row['email_enseignant'],
+                'id_filiere' => $row['id_filiere'],
+                'niveau' => $row['niveau'],
+                'enseignant' => $row['nom_enseignant'] ? $row['nom_enseignant'] . " " . $row['prenom_enseignant'] : 'Non assigné',
+                'filiere' => $row['nom_filiere'] ?? 'N/A',
+                'nb_etudiants' => (int)$row['nb_etudiants']
+            ];
+        }
+        $stmt->close();
+
+        // Total pour pagination (même filtres)
+        $countQuery = "
+            SELECT COUNT(*) AS total
+            FROM cours c
+            LEFT JOIN enseignant e ON c.id_enseignant = e.id_enseignant
+            LEFT JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
+            LEFT JOIN filiere f ON c.id_filiere = f.id_filiere
+            WHERE c.id_enseignant = ?
+        ";
+
+        $countParams = [$id_enseignant];
+        $countTypes = 'i';
+
+        if (!empty($filters['search'])) {
+            $countQuery .= " AND c.nom_cours LIKE ?";
+            $countParams[] = $searchTerm;
+            $countTypes .= 's';
+        }
+
+        if (!empty($filters['filiere'])) {
+            $countQuery .= " AND c.id_filiere = ?";
+            $countParams[] = $filters['filiere'];
+            $countTypes .= 'i';
+        }
+
+        $countStmt = $conn->prepare($countQuery);
+        $countStmt->bind_param($countTypes, ...$countParams);
+        $countStmt->execute();
+        $countResult = $countStmt->get_result();
+        $total = $countResult->fetch_assoc()['total'] ?? 0;
+        $countStmt->close();
+
+        return [
+            'courses' => $courses,
+            'pagination' => [
+                'total' => $total,
+                'page' => $page,
+               'limit' => $limit,
+               'totalPages' => ceil($total / $limit)
+            ]
+        ];
+      }
+   }
 ?>

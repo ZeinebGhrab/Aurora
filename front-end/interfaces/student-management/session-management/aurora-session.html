@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Séances - Aurora</title>
+    <link rel="stylesheet" href="../../../styles/shared.css">
+    <link rel="stylesheet" href="../../../styles/style-dashboard.css">
+    <link rel="stylesheet" href="../../../styles/style-session.css">
+    <link rel="stylesheet" href="../../../styles/style-session-student.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="module" src="../../../scripts/session/student/session_student.js"></script>
+    <script type="module" src="../../../scripts/authentification/logout.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <div class="logo">Auro<span>r</span>a</div>
+                </li>
+                <li class="nav-item">
+                    <a href="../aurora-student-dashboard.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../course-management/aurora-course.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                        </svg>
+                        Mes cours
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../session-management/aurora-session.html" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                        Mes Séances
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../absence-management/aurora-absence.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/>
+                        </svg>
+                        Absences 
+                    </a>
+                </li>
+                <!-- Bouton de déconnexion -->
+                <li>
+                    <a href="#" id="logoutBtn" class="nav-link logout-btn">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                    Déconnexion
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header">
+                    <div class="title-content">
+                        <h2><i class="fa-solid fa-clock"></i> Mes Séances</h2>
+                        <p>Gérez vos séances et marquez votre présence.</p>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon blue"><i class="fa-solid fa-calendar-days"></i></div>
+                            <div>
+                                <div class="stat-number" id="totalSeances">12</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Total Séances</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon green"><i class="fa-solid fa-calendar-check"></i></div>
+                            <div>
+                                <div class="stat-number" id="completedSeances">5</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Séances Complétées</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon orange"><i class="fa-solid fa-hourglass-half"></i></div>
+                            <div>
+                                <div class="stat-number" id="ongoingSeances">2</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Séances en Cours</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon purple"><i class="fa-solid fa-calendar-plus"></i></div>
+                            <div>
+                                <div class="stat-number" id="upcomingSeances">5</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Séances à Venir</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <select id="filterStatus">
+                        <option value="all">Tous les statuts</option>
+                        <option value="planifiée">Planifiées</option>
+                        <option value="en_cours">En cours</option>
+                        <option value="terminée">Terminées</option>  
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select id="filterCourse">
+                        <option value="">Tous les cours</option>
+                    </select>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchSeance" placeholder="Rechercher une séance...">
+                </div>
+            </div>
+
+            <!-- Sessions Grid -->
+            <div class="sessions-grid" id="sessionsContainer">
+                <!-- Les séances seront générées dynamiquement par JavaScript -->
+            </div>
+
+            <!-- Pagination -->
+            <div id="sessions-pagination" class="pagination-container"></div>
+
+        </main>
+    </div>
+
+    <!-- Modal de Visualisation -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fa-solid fa-eye"></i>
+                    <span>Détails de la Séance</span>
+                </h2>
+                <p class="modal-subtitle">Informations complètes de la séance</p>
+                <button class="modal-close">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="teacher-view-grid">
+                    <div class="view-item">
+                        <div class="view-label">Cours</div>
+                        <div class="view-value" id="viewCourseName">-</div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Statut</div>
+                        <div class="view-value">
+                            <span class="status-badge" id="viewStatut">-</span>
+                        </div>
+                    </div>
+                    <div class="view-item full-width">
+                        <div class="view-label">Titre</div>
+                        <div class="view-value" id="viewTitre">-</div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Date</div>
+                        <div class="view-value" id="viewDate">-</div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Horaire</div>
+                        <div class="view-value" id="viewHeure">-</div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Salle</div>
+                        <div class="view-value" id="viewSalle">-</div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Enseignant</div>
+                        <div class="view-value" id="viewTeacher">-</div>
+                    </div>
+                    <div class="view-item full-width">
+                        <div class="view-label">Description</div>
+                        <div class="view-value" id="viewDescription">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-cancel">
+                    <i class="fa-solid fa-times"></i>
+                    Fermer
+                </button>
+                <button class="btn btn-submit" onclick="window.markPresence ? window.markPresence(this.closest('.modal-overlay').previousElementSibling?.querySelector('.seance-card button')) : openUploadModal()">
+                    <i class="fa-solid fa-camera"></i>
+                    Marquer Présence
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Upload Photo -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>Marquer la Présence</span>
+                </h2>
+                <p class="modal-subtitle">Téléchargez votre photo pour confirmer votre présence</p>
+                <button class="modal-close">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Section Info Séance -->
+                <div class="seance-info-section">
+                    <div class="info-row">
+                        <i class="fa-solid fa-book"></i>
+                        <span id="uploadCourseName">-</span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span id="uploadTitre">-</span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-clock"></i>
+                        <span id="uploadDateTime">-</span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <span id="uploadTeacher">-</span>
+                    </div>
+                </div>
+
+                <!-- Section Upload Photo -->
+                <div class="upload-section">
+                    <div class="upload-zone">
+                        <label for="photoUpload" class="upload-label">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>Cliquez pour sélectionner une photo</span>
+                            <small>JPG, PNG ou GIF (max 5MB)</small>
+                        </label>
+                        <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                    </div>
+
+                    <!-- Aperçu de la photo -->
+                    <div class="photo-preview-container">
+                        <img id="photoPreview" alt="Aperçu" style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div class="message-container" id="uploadMessage"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-cancel">
+                    <i class="fa-solid fa-times"></i>
+                    Annuler
+                </button>
+                <button class="btn btn-submit" id="submitPresenceBtn">
+                    <i class="fa-solid fa-check"></i>
+                    Confirmer la Présence
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Aurora. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+</body>
+</html>

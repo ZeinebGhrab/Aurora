@@ -1,7 +1,7 @@
 import { deleteStudent, getAllStudents } from "./student_api.js";
-import { renderStudents, renderPagination } from "./student_render.js";
+import { renderStudents } from "./student_render.js";
 import { fillEditForm, fillViewModal } from "./student_form.js";
-import { showNotification } from "../utils.js";
+import { showNotification, renderPagination } from "../utils.js";
 
 // État de pagination et filtrage
 let currentState = {
@@ -14,32 +14,48 @@ let currentState = {
     }
 };
 
+// Charger et afficher les étudiants
 export async function loadAndRenderStudents(page = 1) {
     currentState.page = page;
 
     const container = document.querySelector(".students-grid");
-    if (!container) return;
+    if (!container) {
+        console.error("Container .students-grid introuvable !");
+        return;
+    }
 
     container.innerHTML = "<div class='loading'>Chargement...</div>";
 
-    const { students, pagination } = await getAllStudents(
-        currentState.page,
-        currentState.limit,
-        currentState.filters
-    );
+    try {
+        const { students, pagination } = await getAllStudents(
+            currentState.page,
+            currentState.limit,
+            currentState.filters
+        );
 
-    renderStudents(students, container);
-    renderPagination(pagination, container.parentElement);
-    updateStats(pagination);
+        renderStudents(students, container);
+
+        const paginationContainer = document.getElementById("students-pagination");
+        if (paginationContainer) {
+            renderPagination(pagination, paginationContainer);
+        }
+
+        updateStats(pagination);
+    } catch (error) {
+        console.error("Erreur lors du chargement des étudiants :", error);
+        container.innerHTML = "<div class='error'>Erreur lors du chargement.</div>";
+    }
 }
 
+// Gérer les actions sur les étudiants
 export function handleStudentActions() {
     const container = document.querySelector(".students-grid");
     if (!container) {
         console.error("Container .students-grid introuvable !");
         return;
     }
-    
+
+    // Actions voir, modifier, supprimer
     container.addEventListener("click", async e => {
         const viewBtn = e.target.closest(".btn-view");
         const editBtn = e.target.closest(".btn-edit");
@@ -47,14 +63,20 @@ export function handleStudentActions() {
 
         if (viewBtn) {
             await fillViewModal(viewBtn.dataset.id);
-            document.getElementById("viewStudentModal").classList.add("active");
-            document.body.style.overflow = "hidden";
+            const modal = document.getElementById("viewStudentModal");
+            if (modal) {
+                modal.classList.add("active");
+                document.body.style.overflow = "hidden";
+            }
         }
 
         if (editBtn) {
             await fillEditForm(editBtn.dataset.id);
-            document.getElementById("editStudentModal").classList.add("active");
-            document.body.style.overflow = "hidden";
+            const modal = document.getElementById("editStudentModal");
+            if (modal) {
+                modal.classList.add("active");
+                document.body.style.overflow = "hidden";
+            }
         }
 
         if (deleteBtn && confirm("Voulez-vous vraiment supprimer cet étudiant ?")) {
@@ -67,27 +89,30 @@ export function handleStudentActions() {
             }
         }
     });
-    
-    // Gérer la pagination
-    document.addEventListener("click", async e => {
-        if (e.target.closest(".pagination-btn")) {
+
+    // Pagination
+    const paginationContainer = document.getElementById("students-pagination");
+    if (paginationContainer) {
+        paginationContainer.addEventListener("click", async e => {
             const btn = e.target.closest(".pagination-btn");
-            const page = parseInt(btn.dataset.page);
-            if (!isNaN(page)) {
-                await loadAndRenderStudents(page);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (btn) {
+                const page = parseInt(btn.dataset.page);
+                if (!isNaN(page)) {
+                    await loadAndRenderStudents(page);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             }
-        }
-    });
+        });
+    }
 }
 
+// Initialiser les filtres
 export function initFilters() {
     const searchInput = document.querySelector(".search-box input");
     const filiereSelect = document.getElementById("filiereSelect");
     const niveauSelect = document.getElementById("niveauSelect");
 
-    
-    // Debounce pour la recherche
+    // Recherche avec debounce
     let searchTimeout;
     if (searchInput) {
         searchInput.addEventListener("input", (e) => {
@@ -99,7 +124,7 @@ export function initFilters() {
             }, 500);
         });
     }
-    
+
     // Filtre par filière
     if (filiereSelect) {
         filiereSelect.addEventListener("change", async (e) => {
@@ -109,7 +134,7 @@ export function initFilters() {
             await loadAndRenderStudents(1);
         });
     }
-    
+
     // Filtre par niveau
     if (niveauSelect) {
         niveauSelect.addEventListener("change", async (e) => {
@@ -120,9 +145,19 @@ export function initFilters() {
     }
 }
 
+// Mettre à jour les statistiques
 function updateStats(pagination) {
     const totalElement = document.querySelector(".stat-card:first-child .stat-number");
-    if (totalElement && pagination.total_students) {
+    const activeElement = document.querySelector(".stat-card:nth-child(2) .stat-number");
+    const newElement = document.querySelector(".stat-card:nth-child(3) .stat-number");
+
+    if (totalElement && pagination?.total_students != null) {
         totalElement.textContent = pagination.total_students.toLocaleString();
+    }
+    if (activeElement && pagination?.active_students != null) {
+        activeElement.textContent = pagination.active_students.toLocaleString();
+    }
+    if (newElement && pagination?.new_students != null) {
+        newElement.textContent = pagination.new_students.toLocaleString();
     }
 }
