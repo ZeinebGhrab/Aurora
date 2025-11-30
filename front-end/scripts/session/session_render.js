@@ -49,7 +49,6 @@ export function renderSessions(sessions, container) {
                 "planifiée": "status-planifiee",
                 "en_cours": "status-en-cours",
                 "terminée": "status-terminee",
-                "annulée": "status-annulee"
             }[s.statut] || "status-planifiee";
 
             const card = document.createElement("div");
@@ -86,10 +85,6 @@ export function renderSessions(sessions, container) {
                             <i class="fa-solid fa-users"></i>
                             <span>${s.nb_etudiants || 0} étudiants</span>
                         </div>
-                    </div>
-
-                    <div class="seance-description">
-                        <p>${s.description || ""}</p>
                     </div>
 
                     <div class="seance-actions">

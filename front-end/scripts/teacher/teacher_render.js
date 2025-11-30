@@ -29,9 +29,9 @@ export function renderTeachers(teachers, container) {
             const enseignant = {
                 grade: teacher.grade || "N/A",
                 specialite: teacher.specialite || "N/A",
-                cours: teacher.cours || Math.floor(Math.random() * 6) + 1,
-                etudiants: teacher.etudiants || Math.floor(Math.random() * 150) + 20,
-                note: teacher.note || (Math.random() * 1 + 4).toFixed(1)
+                cours: teacher.courses_count || 0,
+                etudiants: teacher.students_count || 0,
+                seances: teacher.seances_count || 0
             };
 
             const initials = `${user.prenom.charAt(0)}${user.nom.charAt(0)}`;
@@ -56,8 +56,8 @@ export function renderTeachers(teachers, container) {
                         <span>${user.email}</span>
                     </div>
                     <div class="detail-item">
-                        <i class="fa-solid fa-phone"></i>
-                        <span>${user.telephone || "+216 71 234 567"}</span>
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span>${user.grade || ""}</span>
                     </div>
                     <div class="detail-item">
                         <i class="fa-solid fa-building"></i>
@@ -74,8 +74,8 @@ export function renderTeachers(teachers, container) {
                         <div class="stat-label-small">Étudiants</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value">${enseignant.note}</div>
-                        <div class="stat-label-small">Note</div>
+                        <div class="stat-value">${enseignant.seances}</div>
+                        <div class="stat-label-small">Séances</div>
                     </div>
                 </div>
                 <div class="teacher-actions">
@@ -91,3 +91,5 @@ export function renderTeachers(teachers, container) {
         }
     });
 }
+
+

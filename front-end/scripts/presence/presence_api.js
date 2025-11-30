@@ -18,7 +18,39 @@ export async function getAllPresences(page = 1, limit = 12, filters = {}) {
         if (data.success) {
             return {
                 presences: data.presences || [],
-                pagination: data.pagination || {}
+                pagination: data.pagination || {},
+                stats: data.stats || {}
+            };
+        }
+
+        return { presences: [], pagination: {}, stats: {} };
+        
+    } catch (error) {
+        console.error('Erreur getAllPresences:', error);
+        return { presences: [], pagination: {}, stats: {} };
+    }
+}
+
+
+export async function getPresencesBySession(id_seance, page = 1, limit = 3, filters = {}) {
+    try {
+        const res = await fetch(`${API_BASE}/presence/api/get_presence_by_session.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id_seance ,page, limit, ...filters })
+        });
+        
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        console.log('Données brutes de l\'API:', data);
+        
+        if (data.success) {
+            return {
+                presences: data.presences || [],
+                pagination: data.pagination || {},
             };
         }
 
@@ -29,6 +61,7 @@ export async function getAllPresences(page = 1, limit = 12, filters = {}) {
         return { presences: [], pagination: {} };
     }
 }
+
 
 
 export async function addPresence(presenceData) {
@@ -51,7 +84,6 @@ export async function addPresence(presenceData) {
 
 
 export async function getPresenceeById(id_presence) {
-    console.log('....',id_presence);
     try {
         const res = await fetch(`${API_BASE}/presence/api/get_presence.php`, {
             method: "POST",
@@ -68,9 +100,7 @@ export async function getPresenceeById(id_presence) {
     }
 }
 
-export async function updatePresence(presenceData) {
-    console.log('Updating presence with data:', presenceData);
-    
+export async function updatePresence(presenceData) {    
     try {
         const response = await fetch(`${API_BASE}/presence/api/update_presence.php`, {
             method: 'POST',

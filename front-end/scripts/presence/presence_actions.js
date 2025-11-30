@@ -22,9 +22,10 @@ export async function loadAndRenderPresences(page = 1) {
 
     container.innerHTML = "<div class='loading'>Chargement...</div>";
 
-    const { presences, pagination } = await getAllPresences(currentState.page, currentState.limit, currentState.filters);
+    const { presences, pagination, stats } = await getAllPresences(currentState.page, currentState.limit, currentState.filters);
 
     renderPresences(presences, container);
+    updateStatistics(stats);
 
     const paginationContainer = document.getElementById('presence-pagination');
     if (paginationContainer) {
@@ -137,11 +138,9 @@ export function initFilters() {
 
 
 // ==================== Mettre à jour les statistiques ====================
-function updateStats(pagination) {
-    const totalElement = document.querySelector(".stat-card:first-child .stat-number");
-    if (totalElement && pagination.total) totalElement.textContent = pagination.total.toLocaleString();
-
-    const activeElement = document.querySelector(".stat-card:nth-child(2) .stat-number");
-    if (activeElement && pagination.totalActive) activeElement.textContent = pagination.totalActive.toLocaleString();
+export function updateStatistics(stats) {
+    document.getElementById("statPresences").textContent = stats.total_presences;
+    document.getElementById("statAbsences").textContent = stats.total_seances - stats.total_presences ?? 0;
+    document.getElementById("statTotal").textContent = stats.total_seances ?? 0;
 }
 

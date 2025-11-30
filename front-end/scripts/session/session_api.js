@@ -23,9 +23,6 @@ export async function getAllSessions(page = 1, limit = 6,filters = {}) {
     }
 }
 
-
-
-
 //  GET SEANCES BY TEACHER
 
 export async function getSessionsByTeacher(page = 1, limit = 6,filters = {}) {
@@ -103,6 +100,30 @@ export async function getSessionById(id_seance) {
 }
 
 
+// ==============================
+//  GET SEANCES BY course
+// ==============================
+export async function getSessionsByCourse(cours,page = 1, limit = 6,filters = {}) {
+    try {
+        const res = await fetch(`${API_BASE}/session/api/get_sessions_by_course.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({cours, page, limit, ...filters })
+        });
+        const data = await res.json();
+        console.log("getSeancesByCourse:", data);
+
+        if (data.success) return {
+                sessions: data.sessions|| [],
+                pagination: data.pagination || {}
+            };
+        return { sessions: [], pagination: {} };
+
+    } catch (error) {
+        console.error("Erreur getSeancesByCourse:", error);
+        return { sessions: [], pagination: {} };
+    }
+}
 
 // ==============================
 //  ADD SEANCE (avec vérification disponibilité backend)

@@ -3,13 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes absences - Aurora</title>
+    <title>Gestion des Présences - Aurora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../../styles/shared.css">
     <link rel="stylesheet" href="../../../styles/style-dashboard.css">
+    <link rel="stylesheet" href="../../../styles/style-absence.css">
     <link rel="stylesheet" href="../../../styles/style-course.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="../../../styles/absences.css">
+    <link rel="stylesheet" href="../../../styles/style-session.css">
+    <script type="module" src="../../../scripts/presence/teacher/presence_management.js"></script>
     <script type="module" src="../../../scripts/authentification/logout.js"></script>
+    <!-- jsPDF -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+   <!-- SheetJS -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 </head>
 <body>
     <div class="dashboard">
@@ -44,11 +52,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="../absence-management/aurora-absence.html" class="nav-link active">
+                    <a href="#" class="nav-link active">
                         <svg class="nav-icon" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/>
+                            <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
                         </svg>
-                       Présence & Absence 
+                        Présence & Absence
                     </a>
                 </li>
                 <!-- Bouton de déconnexion -->
@@ -57,269 +65,149 @@
                         <svg class="nav-icon" viewBox="0 0 24 24">
                             <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
                         </svg>
-                    Déconnexion
+                        Déconnexion
                     </a>
                 </li>
             </ul>
         </nav>
-        
+
         <!-- Main Content -->
         <main class="main-content">
             <!-- Page Header -->
             <div class="page-header">
                 <div class="header">
                     <div class="title-content">
-                        <h2><i class="fa-solid fa-user-xmark"></i> Mes Absences</h2>
-                        <p>Suivi de l'assiduité par matiére.</p>
+                        <h2><i class="fa-solid fa-clipboard-check"></i> Mes Présences</h2>
+                        <p>Suivez les présences de vos étudiants par cours et séance</p>
                     </div>
-                </div>
-
-                 <!-- Stats Grid -->
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon blue"><i class="fa-solid fa-calendar-days"></i></div>
-                            <div>
-                                <div class="stat-number">95</div>
-                            </div>
-                        </div>
-                        <div class="stat-label">Total séances</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon green"><i class="fa-solid fa-user-check"></i></div>
-                            <div>
-                                <div class="stat-number">80</div>
-                            </div>
-                        </div>
-                        <div class="stat-label">Présences</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon orange"><i class="fa-solid fa-user-xmark"></i></div>
-                            <div>
-                                <div class="stat-number">15</div>
-                            </div>
-                        </div>
-                        <div class="stat-label">Absences</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon purple"><i class="fa-solid fa-chart-line"></i></div>
-                            <div>
-                                <div class="stat-number">84%</div>
-                            </div>
-                        </div>
-                        <div class="stat-label">Taux d’assiduité</div>
+                    <div class="header-actions">
+                        <button class="btn-primary" onclick="exportPDF()" style="display: none;" id="btnExportPDF">
+                            <i class="fas fa-file-pdf"></i>
+                            Export PDF
+                        </button>
+                        <button class="btn-primary" onclick="exportExcel()" style="display: none;" id="btnExportExcel">
+                            <i class="fas fa-file-excel"></i>
+                            Export Excel
+                        </button>
                     </div>
                 </div>
             </div>
-            <div class="courses-grid">
-                <div class="course-card">
-                    <div class="course-header">
-                        <p class="status"><span class="dot"></span> Correct</p>
-                        <div class="course-name">Algèbre linéaire</div>
-                        <div class="absence-rate">
-                            <span>16.7%</span>
-                            <p>Absences</p>
+
+            <!-- Breadcrumb Navigation -->
+            <div class="filters-container" id="breadcrumb" style="display: none; padding: 1rem 1.5rem;">
+                <button class="btn-secondary" onclick="showCourses()">
+                    <i class="fas fa-arrow-left"></i>
+                    Retour aux cours
+                </button>
+                <div style="flex: 1; display: flex; align-items: center; gap: 0.5rem; color: #6B7280; font-weight: 600;">
+                    <i class="fas fa-book"></i>
+                    <span id="breadcrumbText">Cours</span>
+                </div>
+            </div>
+
+            <!-- Vue 1: Liste des Cours -->
+            <div id="coursesView">
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Mes cours</div>
                         </div>
                     </div>
-                    <div class="absence-stats">
-                        <div class="stat">
-                            <div class="icon red"><i class="fa-solid fa-xmark"></i>
-                            </div>
-                            <p class="count">1</p>
-                            <span>Non justifiées</span>
+
+                    <div class="stat-item">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-calendar-days"></i>
                         </div>
-                        <div class="stat">
-                        <div class="icon orange"><i class="fa-solid fa-exclamation"></i></div>
-                        <p class="count">0</p>
-                        <span>Justifiées</span>
-                        </div>
-                        <div class="stat">
-                        <div class="icon blue"><i class="fa-solid fa-check"></i></div>
-                        <p class="count">5</p>
-                        <span>Présences</span>
+                        <div class="stat-content">
+                            <div class="stat-value">48</div>
+                            <div class="stat-label">Total séances</div>
                         </div>
                     </div>
-    
-                    <div class="progress-info">
-                        <p>Répartition des séances</p>
-                        <p>6 séances</p>
+
+                    <div class="stat-item">
+                        <div class="stat-icon green">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">87%</div>
+                            <div class="stat-label">Taux global</div>
+                        </div>
                     </div>
-    
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 83.3%;"></div>
+
+                    <div class="stat-item">
+                        <div class="stat-icon red">
+                            <i class="fas fa-user-xmark"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">124</div>
+                            <div class="stat-label">Absences totales</div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="content-card">
+                    <h2 class="card-title">Mes Cours</h2>
+                    <div class="courses-grid" id="coursesContainer">
+                        <!-- Les cours seront injectés ici via JS -->
+                    </div>
+                    <!-- Pagination -->
+                    <div id="courses-pagination" class="pagination-container"></div>
+                </div>
+            </div>
+
+            <!-- Vue 2: Liste des Séances -->
+            <div id="sessionsView" style="display: none;">
+                <div class="content-card">
+                    <h2 class="card-title">Séances du cours<span id="courseTitle"></span></h2>
+                    <div class="sessions-grid" id="sessionsGrid">
+                        <!-- Les séances seront insérées ici dynamiquement -->
+                    </div>
+                    <!-- Pagination -->
+                    <div id="sessionsPagination" class="pagination-container"></div>
+                </div>
+            </div>
+
+            <!-- Vue 3: Détails des Absences -->
+            <div id="absencesView" style="display: none;">
+                <div class="quick-stats" id="sessionStats">
+                    <!-- Stats de la séance -->
                 </div>
 
-                <div class="courses-grid">
-                    <div class="course-card">
-                        <div class="course-header">
-                            <p class="status"><span class="dot"></span> Correct</p>
-                            <div class="course-name">Mécanique Quantique</div>
-                            <div class="absence-rate">
-                                <span>20%</span>
-                                <p>Absences</p>
-                            </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">
+                            <h2><i class="fas fa-list-check"></i> Détails des Présences <span class="record-count" id="studentCount"></span></h2>
                         </div>
-                        <div class="absence-stats">
-                            <div class="stat">
-                                <div class="icon red"><i class="fa-solid fa-xmark"></i>
-                                </div>
-                                <p class="count">0</p>
-                                <span>Non justifiées</span>
+                        <div class="table-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchInput" placeholder="Rechercher un étudiant..." onkeyup="searchTable()">
                             </div>
-                            <div class="stat">
-                            <div class="icon orange"><i class="fa-solid fa-exclamation"></i></div>
-                            <p class="count">1</p>
-                            <span>Justifiées</span>
-                            </div>
-                            <div class="stat">
-                            <div class="icon blue"><i class="fa-solid fa-check"></i></div>
-                            <p class="count">4</p>
-                            <span>Présences</span>
-                            </div>
-                        </div>
-        
-                        <div class="progress-info">
-                            <p>Répartition des séances</p>
-                            <p>5 séances</p>
-                        </div>
-        
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 80%;"></div>
                         </div>
                     </div>
+
+                    <div class="table-wrapper">
+                        <table class="data-table" id="presenceTable">
+                            <thead>
+                                <tr>
+                                    <th>Étudiant</th>
+                                    <th>Heure d'arrivée</th>
+                                    <th>Heure de fin</th>
+                                    <th>Statut</th>                                    
+                                </tr>
+                            </thead>
+                            <tbody id="presenceTableBody">
+                                <!-- Les données seront insérées ici -->
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div class="courses-grid">
-                        <div class="course-card">
-                            <div class="course-header">
-                                <p class="status"><span class="dot"></span> A surveiller</p>
-                                <div class="course-name">Intelligence Artificielle</div>
-                                <div class="absence-rate">
-                                    <span>33.3%</span>
-                                    <p>Absences</p>
-                                </div>
-                            </div>
-                            <div class="absence-stats">
-                                <div class="stat">
-                                    <div class="icon red"><i class="fa-solid fa-xmark"></i>
-                                    </div>
-                                    <p class="count">4</p>
-                                    <span>Non justifiées</span>
-                                </div>
-                                <div class="stat">
-                                <div class="icon orange"><i class="fa-solid fa-exclamation"></i></div>
-                                <p class="count">1</p>
-                                <span>Justifiées</span>
-                                </div>
-                                <div class="stat">
-                                <div class="icon blue"><i class="fa-solid fa-check"></i></div>
-                                <p class="count">10</p>
-                                <span>Présences</span>
-                                </div>
-                            </div>
-            
-                            <div class="progress-info">
-                                <p>Répartition des séances</p>
-                                <p>15 séances</p>
-                            </div>
-            
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 66.6%;"></div>
-                            </div>
-                        </div>
-                        </div>
-
-                        <div class="courses-grid">
-                            <div class="course-card">
-                                <div class="course-header">
-                                    <p class="status"><span class="dot"></span> Correct</p>
-                                    <div class="course-name">Base de Données</div>
-                                    <div class="absence-rate">
-                                        <span>0%</span>
-                                        <p>Absences</p>
-                                    </div>
-                                </div>
-                                <div class="absence-stats">
-                                    <div class="stat">
-                                        <div class="icon red"><i class="fa-solid fa-xmark"></i>
-                                        </div>
-                                        <p class="count">0</p>
-                                        <span>Non justifiées</span>
-                                    </div>
-                                    <div class="stat">
-                                    <div class="icon orange"><i class="fa-solid fa-exclamation"></i></div>
-                                    <p class="count">0</p>
-                                    <span>Justifiées</span>
-                                    </div>
-                                    <div class="stat">
-                                    <div class="icon blue"><i class="fa-solid fa-check"></i></div>
-                                    <p class="count">7</p>
-                                    <span>Présences</span>
-                                    </div>
-                                </div>
-                
-                                <div class="progress-info">
-                                    <p>Répartition des séances</p>
-                                    <p>7 séances</p>
-                                </div>
-                
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 100%;"></div>
-                                </div>
-                            </div>
-                            </div>
-
-                            <div class="courses-grid">
-                                <div class="course-card">
-                                    <div class="course-header">
-                                        <p class="status"><span class="dot"></span> Correct</p>
-                                        <div class="course-name">Sécurité Informatique</div>
-                                        <div class="absence-rate">
-                                            <span>10%</span>
-                                            <p>Absences</p>
-                                        </div>
-                                    </div>
-                                    <div class="absence-stats">
-                                        <div class="stat">
-                                            <div class="icon red"><i class="fa-solid fa-xmark"></i>
-                                            </div>
-                                            <p class="count">0</p>
-                                            <span>Non justifiées</span>
-                                        </div>
-                                        <div class="stat">
-                                        <div class="icon orange"><i class="fa-solid fa-exclamation"></i></div>
-                                        <p class="count">1</p>
-                                        <span>Justifiées</span>
-                                        </div>
-                                        <div class="stat">
-                                        <div class="icon blue"><i class="fa-solid fa-check"></i></div>
-                                        <p class="count">9</p>
-                                        <span>Présences</span>
-                                        </div>
-                                    </div>
-                    
-                                    <div class="progress-info">
-                                        <p>Répartition des séances</p>
-                                        <p>10 séances</p>
-                                    </div>
-                    
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 90%;"></div>
-                                    </div>
-                                </div>
-                                </div>
-
-                                
-                
+                    <!-- Pagination -->
+                    <div id="presencePagination" class="pagination-container"></div>
+                </div>
             </div>
         </main>
     </div>

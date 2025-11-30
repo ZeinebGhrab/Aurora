@@ -143,8 +143,7 @@ export async function updateCourse(id_cours, courseData) {
     try {
         // inclure id_cours dans le corps
         const bodyData = { id_cours, ...courseData };
-        console.log(bodyData);
-
+        
         const res = await fetch(`${API_BASE}/course/api/update_course.php`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

@@ -235,6 +235,29 @@ class PresenceManager {
         $total = $countStmt->get_result()->fetch_assoc()['total'] ?? 0;
         $countStmt->close();
 
+
+        $totalPresencesQuery = "
+            SELECT COUNT(*) AS total_presences
+            FROM presence p
+            INNER JOIN seance s ON p.id_seance = s.id_seance
+            WHERE p.statut = 'Présent'
+            AND s.statut = 'terminée'
+        ";
+
+        $resultPres = $conn->query($totalPresencesQuery);
+        $total_presences = $resultPres->fetch_assoc()['total_presences'] ?? 0;
+
+        // Total des séances (uniquement 'terminée')
+        $totalSeancesQuery = "
+            SELECT COUNT(*) AS total_seances
+            FROM seance
+            WHERE statut = 'terminée'
+        ";
+
+        $resultSeances = $conn->query($totalSeancesQuery);
+        $total_seances = $resultSeances->fetch_assoc()['total_seances'] ?? 0;
+
+
         return [
             'presences' => $presences,
             'pagination' => [
@@ -242,6 +265,10 @@ class PresenceManager {
                 'page' => $page,
                 'limit' => $limit,
                 'totalPages' => ceil($total / $limit)
+            ],
+            'stats' => [
+                'total_presences' => $total_presences,
+                'total_seances' => $total_seances
             ]
         ];
     }

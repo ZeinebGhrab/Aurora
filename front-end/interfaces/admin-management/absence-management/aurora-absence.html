@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Présences - Aurora</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../../styles/shared.css">
     <link rel="stylesheet" href="../../../styles/style-dashboard.css">
     <link rel="stylesheet" href="../../../styles/style-absence.css">
@@ -92,46 +92,46 @@
                 </div>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="quick-stats">
-                <div class="stat-item">
-                    <div class="stat-icon green">
-                        <i class="fa-solid fa-user-check"></i>
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon orange">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number" id="statTotal"></div>
+                        </div>
                     </div>
-                    <div class="stat-content">
-                        <span class="stat-value">892</span>
-                        <span class="stat-label">Présences totales</span>
-                    </div>
+                    <div class="stat-label">Total</div>
+                    <div class="stat-detail">+0 ce mois</div>
                 </div>
 
-                <div class="stat-item">
-                    <div class="stat-icon red">
-                        <i class="fa-solid fa-user-xmark"></i>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon green">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number" id="statPresences"></div>
+                        </div>
                     </div>
-                    <div class="stat-content">
-                        <span class="stat-value">128</span>
-                        <span class="stat-label">Absences totales</span>
-                    </div>
+                    <div class="stat-label">Présences totales</div>
+                    <div class="stat-detail">+0 ce mois</div>
                 </div>
 
-                <div class="stat-item">
-                    <div class="stat-icon orange">
-                        <i class="fa-solid fa-clock"></i>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon red">
+                            <i class="fa-solid fa-user-xmark"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number" id="statAbsences"></div>
+                        </div>
                     </div>
-                    <div class="stat-content">
-                        <span class="stat-value">45</span>
-                        <span class="stat-label">Retards</span>
-                    </div>
-                </div>
-
-                <div class="stat-item">
-                    <div class="stat-icon blue">
-                        <i class="fa-solid fa-file-lines"></i>
-                    </div>
-                    <div class="stat-content">
-                        <span class="stat-value">32</span>
-                        <span class="stat-label">Absences justifiées</span>
-                    </div>
+                    <div class="stat-label">Absences totales</div>
+                    <div class="stat-detail">+0 cette semaine</div>
                 </div>
             </div>
 
@@ -189,7 +189,7 @@
         </div>
     </footer>
 
-    <!-- Modal Edit Présence - À ajouter dans aurora-absence.html avant </main> -->
+    <!-- Modal modifier Présence -->
 <div class="modal-overlay" id="editPresenceModal">
     <div class="modal-container">
         <!-- Header -->

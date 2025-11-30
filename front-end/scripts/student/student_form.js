@@ -18,7 +18,6 @@ export function handleFormSubmit(formId, modal) {
                 : null,
             niveau: form.querySelector("[name='niveau']").value || "",
             statut: form.querySelector("[name='statut']").value == "activé" ? "activé" : "désactivé",
-            photo_profil: form.querySelector("[name='photo_profil']").value || "",
         };
 
         const editingId = form.dataset.editingId;
@@ -27,7 +26,8 @@ export function handleFormSubmit(formId, modal) {
             res = await updateStudent(editingId, formData);
         } else {
             const mot_de_passe = form.querySelector("[name='mot_de_passe']").value;
-            res = await addStudent({mot_de_passe, ...formData});
+            const photo_profil= form.querySelector("[name='photo_profil']").value || "";
+            res = await addStudent({mot_de_passe, photo_profil, ...formData});
         }
 
         if (res.success) {
@@ -56,7 +56,7 @@ export async function fillEditForm(id) {
     form.querySelector("#editStudentStatut").value = student.statut || "actif";
 
     // Remplir filière si disponible
-    const filiereSelect = form.querySelector("editStudentFiliere");
+    const filiereSelect = form.querySelector("#editStudentFiliere");
     if (filiereSelect && student.id_filiere) {
         filiereSelect.value = student.id_filiere;
     }

@@ -50,10 +50,45 @@ class TeacherManager {
         $offset = ($page - 1) * $limit;
 
         $query = "
-            SELECT u.id_utilisateur, u.nom, u.prenom, u.email, u.date_creation, u.type_compte, u.statut, e.grade, e.specialite
-            FROM enseignant e
-            JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
-            WHERE 1=1
+            SELECT 
+            u.id_utilisateur,
+            u.nom,
+            u.prenom,
+            u.email,
+            u.date_creation,
+            u.type_compte,
+            u.statut,
+            e.grade,
+            e.specialite,
+
+            -- Nombre TOTAL de cours que l’enseignant enseigne
+            (
+                SELECT COUNT(*) 
+                FROM cours c 
+                WHERE c.id_enseignant = u.id_utilisateur
+            ) AS courses_count,
+
+            -- Nombre TOTAL d’étudiants inscrits dans ses cours
+            (
+                SELECT COUNT(DISTINCT etu.id_etudiant)
+                FROM cours c
+                JOIN etudiant etu ON etu.id_filiere = c.id_filiere 
+                                 AND etu.niveau = c.niveau
+                WHERE c.id_enseignant = u.id_utilisateur
+            ) AS students_count,
+            
+             -- Nombre TOTAL de séances que l’enseignant enseigne
+
+            (
+                SELECT COUNT(*)
+                FROM seance s
+                JOIN cours c ON s.id_cours = c.id_cours
+                WHERE c.id_enseignant = u.id_utilisateur
+            ) AS seances_count
+
+        FROM enseignant e
+        JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
+        WHERE 1=1
         ";
 
         $params = [];

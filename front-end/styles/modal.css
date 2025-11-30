@@ -18,13 +18,13 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    padding: 2rem;
+    padding: 1.5rem;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
@@ -50,6 +50,41 @@
 
 .modal-overlay.active .modal-container {
     transform: translateY(0);
+}
+
+/* View Modal Specific Styles */
+.teacher-view-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.view-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.view-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.view-label {
+    font-weight: 600;
+    color: #6B7280;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.view-value {
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    background: #F9FAFB;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent);
 }
 
 /* Modal Header */

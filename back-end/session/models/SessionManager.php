@@ -480,6 +480,104 @@ class SessionManager {
         ];
     }
 
+    // Obtenir toutes les séances d’un cours
+    public function getSessionsByCourse($id_cours, $filters = []) {
+        $this->updateSeancesStatusAndPresence();
+        $conn = $this->db->connect();
+
+        $page = isset($filters['page']) ? (int)$filters['page'] : 1;
+        $limit = isset($filters['limit']) ? (int)$filters['limit'] : 6;
+        $offset = ($page - 1) * $limit;
+
+        $query = "
+            SELECT 
+                s.*,
+                c.nom_cours,
+                c.code_cours,
+                u.nom AS nom_enseignant,
+                u.prenom AS prenom_enseignant,
+                (SELECT COUNT(*) 
+                    FROM etudiant et 
+                    WHERE et.id_filiere = c.id_filiere 
+                    AND et.niveau = c.niveau) AS nb_etudiants
+            FROM seance s
+            LEFT JOIN cours c ON s.id_cours = c.id_cours
+            LEFT JOIN enseignant e ON c.id_enseignant = e.id_enseignant
+            LEFT JOIN utilisateur u ON e.id_enseignant = u.id_utilisateur
+            WHERE s.statut = 'terminée' 
+            AND s.id_cours = ?
+        ";
+
+        $params = [$id_cours];
+        $types = "i";
+
+        // Filtre par statut
+        if (!empty($filters['statut'])) {
+            $query .= " AND s.statut = ?";
+            $params[] = $filters['statut'];
+            $types .= "s";
+        }
+
+        // Filtre par recherche texte
+        if (!empty($filters['search'])) {
+            $query .= " AND (s.titre LIKE ? OR s.description LIKE ?)";
+            $search = "%" . $filters['search'] . "%";
+            $params[] = $search;
+            $params[] = $search;
+            $types .= "ss";
+        }
+
+        // Pagination
+        $query .= " ORDER BY s.date_heure DESC LIMIT ?, ?";
+        $params[] = $offset;
+        $params[] = $limit;
+        $types .= "ii";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $seances = [];
+        while ($row = $result->fetch_assoc()) {
+            $row['nb_etudiants'] = (int)$row['nb_etudiants'];
+            $seances[] = (new Session($row))->toArray();
+        }
+        $stmt->close();
+
+        // Total pour pagination
+        $countQuery = "SELECT COUNT(*) AS total FROM seance WHERE id_cours = ?";
+        $countParams = [$id_cours];
+        $countTypes = "i";
+
+        if (!empty($filters['statut'])) {
+            $countQuery .= " AND statut = ?";
+            $countParams[] = $filters['statut'];
+            $countTypes .= "s";
+        }
+        if (!empty($filters['search'])) {
+            $countQuery .= " AND (titre LIKE ? OR description LIKE ?)";
+            $countParams[] = $search;
+            $countParams[] = $search;
+            $countTypes .= "ss";
+        }
+
+        $countStmt = $conn->prepare($countQuery);
+        $countStmt->bind_param($countTypes, ...$countParams);
+        $countStmt->execute();
+        $total = $countStmt->get_result()->fetch_assoc()['total'];
+        $countStmt->close();
+
+        return [
+            "seances" => $seances,
+            "pagination" => [
+                "total" => $total,
+                "page" => $page,
+                "limit" => $limit,
+                "totalPages" => ceil($total / $limit)
+            ]
+        ];
+    }
 
     // Modifier une séance
     public function updateSeance($id, $data) {
