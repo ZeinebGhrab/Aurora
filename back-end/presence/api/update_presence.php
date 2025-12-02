@@ -23,7 +23,6 @@ try {
     $id_seance     = $input['id_seance'] ?? null;
     $statut        = $input['statut'] ?? null;
     $heure_arrivee = $input['heure_arrivee'] ?? null;
-    $justification = $input['justification'] ?? "";
 
     // Validation des champs requis
     if (!$id_presence || !$id_etudiant || !$id_seance || !$statut) {
@@ -34,14 +33,12 @@ try {
         exit;
     }
 
-    // Correction : passer un tableau au lieu d'arguments séparés
     $presence = new Presence([
         'id_presence'   => $id_presence,
         'id_etudiant'   => $id_etudiant,
         'id_seance'     => $id_seance,
         'statut'        => $statut,
         'heure_arrivee' => $heure_arrivee,
-        'justification' => $justification
     ]);
 
     if ($pm->updatePresence($presence)) {

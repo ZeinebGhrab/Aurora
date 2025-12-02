@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
+// Connexion à la base
 $link = mysqli_connect("localhost", "root", "", "aurora");
 if (!$link) {
     echo json_encode(['success' => false, 'message' => 'Erreur de connexion à la base de données.']);
@@ -16,6 +17,7 @@ foreach ($required as $field) {
     }
 }
 
+// Vérifier la photo
 if (!isset($_FILES['photo_profil']) || $_FILES['photo_profil']['error'] !== UPLOAD_ERR_OK) {
     echo json_encode(['success' => false, 'message' => 'Erreur lors du téléchargement de la photo.']);
     exit;
@@ -57,31 +59,36 @@ mysqli_stmt_close($stmt);
 // Hacher le mot de passe
 $mot_de_passe_hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
 
-// Gestion de la photo
-$dossier = "uploads/";
-if (!is_dir($dossier)) mkdir($dossier, 0777, true);
-
-$extension = strtolower(pathinfo($_FILES['photo_profil']['name'], PATHINFO_EXTENSION));
-$photo_profil = uniqid('photo_', true) . '.' . $extension;
-$chemin = $dossier . $photo_profil;
-
-if (!move_uploaded_file($_FILES['photo_profil']['tmp_name'], $chemin)) {
-    echo json_encode(['success' => false, 'message' => 'Erreur lors du déplacement de la photo.']);
-    exit;
-}
-
-// Insérer dans utilisateur
+// -------------------- INSÉRER UTILISATEUR --------------------
+// Sans la photo pour obtenir l'ID
 $stmt = mysqli_prepare($link, 
-    "INSERT INTO utilisateur (nom, prenom, email, mot_de_passe, photo_profil) 
-     VALUES (?, ?, ?, ?, ?)"
+    "INSERT INTO utilisateur (nom, prenom, email, mot_de_passe) 
+     VALUES (?, ?, ?, ?)"
 );
-mysqli_stmt_bind_param($stmt, "sssss", $nom, $prenom, $email, $mot_de_passe_hash, $photo_profil);
+mysqli_stmt_bind_param($stmt, "ssss", $nom, $prenom, $email, $mot_de_passe_hash);
 
 if (mysqli_stmt_execute($stmt)) {
+    $id_utilisateur = mysqli_insert_id($link); // ID généré
 
-    $id_utilisateur = mysqli_insert_id($link);
+    // -------------------- GÉRER LA PHOTO --------------------
+    $dossier = "uploads/";
+    if (!is_dir($dossier)) mkdir($dossier, 0777, true);
 
-    // Insérer dans etudiant
+    $extension = strtolower(pathinfo($_FILES['photo_profil']['name'], PATHINFO_EXTENSION));
+    $photo_profil = 'student_'. $id_utilisateur . '.' . $extension; // nom = student_id.extension
+    $chemin = $dossier . $photo_profil;
+
+    if (!move_uploaded_file($_FILES['photo_profil']['tmp_name'], $chemin)) {
+        echo json_encode(['success' => false, 'message' => 'Erreur lors du déplacement de la photo.']);
+        exit;
+    }
+
+    // Mettre à jour l'utilisateur avec le nom de la photo
+    $stmt_update = mysqli_prepare($link, "UPDATE utilisateur SET photo_profil = ? WHERE id_utilisateur = ?");
+    mysqli_stmt_bind_param($stmt_update, "si", $photo_profil, $id_utilisateur);
+    mysqli_stmt_execute($stmt_update);
+
+    // -------------------- INSÉRER ÉTUDIANT --------------------
     $stmt2 = mysqli_prepare($link, 
         "INSERT INTO etudiant (id_etudiant, id_filiere) VALUES (?, ?)"
     );
@@ -99,5 +106,4 @@ if (mysqli_stmt_execute($stmt)) {
     mysqli_close($link);
     echo json_encode(['success' => false, 'message' => 'Erreur lors de l’inscription utilisateur.']);
 }
-
 ?>

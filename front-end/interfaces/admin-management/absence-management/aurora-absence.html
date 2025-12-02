@@ -8,9 +8,16 @@
     <link rel="stylesheet" href="../../../styles/shared.css">
     <link rel="stylesheet" href="../../../styles/style-dashboard.css">
     <link rel="stylesheet" href="../../../styles/style-absence.css">
+    <link rel="stylesheet" href="../../../styles/style-course.css">
+    <link rel="stylesheet" href="../../../styles/style-session.css">
     <link rel="stylesheet" href="../../../styles/modal.css">
     <script type="module" src="../../../scripts/authentification/logout.js"></script>
     <script type="module" src="../../../scripts/presence/presence.js"></script>
+    <!-- jsPDF -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+   <!-- SheetJS -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="dashboard">
@@ -87,8 +94,16 @@
                         <h2><i class="fa-regular fa-address-card"></i> Gestion des Présences</h2>
                         <p></p>
                     </div>
-               
-           
+                    <div class="header-actions">
+                        <button class="btn-primary" onclick="exportPDF()" style="display: none;" id="btnExportPDF">
+                            <i class="fas fa-file-pdf"></i>
+                            Export PDF
+                        </button>
+                        <button class="btn-primary" onclick="exportExcel()" style="display: none;" id="btnExportExcel">
+                            <i class="fas fa-file-excel"></i>
+                            Export Excel
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -135,49 +150,81 @@
                 </div>
             </div>
 
-            <!-- Filters Section -->
-            <div class="filters-container">
-                <div class="filter-group">
-                    <label><i class="fa-solid fa-book"></i> Cours</label>
-                    <select id="courseSelect" class="filter-input">
-                        <option value="">Tous les cours</option>
-                    </select>
-                </div>
-                
-               <div class="filter-group">
-                    <select id="filiereSelect" class="filter-input">
-                        <option value="">Toutes les filières</option>
-                        <option value="1">Ingénierie Spatiale & Aéronautique</option>
-                        <option value="2">Sciences Cosmiques & Planétaires</option>
-                        <option value="3">IA & Sciences des Données Spatiales</option>
-                        <option value="4">Énergie Durable & Technologies Vertes</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <select id="niveauSelect" class="filter-input">
-                        <option value="">Tous les niveaux</option>
-                        <option value="Niveau 1">Niveau 1</option>
-                        <option value="Niveau 2">Niveau 2</option>
-                        <option value="Niveau 3">Niveau 3</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label><i class="fa-solid fa-filter"></i> Statut</label>
-                    <select id="statutSelect" class="filter-input">
-                        <option value="">Tous</option>
-                        <option value="présent">Présent</option>
-                        <option value="absent">Absent</option>
-                    </select>
+            <!-- Breadcrumb Navigation -->
+            <div class="filters-container" id="breadcrumb" style="display: none; padding: 1rem 1.5rem;">
+                <button class="btn-secondary" onclick="showCourses()">
+                    <i class="fas fa-arrow-left"></i>
+                    Retour aux cours
+                </button>
+                <div style="flex: 1; display: flex; align-items: center; gap: 0.5rem; color: #6B7280; font-weight: 600;">
+                    <i class="fas fa-book"></i>
+                    <span id="breadcrumbText">Cours</span>
                 </div>
             </div>
 
-            <!-- Contenu dynamique depuis API -->
-            <div class="presence-grid"></div>
+            <!-- Vue 1: Liste des Cours -->
+            <div id="coursesView">
 
-            <!-- Pagination dynamique -->
-            <div id="presence-pagination"></div>
+                <div class="content-card">
+                    <h2 class="card-title">Cours</h2>
+                    <div class="courses-grid" id="coursesContainer">
+                        <!-- Les cours seront injectés ici via JS -->
+                    </div>
+                    <!-- Pagination -->
+                    <div id="courses-pagination" class="pagination-container"></div>
+                </div>
+            </div>
+
+            <!-- Vue 2: Liste des Séances -->
+            <div id="sessionsView" style="display: none;">
+                <div class="content-card">
+                    <h2 class="card-title">Séances du cours<span id="courseTitle"></span></h2>
+                    <div class="sessions-grid" id="sessionsGrid">
+                        <!-- Les séances seront insérées ici dynamiquement -->
+                    </div>
+                    <!-- Pagination -->
+                    <div id="sessionsPagination" class="pagination-container"></div>
+                </div>
+            </div>
+
+            <!-- Vue 3: Détails des Absences -->
+            <div id="absencesView" style="display: none;">
+                <div class="quick-stats" id="sessionStats">
+                    <!-- Stats de la séance -->
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">
+                            <h2><i class="fas fa-list-check"></i> Détails des Présences <span class="record-count" id="studentCount"></span></h2>
+                        </div>
+                        <div class="table-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchInput" placeholder="Rechercher un étudiant..." onkeyup="searchTable()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="data-table" id="presenceTable">
+                            <thead>
+                                <tr>
+                                    <th>Étudiant</th>
+                                    <th>Heure d'arrivée</th>
+                                    <th>Heure de fin</th>
+                                    <th>Statut</th>                                    
+                                </tr>
+                            </thead>
+                            <tbody id="presenceTableBody">
+                                <!-- Les données seront insérées ici -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div id="presencePagination" class="pagination-container"></div>
+                </div>
+            </div>
         </main>
     </div>
     <footer>

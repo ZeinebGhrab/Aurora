@@ -1,8 +1,7 @@
-import { getCourseByTeacher } from "../../course/course_api.js";
-import { renderPagination } from "../../utils.js";
+import { renderPagination } from "../utils.js";
 import { showSessions } from "./presence_session_management.js"; 
 
-export async function loadCourses(page = 1) {
+export async function loadCourses(getCoursesByTeacher, isAdmin = false, page = 1, limit = 4) {
     const container = document.getElementById("coursesContainer");
     const paginationContainer = document.getElementById("courses-pagination");
 
@@ -14,7 +13,7 @@ export async function loadCourses(page = 1) {
     </div>`;
 
     try {
-        const res = await getCourseByTeacher(page, 4);
+        const res = await getCoursesByTeacher(page, limit);
         const courses = res.courses || [];
         const pagination = res.pagination || {};
 
@@ -27,7 +26,7 @@ export async function loadCourses(page = 1) {
         courses.forEach(course => {
             const card = document.createElement("div");
             card.classList.add("course-card");
-            card.addEventListener('click', () => showSessions(course.id_cours, course.nom_cours));
+            card.addEventListener('click', () => showSessions(course.id_cours, course.nom_cours, isAdmin, page = 1, limit = 4));
 
             card.innerHTML = `
                 <div class="course-header">
@@ -48,7 +47,8 @@ export async function loadCourses(page = 1) {
             container.appendChild(card);
         });
 
-        if (paginationContainer) renderPagination(pagination, paginationContainer, loadCourses);
+        if (paginationContainer) 
+            renderPagination(pagination, paginationContainer, (p) => loadCourses(getCoursesByTeacher,isAdmin, p, limit));
 
     } catch (error) {
         console.error("Erreur chargement cours:", error);

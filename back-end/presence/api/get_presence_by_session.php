@@ -8,7 +8,6 @@ header('Content-Type: application/json');
 try {
     // Vérifier que l'utilisateur est connecté et est admin
     requireLogin();
-    requireTeacher();
 
     // Récupérer les données POST
     $input = json_decode(file_get_contents("php://input"), true) ?? [];

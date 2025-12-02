@@ -63,14 +63,41 @@ export async function getPresencesBySession(id_seance, page = 1, limit = 3, filt
 }
 
 
-
-export async function addPresence(presenceData) {
+export async function getPresencesByStudent(page = 1, limit = 12, filters = {}) {
     try {
-        console.log(presenceData);
-        const res = await fetch(`${API_BASE}/presence/api/add_presence.php`, {
+        const res = await fetch(`${API_BASE}/presence/api/get_presence_by_student.php`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(presenceData)
+            body: JSON.stringify({ page, limit, ...filters })
+        });
+        
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        console.log('Données brutes de l\'API:', data);
+        
+        if (data.success) {
+            return {
+                presences: data.presences || [],
+                pagination: data.pagination || {},
+            };
+        }
+
+        return { presences: [], pagination: {} };
+        
+    } catch (error) {
+        console.error('Erreur getAllPresences:', error);
+        return { presences: [], pagination: {} };
+    }
+}
+
+export async function addPresence(formData) {
+    try {
+        const res = await fetch(`${API_BASE}/presence/api/add_presence_by_student.php`, {
+            method: "POST",
+            body: formData
         });
 
         const data = await res.json();

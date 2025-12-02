@@ -10,24 +10,26 @@ class PresenceManager {
         $this->db = $database;
     }
 
+    // Ajouter une présence par l'étudiant
 
-    // Ajouter une présence
-
-    public function addPresence(Presence $presence) {
+    public function addPresenceByStudent(Presence $presence) {
         $conn = $this->db->connect();
 
         $stmt = $conn->prepare("
-            INSERT INTO presence (id_etudiant, id_seance, statut, heure_arrivee, justification)
-            VALUES (?, ?, ?, ?, ?)
-        ");
+            UPDATE presence
+            SET statut = 'present', heure_arrivee = ?
+            WHERE id_etudiant = ? AND id_seance = ?
+           ");
+
+        $idEtudiant    = $presence->getIdEtudiant();
+        $idSeance      = $presence->getIdSeance();
+        $heureArrivee  = $presence->getHeureArrivee() ? $presence->getHeureArrivee() : date("H:i:s");
 
         $stmt->bind_param(
-            "iisss",
-            $presence->getIdEtudiant(),
-            $presence->getIdSeance(),
-            $presence->getStatut(),
-            $presence->getHeureArrivee(),
-            $presence->getJustification()
+            "sii",
+            $heureArrivee,
+            $idEtudiant,
+            $idSeance
         );
 
         $success = $stmt->execute();
@@ -35,7 +37,6 @@ class PresenceManager {
 
         return $success;
     }
-
 
 
     // Récupérer une présence
@@ -137,11 +138,25 @@ class PresenceManager {
             $types .= 'i';
         }
 
+        // Filtrage par séance
+        if (isset($filters['id_seance']) && $filters['id_seance'] !== '') {
+            $query .= " AND p.id_seance = ?";
+            $params[] = $filters['id_seance'];
+            $types .= 'i';
+        }
+
         // Filtrage par statut
         if (isset($filters['statut']) && $filters['statut'] !== '') {
             $query .= " AND p.statut = ?";
             $params[] = $filters['statut'];
             $types .= 's';
+        }
+
+        // Filtrer par étudiant
+        if (isset($filters['id_etudiant']) && $filters['id_etudiant'] !== '') {
+            $query .= " AND p.id_etudiant = ?";
+            $params[] = $filters['id_etudiant'];
+            $types .= 'i';
         }
 
         // Pagination
@@ -227,6 +242,18 @@ class PresenceManager {
             $countTypes .= 's';
         }
 
+        if (isset($filters['id_seance']) && $filters['id_seance'] !== '') {
+            $countQuery .= " AND p.id_seance = ?";
+            $countParams[] = $filters['id_seance'];
+            $countTypes .= 'i';
+        }
+
+        if (isset($filters['id_etudiant']) && $filters['id_etudiant'] !== '') {
+           $countQuery .= " AND p.id_etudiant = ?";
+           $countParams[] = $filters['id_etudiant'];
+           $countTypes .= 'i';
+        }
+
         $countStmt = $conn->prepare($countQuery);
         if (!empty($countParams)) {
             $countStmt->bind_param($countTypes, ...$countParams);
@@ -276,8 +303,115 @@ class PresenceManager {
     // Présences par étudiant
 
     public function getPresenceByStudent($id_etudiant, $page = 1, $limit = 10) {
-        return $this->getAllPresences(['id_etudiant' => $id_etudiant], $page, $limit);
+    $conn = $this->db->connect();
+    $offset = ($page - 1) * $limit;
+
+    // 🔹 1️⃣ Récupérer les présences détaillées (pagination)
+    $sqlPresences = "
+        SELECT 
+            p.id_presence,
+            p.id_seance,
+            p.statut,
+            p.heure_arrivee,
+            p.justification,
+            s.id_cours,
+            s.titre AS titre_seance,
+            s.date_heure,
+            s.heure_fin,
+            s.salle,
+            c.nom_cours,
+            c.code_cours
+        FROM presence p
+        INNER JOIN seance s ON p.id_seance = s.id_seance
+        INNER JOIN cours c ON s.id_cours = c.id_cours
+        WHERE p.id_etudiant = ? AND s.statut = 'terminée'
+        ORDER BY s.date_heure DESC
+        LIMIT ?, ?
+    ";
+    $stmt = $conn->prepare($sqlPresences);
+    $stmt->bind_param("iii", $id_etudiant, $offset, $limit);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $presences = [];
+    while ($row = $result->fetch_assoc()) {
+        $presences[] = [
+            'id_presence'   => $row['id_presence'],
+            'id_seance'     => $row['id_seance'],
+            'statut'        => $row['statut'],
+            'heure_arrivee' => $row['heure_arrivee'],
+            'justification' => $row['justification'],
+            'titre_seance'  => $row['titre_seance'],
+            'date_heure'    => $row['date_heure'],
+            'heure_fin'     => $row['heure_fin'],
+            'salle'         => $row['salle'],
+            'nom_cours'     => $row['nom_cours'],
+            'code_cours'    => $row['code_cours']
+        ];
     }
+    $stmt->close();
+
+    // 🔹 2️⃣ Stats par séance pour cet étudiant
+    $sqlStats = "
+        SELECT 
+            s.id_seance,
+            s.titre,
+            s.date_heure,
+            s.heure_fin,
+            s.salle,
+            COUNT(CASE WHEN p.statut = 'présent' THEN 1 END) AS nb_presences,
+            COUNT(CASE WHEN p.statut = 'absent' THEN 1 END) AS nb_absences
+        FROM seance s
+        LEFT JOIN presence p 
+            ON s.id_seance = p.id_seance AND p.id_etudiant = ?
+        WHERE s.statut = 'terminée'
+        GROUP BY s.id_seance, s.titre, s.date_heure, s.heure_fin, s.salle
+        ORDER BY s.date_heure DESC
+    ";
+    $stmt = $conn->prepare($sqlStats);
+    $stmt->bind_param("i", $id_etudiant);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $stats = [];
+    while ($row = $result->fetch_assoc()) {
+        $stats[] = [
+            'id_seance'    => $row['id_seance'],
+            'titre'        => $row['titre'],
+            'date_heure'   => $row['date_heure'],
+            'heure_fin'    => $row['heure_fin'],
+            'salle'        => $row['salle'],
+            'nb_presences' => (int)$row['nb_presences'],
+            'nb_absences'  => (int)$row['nb_absences']
+        ];
+    }
+    $stmt->close();
+
+    // 🔹 3️⃣ Total pour pagination
+    $countQuery = "
+        SELECT COUNT(*) AS total
+        FROM presence p
+        INNER JOIN seance s ON p.id_seance = s.id_seance
+        WHERE p.id_etudiant = ? AND s.statut = 'terminée'
+    ";
+    $stmt = $conn->prepare($countQuery);
+    $stmt->bind_param("i", $id_etudiant);
+    $stmt->execute();
+    $total = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
+    $stmt->close();
+
+    return [
+        'presences' => $presences,
+        'stats' => $stats,
+        'pagination' => [
+            'total' => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'totalPages' => ceil($total / $limit)
+        ]
+    ];
+}
+
 
 
     // Présences par enseignant (tous ses cours → toutes ses séances)
@@ -304,27 +438,22 @@ class PresenceManager {
 
 
 
-    // Update
+    // Update presence Admin
 
     public function updatePresence(Presence $presence) {
         $conn = $this->db->connect();
 
         $stmt = $conn->prepare("
             UPDATE presence
-            SET id_etudiant = ?, id_seance = ?, statut = ?, heure_arrivee = ?, justification = ?
+            SET id_etudiant = ?, id_seance = ?, statut = ?, heure_arrivee = ?
             WHERE id_presence = ?
         ");
 
         $idEtudiant    = $presence->getIdEtudiant();
         $idSeance      = $presence->getIdSeance();
         $statut        = $presence->getStatut();
-        $heureArrivee  = $presence->getHeureArrivee();
-        $justification = $presence->getJustification();
+        $heureArrivee  = $presence->getHeureArrivee() ? $presence->getHeureArrivee() : date("H:i:s");
         $idPresence    = $presence->getId();
-
-        if ($heureArrivee === null || $heureArrivee === "") {
-            $heureArrivee = NULL;
-        }
 
         $stmt->bind_param(
             "iisssi",
@@ -332,7 +461,6 @@ class PresenceManager {
             $idSeance,
             $statut,
             $heureArrivee,
-            $justification,
             $idPresence
         );
 
@@ -354,6 +482,5 @@ class PresenceManager {
 
         return $success;
     }
-
 }
 ?>

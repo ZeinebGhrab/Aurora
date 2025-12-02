@@ -2,6 +2,7 @@ import { loadCourses } from "./presence_course_management.js";
 import { showSessions } from "./presence_session_management.js";
 import { showAbsences } from "./presence_student_management.js";
 import { exportPDF, exportExcel } from "./presence_export.js";
+import { getCourseByTeacher } from "../course/course_api.js";
 
 // Attacher les fonctions globales pour HTML
 window.showCourses = function() {
@@ -37,5 +38,5 @@ window.exportExcel = exportExcel;
 
 // Charger les cours au démarrage
 document.addEventListener("DOMContentLoaded", () => {
-    loadCourses();
+    loadCourses(getCourseByTeacher);
 });

@@ -2,10 +2,15 @@
 require_once __DIR__ . '/../../config/Database.php';
 require_once '../models/PresenceManager.php';
 require_once '../models/Presence.php';
+require_once '../../user/api/auth/check_session_logic.php';
 
 header('Content-Type: application/json');
 
 try {
+    
+    requireLogin();
+    requireStudent();
+
     $db = new Database();
     $pm = new PresenceManager($db);
 
@@ -29,7 +34,7 @@ try {
     }
 
     // Récupérer infos étudiant et séance depuis POST
-    $id_etudiant = (int)($_POST['id_etudiant'] ?? 0);
+    $id_etudiant = $_SESSION['id_utilisateur'];
     $id_seance   = (int)($_POST['id_seance'] ?? 0);
 
     if ($id_etudiant <= 0 || $id_seance <= 0) {
@@ -37,7 +42,7 @@ try {
         exit;
     }
 
-    // ---- APPEL AU SCRIPT PYTHON ---- //
+    // APPEL AU SCRIPT PYTHON 
     $pythonPath   = "C:\\Users\\Lenovo\\AppData\\Local\\Programs\\Python\\Python311\\python.exe";
     $pythonScript = __DIR__ . "\\../models/check_face.py";
 
@@ -56,9 +61,8 @@ try {
         exit;
     }
 
-    // -------------------------
     // Extraire uniquement le JSON de la sortie Python
-    // -------------------------
+
     $lines = explode("\n", trim($output));
     $json_line = null;
     foreach ($lines as $line) {
@@ -89,15 +93,21 @@ try {
         exit;
     }
 
-    // --------- GESTION DES RÉSULTATS --------- //
+    // GESTION DES RÉSULTATS 
     // Valider uniquement si status = 'found' et identity_verified = true (si présent)
     if (isset($result['status']) && $result['status'] === 'found' && (!isset($result['identity_verified']) || $result['identity_verified'] === true)) {
         $statut = "present";
         $heure_arrivee = date("H:i:s");
 
-        $presence = new Presence($id_etudiant, $id_seance, $statut, $heure_arrivee, "");
+        $presence = new Presence([
+            'id_etudiant'   => $id_etudiant,
+            'id_seance'     => $id_seance,
+            'statut'        => 'present',
+            'heure_arrivee' => date("H:i:s"),
+            'justification' => null
+        ]);
 
-        if ($pm->addPresence($presence)) {
+        if ($pm->addPresenceByStudent($presence)) {
             echo json_encode(['success' => true, 'message' => 'Présence validée par DeepFace']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Erreur ajout présence']);

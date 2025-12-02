@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../../../styles/style-absence.css">
     <link rel="stylesheet" href="../../../styles/style-course.css">
     <link rel="stylesheet" href="../../../styles/style-session.css">
-    <script type="module" src="../../../scripts/presence/teacher/presence_management.js"></script>
+    <script type="module" src="../../../scripts/presence/presence_teacher_management.js"></script>
     <script type="module" src="../../../scripts/authentification/logout.js"></script>
     <!-- jsPDF -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -107,52 +107,68 @@
 
             <!-- Vue 1: Liste des Cours -->
             <div id="coursesView">
-                <div class="quick-stats">
-                    <div class="stat-item">
-                        <div class="stat-icon blue">
-                            <i class="fas fa-book"></i>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div>
+                                <div class="stat-number" id="myCourses">5</div>
+                            </div>
                         </div>
-                        <div class="stat-content">
-                            <div class="stat-value">5</div>
-                            <div class="stat-label">Mes cours</div>
-                        </div>
+                        <div class="stat-label">Mes cours</div>
+                        <div class="stat-detail">-</div>
                     </div>
 
-                    <div class="stat-item">
-                        <div class="stat-icon purple">
-                            <i class="fas fa-calendar-days"></i>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-calendar-days"></i>
+                            </div>
+                            <div>
+                                <div class="stat-number" id="totalSessions">48</div>
+                            </div>
                         </div>
-                        <div class="stat-content">
-                            <div class="stat-value">48</div>
-                            <div class="stat-label">Total séances</div>
-                        </div>
+                        <div class="stat-label">Total séances</div>
+                        <div class="stat-detail">-</div>
                     </div>
 
-                    <div class="stat-item">
-                        <div class="stat-icon green">
-                            <i class="fas fa-user-check"></i>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon green">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div>
+                                <div class="stat-number" id="globalRate">87%</div>
+                            </div>
                         </div>
-                        <div class="stat-content">
-                            <div class="stat-value">87%</div>
-                            <div class="stat-label">Taux global</div>
-                        </div>
+                        <div class="stat-label">Taux global</div>
+                        <div class="stat-detail">-</div>
                     </div>
 
-                    <div class="stat-item">
-                        <div class="stat-icon red">
-                            <i class="fas fa-user-xmark"></i>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon red">
+                                <i class="fas fa-user-xmark"></i>
+                            </div>
+                            <div>
+                                <div class="stat-number" id="totalAbsences">124</div>
+                            </div>
                         </div>
-                        <div class="stat-content">
-                            <div class="stat-value">124</div>
-                            <div class="stat-label">Absences totales</div>
-                        </div>
+                        <div class="stat-label">Absences totales</div>
+                        <div class="stat-detail">-</div>
                     </div>
+
                 </div>
 
                 <div class="content-card">
                     <h2 class="card-title">Mes Cours</h2>
                     <div class="courses-grid" id="coursesContainer">
-                        <!-- Les cours seront injectés ici via JS -->
+                        <!-- Les cours seront injectés ici dynamiquement -->
                     </div>
                     <!-- Pagination -->
                     <div id="courses-pagination" class="pagination-container"></div>
