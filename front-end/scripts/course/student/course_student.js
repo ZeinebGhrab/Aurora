@@ -1,10 +1,13 @@
 import { getCourseByStudent } from "../course_api.js";
 import {  renderPagination } from "../../utils.js";
+import {  initViewCourseModal } from "../course_view_modal.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
     const container = document.getElementById("coursesContainer");
     const paginationContainer = document.getElementById("courses-pagination");
+
+    initViewCourseModal()
 
     if (!container || !paginationContainer) return;
 
@@ -38,13 +41,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                             <span>${course.niveau ?? ""}</span>
                         </div>
                     </div>
-
                     <div class="course-actions">
-                        <button class="btn-view">
+                        <button class="btn-view" data-id="${course.id_cours}">
                             <i class="fa-solid fa-eye"></i> Voir
-                        </button>
-                        <button class="btn btn-secondary">
-                            <i class="fa-solid fa-file-export"></i> Exporter
                         </button>
                     </div>
                 </div>

@@ -17,7 +17,7 @@ export async function loadCourseFilter(filterCourse) {
 
 export function getFilters(filterStatus, filterCourse, searchInput) {
     return {
-        statut: filterStatus?.value === "all" ? null : filterStatus?.value,
+        statut: filterStatus?.value === "" ? "" : filterStatus?.value,
         cours: filterCourse?.value || null,
         search: searchInput?.value.trim() || ''
     };

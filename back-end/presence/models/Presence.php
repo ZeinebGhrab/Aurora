@@ -5,6 +5,7 @@ class Presence {
     private $id_seance;
     private $statut;
     private $heure_arrivee;
+    private $justification;
 
     // Le constructeur accepte soit un tableau de données, soit des arguments séparés
     public function __construct($data) {

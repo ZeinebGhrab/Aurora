@@ -52,8 +52,9 @@ export function renderCourses(courses, container) {
                     </div>
                 </div>
                 <div class="course-actions">
-                    <button class="btn-edit" data-id="${course.id_cours}"><i class="fa-solid fa-pen"></i> Modifier</button>
-                    <button class="btn-delete" data-id="${course.id_cours}"><i class="fa-solid fa-trash"></i> Supprimer</button>
+                    <button class="btn-action btn-view" data-id="${course.id_cours}"><i class="fa-solid fa-eye"></i></button>
+                    <button class="btn-action btn-edit" data-id="${course.id_cours}"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-action btn-delete" data-id="${course.id_cours}"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </div>`;
             container.appendChild(card);

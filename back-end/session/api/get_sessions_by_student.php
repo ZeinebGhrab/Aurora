@@ -18,7 +18,8 @@ try {
         'page' => isset($input['page']) ? (int)$input['page'] : 1,
         'limit' => isset($input['limit']) ? (int)$input['limit'] : 1000,
         'cours' => $input['cours'] ?? null,
-        'search' => $input['search'] ?? ''
+        'search' => $input['search'] ?? '',
+        'statut' => $input['statut'] ?? ''
     ];
 
     $db = new Database();

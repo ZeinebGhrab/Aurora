@@ -81,7 +81,7 @@ export async function showAbsences(
     }
 }
 
-// ------------------------ STATISTIQUES ------------------------
+// STATISTIQUES 
 
 export function displaySessionStats(total, present, absent = 0, rate = 0) {
     const sessionStats = document.getElementById("sessionStats");
@@ -95,7 +95,7 @@ export function displaySessionStats(total, present, absent = 0, rate = 0) {
     `;
 }
 
-// ------------------------ TABLEAU ------------------------
+// TABLEAU 
 
 export function displayStudentsTable(students, isAdmin) {
     const tableBody = document.getElementById("presenceTableBody");
@@ -110,7 +110,7 @@ export function displayStudentsTable(students, isAdmin) {
         tableBody.innerHTML += createStudentRow(student, isAdmin);
     });
 
-    // ⚡ Attacher les actions admin (si admin)
+    // Attacher les actions admin (si admin)
     if (isAdmin) {
         attachAdminEvents();
     }
@@ -147,7 +147,7 @@ function createStudentRow(student, isAdmin) {
     `;
 }
 
-// ------------------------ BADGE STATUT ------------------------
+// BADGE STATUT 
 
 function getStatusBadge(status) {
     switch (status) {
@@ -160,7 +160,7 @@ function getStatusBadge(status) {
     }
 }
 
-// ------------------------ ACTIONS ADMIN ------------------------
+// ACTIONS ADMIN 
 
 function attachAdminEvents() {
     // Modifier

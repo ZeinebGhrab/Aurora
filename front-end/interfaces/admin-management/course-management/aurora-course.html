@@ -21,14 +21,6 @@
                     <div class="logo">Auro<span>r</span>a</div>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <svg class="nav-icon" viewBox="0 0 24 24">
-                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
-                        </svg>
-                        Tableau de bord
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="../teacher-management/aurora-teacher.html" class="nav-link">
                         <svg class="nav-icon" viewBox="0 0 24 24">
                             <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zM12 14c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z"/>
@@ -273,5 +265,44 @@
     </div>
 </div>
 
+    <!-- Modal View Course -->
+    <div id="viewCourseModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-eye"></i> Détails de cours</h3>
+                <p class="modal-subtitle">Informations complètes de cours</p>
+                <button class="modal-close">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="teacher-view-grid">
+                    <div class="view-item">
+                        <span class="view-label">Code de cours :</span>
+                        <span id="viewCoursCode" class="view-value"></span>
+                    </div>
+                    <div class="view-item">
+                        <span class="view-label">Nom Cours :</span>
+                        <span id="viewCoursNom" class="view-value"></span>
+                    </div>
+                    <div class="view-item">
+                        <span class="view-label">Enseignant :</span>
+                        <span id="viewCoursEnseignant" class="view-value"></span>
+                    </div>
+                    <div class="view-item">
+                        <span class="view-label">Email d'enseignant :</span>
+                        <span id="viewCoursMailEnseignant" class="view-value"></span>
+                    </div>
+                    <div class="view-item">
+                        <span class="view-label">Niveau :</span>
+                        <span id="viewCoursNiveau" class="view-value"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-close close-modal">Fermer</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

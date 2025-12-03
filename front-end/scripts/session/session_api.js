@@ -76,9 +76,8 @@ export async function getSessionsByStudent(page = 1, limit = 6,filters = {}) {
 
 
 
-// ==============================
 //  GET SEANCE BY ID
-// ==============================
+
 export async function getSessionById(id_seance) {
     try {
         const res = await fetch(`${API_BASE}/session/api/get_session.php`, {
@@ -100,9 +99,9 @@ export async function getSessionById(id_seance) {
 }
 
 
-// ==============================
+
 //  GET SEANCES BY course
-// ==============================
+
 export async function getSessionsByCourse(cours,page = 1, limit = 6,filters = {}) {
     try {
         const res = await fetch(`${API_BASE}/session/api/get_sessions_by_course.php`, {
@@ -125,9 +124,8 @@ export async function getSessionsByCourse(cours,page = 1, limit = 6,filters = {}
     }
 }
 
-// ==============================
-//  ADD SEANCE (avec vérification disponibilité backend)
-// ==============================
+//  ADD SEANCE 
+
 export async function addSession(seanceData) {
     try {
         const res = await fetch(`${API_BASE}/session/api/add_session.php`, {
@@ -149,9 +147,9 @@ export async function addSession(seanceData) {
 
 
 
-// ==============================
-//  UPDATE SEANCE (avec vérification conflits)
-// ==============================
+
+//  UPDATE SEANCE 
+
 export async function updateSession(id_seance, seanceData) {
     try {
         const bodyData = { id_seance, ...seanceData };
@@ -182,9 +180,9 @@ export async function updateSession(id_seance, seanceData) {
 
 
 
-// ==============================
+
 //  DELETE SEANCE
-// ==============================
+
 export async function deleteSession(id_seance) {
     try {
         const res = await fetch(`${API_BASE}/session/api/delete_session.php`, {

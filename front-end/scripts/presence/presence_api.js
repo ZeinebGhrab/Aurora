@@ -63,7 +63,7 @@ export async function getPresencesBySession(id_seance, page = 1, limit = 3, filt
 }
 
 
-export async function getPresencesByStudent(page = 1, limit = 12, filters = {}) {
+export async function getPresencesByStudent(page = 1, limit = 3, filters = {}) {
     try {
         const res = await fetch(`${API_BASE}/presence/api/get_presence_by_student.php`, {
             method: "POST",

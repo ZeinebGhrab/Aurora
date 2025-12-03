@@ -9,7 +9,6 @@ export function initCourseModal() {
         return;
     }
     
-    
     // Ouvrir le modal
     newCourseBtn.addEventListener('click', (e) => {
         e.preventDefault();

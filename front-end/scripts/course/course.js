@@ -1,11 +1,13 @@
 import { populateSelects, handleFormSubmit } from "./course_form.js";
 import { handleCourseActions, initFilters, loadAndRenderCourses } from "./course_actions.js";
 import { initCourseModal } from "./course_modal.js"; 
+import { initViewCourseModal } from "./course_view_modal.js"; 
 import { initEditCourseModal } from './course_edit_modal.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     
     initCourseModal();
+    initViewCourseModal();
     initEditCourseModal(); 
 
     try {

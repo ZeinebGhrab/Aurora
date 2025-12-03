@@ -6,8 +6,8 @@ require_once '../../user/api/auth/check_session_logic.php';
 header('Content-Type: application/json');
 
 try {
-    requireLogin();
-    requireStudent();
+    //requireLogin();
+    //requireStudent();
 
     $input = json_decode(file_get_contents("php://input"), true) ?? [];
 
@@ -15,19 +15,18 @@ try {
         'page' => isset($input['page']) ? (int)$input['page'] : 1,
         'limit' => isset($input['limit']) ? (int)$input['limit'] : 10,
         'id_cours' => $input['id_cours'] ?? null,
-        'id_etudiant' => $_SESSION['id_utilisateur']
+        'id_etudiant' =>  $_SESSION['id_utilisateur']
     ];
 
     $db = new Database();
     $pm = new PresenceManager($db);
 
-    $result = $pm->getPresenceByStudent($_SESSION['id_utilisateur']);
+    $result = $pm->getAttendanceStatsByStudent($_SESSION['id_utilisateur'],$filters['page'],$filters['limit']);
 
     echo json_encode([
         "success" => true,
         "presences" => $result['presences'],
         "pagination" => $result['pagination'],
-        'stats' => $result['stats']
     ]);
 
 } catch (Exception $e) {

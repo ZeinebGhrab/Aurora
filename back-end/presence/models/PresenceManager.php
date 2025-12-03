@@ -306,7 +306,7 @@ class PresenceManager {
     $conn = $this->db->connect();
     $offset = ($page - 1) * $limit;
 
-    // 🔹 1️⃣ Récupérer les présences détaillées (pagination)
+    // Récupérer les présences détaillées (pagination)
     $sqlPresences = "
         SELECT 
             p.id_presence,
@@ -351,7 +351,7 @@ class PresenceManager {
     }
     $stmt->close();
 
-    // 🔹 2️⃣ Stats par séance pour cet étudiant
+    // Stats par séance pour cet étudiant
     $sqlStats = "
         SELECT 
             s.id_seance,
@@ -387,7 +387,7 @@ class PresenceManager {
     }
     $stmt->close();
 
-    // 🔹 3️⃣ Total pour pagination
+    // Total pour pagination
     $countQuery = "
         SELECT COUNT(*) AS total
         FROM presence p
@@ -411,14 +411,6 @@ class PresenceManager {
         ]
     ];
 }
-
-
-
-    // Présences par enseignant (tous ses cours → toutes ses séances)
-  
-    public function getPresenceByTeacher($id_enseignant, $page = 1, $limit = 10) {
-        return $this->getAllPresences(['id_enseignant' => $id_enseignant], $page, $limit);
-    }
 
 
 
@@ -456,7 +448,7 @@ class PresenceManager {
         $idPresence    = $presence->getId();
 
         $stmt->bind_param(
-            "iisssi",
+            "iissi",
             $idEtudiant,
             $idSeance,
             $statut,
@@ -481,6 +473,69 @@ class PresenceManager {
         $stmt->close();
 
         return $success;
+    }
+
+    // Nombre de présences et d'absences pour un étudiant donné (séances terminées)
+    public function getAttendanceStatsByStudent($id_etudiant, $page = 1, $limit = 3) {
+        $conn = $this->db->connect();
+        $offset = ($page - 1) * $limit;
+
+        // Récupérer les stats paginées
+        $sql = "
+            SELECT 
+                c.id_cours,
+                c.nom_cours,
+                c.code_cours,
+                SUM(p.statut = 'présent') AS nb_presences,
+                SUM(p.statut = 'absent') AS nb_absences
+                FROM cours c
+                INNER JOIN seance s ON c.id_cours = s.id_cours AND s.statut = 'terminée'
+                LEFT JOIN presence p ON s.id_seance = p.id_seance AND p.id_etudiant = ?
+                GROUP BY c.id_cours, c.nom_cours, c.code_cours
+                ORDER BY c.nom_cours
+                LIMIT ? OFFSET ?
+            ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iii", $id_etudiant, $limit, $offset);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $stats = [];
+        while ($row = $result->fetch_assoc()) {
+            $stats[] = [
+                'id_cours'     => $row['id_cours'],
+                'nom_cours'    => $row['nom_cours'],
+                'code_cours'   => $row['code_cours'],
+                'nb_presences' => (int)$row['nb_presences'],
+                'nb_absences'  => (int)$row['nb_absences']
+            ];
+        }
+        $stmt->close();
+
+        // Nombre total pour pagination
+        $sqlCount = "
+            SELECT COUNT(DISTINCT c.id_cours) AS total
+            FROM cours c
+            INNER JOIN seance s ON c.id_cours = s.id_cours AND s.statut = 'terminée'
+            LEFT JOIN presence p ON s.id_seance = p.id_seance AND p.id_etudiant = ?
+        ";
+
+        $stmt = $conn->prepare($sqlCount);
+        $stmt->bind_param("i", $id_etudiant);
+        $stmt->execute();
+        $total = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
+        $stmt->close();
+
+        return [
+            "presences" => $stats,
+            'pagination' => [
+                'total' => (int)$total,
+                'page' => $page,
+                'limit' => $limit,
+                'totalPages' => ceil($total / $limit)
+            ]
+        ];
     }
 }
 ?>

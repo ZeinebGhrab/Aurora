@@ -39,13 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 switch(role) {
                     case 'etudiant':
-                        window.location.href = '/Aurora/front-end/interfaces/student-management/aurora-student-dashboard.html';
+                        window.location.href = '/Aurora/front-end/interfaces/student-management/course-management/aurora-course.html';
                         break;
                     case 'enseignant':
-                        window.location.href = '/Aurora/front-end/interfaces/teacher-management/aurora-teacher-dashboard.html';
+                        window.location.href = '/Aurora/front-end/interfaces/teacher-management/course-management/aurora-course.html';
                         break;
                     case 'admin':
-                        window.location.href = '/Aurora/front-end/interfaces/admin-management/course-management/aurora-course.html';
+                        window.location.href = '/Aurora/front-end/interfaces/admin-management/teacher-management/aurora-teacher.html';
                         break;
                     default:
                         window.location.href = '/Aurora/front-end/interfaces/aurora-landing-page.html';

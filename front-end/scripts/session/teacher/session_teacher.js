@@ -17,14 +17,13 @@ const searchInput = document.getElementById('searchSeance');
 const container = document.getElementById('sessionsContainer');
 const paginationContainer = document.getElementById('sessions-pagination');
 
-// ==========================
 // FILTRE COURS
-// ==========================
+
 async function loadCourseFilter() {
     if (!filterCourse) return;
 
     try {
-        const data = await getSessionsByTeacher(currentPage, limit, {}); // récupère toutes les séances
+        const data = await getSessionsByTeacher(currentPage, limit, {}); 
         if (!data.sessions) return;
 
         seancesData = data.sessions.map(s => ({
@@ -45,21 +44,26 @@ async function loadCourseFilter() {
     }
 }
 
-// ==========================
 // CHARGEMENT SÉANCES
-// ==========================
+
 async function loadSessions(page = 1) {
     currentPage = page;
 
+    let statutVal = filterStatus?.value ? filterStatus?.value : "" ;
+
     const filters = {
-        statut: filterStatus?.value === "all" ? null : filterStatus?.value,
-        cours: filterCourse?.value === "all" ? null : filterCourse?.value,
+        page,
+        limit,
+        id_cours: filterCourse?.value ? parseInt(filterCourse.value) : null,
+        statut: statutVal,
         search: searchInput?.value.trim() || ''
     };
 
+    console.log(filters);
+
     try {
         const { sessions, pagination } = await getSessionsByTeacher(currentPage, limit, filters);
-        seancesData = sessions; // Mise à jour des données
+        seancesData = sessions; 
         renderSessions(seancesData);
 
         renderPagination(pagination, paginationContainer, (newPage) => {
@@ -70,24 +74,25 @@ async function loadSessions(page = 1) {
         container.innerHTML = `
             <div class="empty-state">
                 <i class="fa-solid fa-calendar-xmark empty-icon"></i>
-                <h3>Impossible de charger les séances</h3>
+                <h3>Aucune séance trouvée</h3>
+                <p>Aucune séance ne correspond à votre recherche.</p>
             </div>
         `;
         paginationContainer.innerHTML = "";
     }
 }
 
-// ==========================
+
 // FILTRE & RECHERCHE
-// ==========================
+
 function applyFilters() {
     currentPage = 1;
     loadSessions();
 }
 
-// ==========================
+
 // ÉVÉNEMENTS
-// ==========================
+
 function setupEventListeners() {
     filterStatus?.addEventListener('change', applyFilters);
     filterCourse?.addEventListener('change', applyFilters);
@@ -97,9 +102,9 @@ function setupEventListeners() {
     });
 }
 
-// ==========================
+
 // RENDU SÉANCES
-// ==========================
+
 function renderSessions(sessions) {
     if (!sessions || sessions.length === 0) {
         container.innerHTML = `
@@ -151,9 +156,9 @@ function renderSessions(sessions) {
     }).join('');
 }
 
-// ==========================
+
 // STATUTS & ICONES
-// ==========================
+
 function getStatusClass(s) {
     return { planifiee: "status-planifiee", en_cours: "status-en-cours", terminee: "status-terminee", annulee: "status-annulee" }[s] || "";
 }
@@ -164,9 +169,9 @@ function getStatusIcon(s) {
     return { planifiee: "fa-calendar-plus", en_cours: "fa-spinner fa-spin", terminee: "fa-check-circle", annulee: "fa-times-circle" }[s] || "fa-circle";
 }
 
-// ==========================
+
 // BOUTONS ACTION
-// ==========================
+
 function getActionButtons(s) {
     if (s.statut === 'en_cours') {
         return `<button class="btn-action btn-view" onclick="managePresence(${s.id_seance})"><i class="fa-solid fa-user-check"></i></button>`;

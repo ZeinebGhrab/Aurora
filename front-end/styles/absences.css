@@ -13,6 +13,7 @@
     overflow: hidden;
     transition: all 0.3s ease;
     position: relative;
+    margin-bottom: 10px;
   }
   
   .course-card:hover {
