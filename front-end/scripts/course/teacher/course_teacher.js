@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Si aucun cours
             if (!courses || courses.length === 0) {
                 container.innerHTML = `
-                    <div style="display:flex; justify-content:center; align-items:center; min-height:400px; width:100%;">
+                    <div class="empty-state" style="display:flex; justify-content:center; align-items:center; min-height:400px; width:100%;">
                         <div style="text-align:center; color:#6B7280; max-width:500px;">
                             <i class="fa-solid fa-book-open" style="font-size:4rem; color:#5299cf; margin-bottom:1.5rem; opacity:0.6; display:block;"></i>
                             <h3 style="font-size:1.5rem; font-weight:700; color:#374151; margin-bottom:0.5rem;">Aucun cours disponible</h3>

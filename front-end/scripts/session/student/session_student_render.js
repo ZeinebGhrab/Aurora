@@ -2,7 +2,7 @@ import { openUploadModal } from './session_student_upload_modal.js';
 
 export function renderSessions(sessions, container) {
     if (!sessions.length) {
-        container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-calendar-xmark empty-icon"></i><h3>Aucune séance trouvée</h3></div>`;
+        container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-calendar-xmark" class="fa-solid fa-book-open" style="font-size:4rem; color:#5299cf; margin-bottom:1.5rem; opacity:0.6; display:block;"></i><h3>Aucune séance trouvée</h3></div>`;
         return;
     }
 

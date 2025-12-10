@@ -16,6 +16,7 @@ class Session {
     private $code_cours;
     private $nom_enseignant;
     private $prenom_enseignant;
+    private $statut_presence;
 
     public function __construct($data = []) {
         $this->fromArray($data);
@@ -38,6 +39,7 @@ class Session {
         $this->id_enseignant  = $data['id_enseignant'] ?? null;
         $this->prenom_enseignant = $data['prenom_enseignant'] ?? null;
         $this->nb_etudiants = $data['nb_etudiants'] ?? 0;
+        $this->statut_presence = $data['statut_presence'] ?? 'absent';
     }
 
     // GETTERS
@@ -69,6 +71,7 @@ class Session {
             'prenom_enseignant' => $this->prenom_enseignant,
             'id_enseignant' => $this->id_enseignant,
             'nb_etudiants'=> $this->nb_etudiants,
+            'statut_presence' => $this->statut_presence
         ];
     }
 }

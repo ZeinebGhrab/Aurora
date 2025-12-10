@@ -13,7 +13,7 @@ export function renderSessions(sessions, container) {
     // Si aucune séance
     if (sessions.length === 0) {
         container.innerHTML = `
-            <div style="text-align: center; padding: 3rem; display:flex;justify-content:center;align-items:center;min-height:300px;width:100%;">
+            <div class="empty-state" style="text-align: center; padding: 3rem; display:flex;justify-content:center;align-items:center;min-height:300px;width:100%;">
                 <div style="text-align:center;color:#6B7280;max-width:500px;">
                     <i class="fa-solid fa-calendar-xmark" 
                         style="font-size:4rem;color:#5299cf;margin-bottom:1.5rem;opacity:0.6;display:block;">

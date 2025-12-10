@@ -629,6 +629,7 @@ footer {
 .footer-bottom p {
     color: #888;
     font-size: 14px;
+    text-align: center;
 }
 
 .logo-img {

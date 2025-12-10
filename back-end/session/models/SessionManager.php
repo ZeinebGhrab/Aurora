@@ -10,7 +10,6 @@ class SessionManager {
         $this->db = $database;
     }
 
-
     // Obtenir toutes les séances
     public function getAllSeances($filters = []) {
 
@@ -366,23 +365,28 @@ class SessionManager {
         $offset = ($page - 1) * $limit;
 
         $query= "
-            SELECT 
+              SELECT 
             s.*,
             c.nom_cours,
             c.code_cours,
             u.nom AS nom_enseignant,
-            u.prenom AS prenom_enseignant
-            FROM seance s
-            JOIN cours c 
+            u.prenom AS prenom_enseignant,
+            p.statut AS statut_presence,
+            p.heure_arrivee
+        FROM seance s
+        JOIN cours c 
             ON c.id_cours = s.id_cours
-            JOIN etudiant e 
+        JOIN etudiant e 
             ON e.id_filiere = c.id_filiere 
             AND e.niveau = c.niveau
-            LEFT JOIN enseignant en 
+        LEFT JOIN enseignant en 
             ON en.id_enseignant = c.id_enseignant
-            LEFT JOIN utilisateur u 
+        LEFT JOIN utilisateur u 
             ON u.id_utilisateur = en.id_enseignant
-            WHERE e.id_etudiant = ?
+        LEFT JOIN presence p 
+            ON p.id_seance = s.id_seance 
+            AND p.id_etudiant = e.id_etudiant
+        WHERE e.id_etudiant = ?
             ";
 
         $params = [$id_etudiant];
@@ -427,6 +431,7 @@ class SessionManager {
 
         $seances = [];
         while ($row = $result->fetch_assoc()) {
+            //$row['statut_presence'] = $row['statut_presence'];
             $seances[] = (new Session($row))->toArray();
         }
 
@@ -435,10 +440,16 @@ class SessionManager {
         // Comptage total pour pagination
         $countQuery = "
             SELECT COUNT(*) AS total
-            FROM seance s
-            JOIN cours c ON c.id_cours = s.id_cours
-            JOIN etudiant e ON e.id_filiere = c.id_filiere AND e.niveau = c.niveau
-            WHERE e.id_etudiant = ?
+        FROM seance s
+        JOIN cours c 
+            ON c.id_cours = s.id_cours
+        JOIN etudiant e 
+            ON e.id_filiere = c.id_filiere 
+            AND e.niveau = c.niveau
+        LEFT JOIN presence p
+            ON p.id_seance = s.id_seance
+            AND p.id_etudiant = e.id_etudiant
+        WHERE e.id_etudiant = ?
         ";
 
         $countParams = [$id_etudiant];
