@@ -1,4 +1,4 @@
-import { getAllFilieres } from "./student_api.js";
+import { getAllFilieres } from '../sector/sector_api.js';
 
 export async function populateStudentForm(formId) {
     const form = document.getElementById(formId);

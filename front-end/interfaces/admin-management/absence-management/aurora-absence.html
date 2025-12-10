@@ -28,6 +28,14 @@
                     <div class="logo">Auro<span>r</span>a</div>
                 </li>
                 <li class="nav-item">
+                    <a href="../aurora-admin-dashboard.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="../teacher-management/aurora-teacher.html" class="nav-link">
                         <svg class="nav-icon" viewBox="0 0 24 24">
                             <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zM12 14c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z"/>
@@ -111,8 +119,7 @@
                             <div class="stat-number" id="statTotal"></div>
                         </div>
                     </div>
-                    <div class="stat-label">Total</div>
-                    <div class="stat-detail">+0 ce mois</div>
+                    <div class="stat-label">Séances totales</div>
                 </div>
 
                 <div class="stat-card">
@@ -125,7 +132,6 @@
                         </div>
                     </div>
                     <div class="stat-label">Présences totales</div>
-                    <div class="stat-detail">+0 ce mois</div>
                 </div>
 
                 <div class="stat-card">
@@ -138,7 +144,6 @@
                         </div>
                     </div>
                     <div class="stat-label">Absences totales</div>
-                    <div class="stat-detail">+0 cette semaine</div>
                 </div>
             </div>
 
@@ -233,10 +238,10 @@
     <div class="modal-container">
         <!-- Header -->
         <div class="modal-header">
-            <h2 class="modal-title">
+            <h3 class="modal-title">
                 <i class="fa-solid fa-user-check"></i>
                 Modifier la Présence
-            </h2>
+            </h3>
             <p class="modal-subtitle">Mettre à jour le statut de présence de l'étudiant</p>
             <button class="modal-close" id="closeEditModalBtn">
                 <i class="fa-solid fa-xmark"></i>
@@ -249,18 +254,17 @@
             <div style="background: linear-gradient(135deg, #F0F9FF 0%, #FFF1F2 100%); padding: 1.5rem; border-radius: 16px; margin-bottom: 2rem; border: 2px solid #E0E7FF;">
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
                     <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #5299cf, #c14b5f); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 700;" id="studentAvatar">
-                        MA
                     </div>
                     <div>
                         <h3 style="font-size: 1.3rem; color: #111827; margin-bottom: 0.3rem;" id="studentName">Mohamed Ali</h3>
                         <div style="display: flex; gap: 1.5rem; font-size: 0.9rem; color: #6B7280;">
                             <span style="display: flex; align-items: center; gap: 0.4rem;">
                                 <i class="fa-solid fa-id-card"></i>
-                                <span id="studentId">INS123456</span>
+                                <span id="studentId"></span>
                             </span>
                             <span style="display: flex; align-items: center; gap: 0.4rem;">
                                 <i class="fa-solid fa-graduation-cap"></i>
-                                <span id="studentLevel">2ème année</span>
+                                <span id="studentLevel"></span>
                             </span>
                         </div>
                     </div>
@@ -268,15 +272,15 @@
                 <div style="display: flex; gap: 1.5rem; font-size: 0.9rem; color: #6B7280; flex-wrap: wrap;">
                     <span style="display: flex; align-items: center; gap: 0.4rem;">
                         <i class="fa-solid fa-book"></i>
-                        <span id="courseName">Mathématiques Avancées</span>
+                        <span id="courseName"></span>
                     </span>
                     <span style="display: flex; align-items: center; gap: 0.4rem;">
                         <i class="fa-solid fa-calendar"></i>
-                        <span id="courseDate">28 Nov 2025</span>
+                        <span id="courseDate"></span>
                     </span>
                     <span style="display: flex; align-items: center; gap: 0.4rem;">
                         <i class="fa-solid fa-clock"></i>
-                        <span id="courseTime">08:00 - 10:00</span>
+                        <span id="courseTime"></span>
                     </span>
                 </div>
             </div>
@@ -314,7 +318,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="heureArrivee">
+                        <label class="form-label" for="heureArrivee" style="margin-top: 30px;">
                             <i class="fa-solid fa-clock"></i>
                             Heure d'arrivée
                         </label>

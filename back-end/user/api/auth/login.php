@@ -80,6 +80,8 @@ try {
             $_SESSION['role'] = $userData['type_compte'];
             $_SESSION['statut'] = $userData['statut'] ?? 'activé'; 
             $_SESSION['email'] = $userData['email'];
+            $_SESSION['nom'] = $userData['nom'];
+            $_SESSION['prenom'] = $userData['prenom'];
 
             $response = [
             'success' => true,

@@ -3,6 +3,7 @@ import { showSessions } from "./presence_session_management.js";
 import { showAbsences } from "./presence_student_management.js";
 import { exportPDF, exportExcel } from "./presence_export.js";
 import { getAllCourses } from "../course/course_api.js";
+import { getStatsPresence } from "../presence/presence_api.js";
 
 // Attacher les fonctions globales pour HTML
 window.showCourses = function() {
@@ -36,12 +37,24 @@ window.printTable = function() { window.print(); };
 window.exportPDF = exportPDF;
 window.exportExcel = exportExcel;
 
+// Fonction pour charger les stats et mettre à jour le DOM
+async function loadPresenceStats() {
+    try {
+        const stats = await getStatsPresence();
+        if (!stats) return;
 
-
+        document.getElementById('statTotal').textContent = stats.total_seances ?? 0;
+        document.getElementById('statPresences').textContent = stats.total_presences ?? 0;
+        document.getElementById('statAbsences').textContent = stats.total_absences ?? 0;
+    } catch (error) {
+        console.error("Erreur lors du chargement des stats de présence :", error);
+    }
+}
 
 const isAdmin = true;
 
-// Charger les cours au démarrage
+// Charger les stats au démarrage
 document.addEventListener("DOMContentLoaded", () => {
-    loadCourses(getAllCourses,isAdmin);
+    loadPresenceStats();
+    loadCourses(getAllCourses, isAdmin);
 });

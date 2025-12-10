@@ -1,4 +1,5 @@
-import { getCourseById, updateCourse, getAllTeachers, getAllFilieres } from './course_api.js';
+import { getCourseById, updateCourse, getAllTeachers } from './course_api.js';
+import { getAllFilieres } from '../sector/sector_api.js';
 import { showNotification } from '../utils.js';
 
 export async function initEditCourseModal() {

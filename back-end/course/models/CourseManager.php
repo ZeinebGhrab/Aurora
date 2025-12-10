@@ -110,6 +110,23 @@ class CourseManager {
         return $courses;
     }
 
+    // Récupérer le nombre des cours
+    public function getCountTeacherCourses($id_enseignant) {
+        $conn = $this->db->connect();
+        $stmt = $conn->prepare("
+            SELECT COUNT(*) AS total
+            FROM cours c
+            WHERE c.id_enseignant = ?
+            ");
+            $stmt->bind_param("i", $id_enseignant);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $CoursEnseignant = $result->fetch_assoc();
+            $stmt->close();
+
+            return $CoursEnseignant;
+    }
+
 // Récupérer tous les cours avec filtres et pagination
 public function getAllCourses($filters = []) {
     $conn = $this->db->connect();
@@ -542,5 +559,155 @@ public function getAllCourses($filters = []) {
             ]
         ];
       }
-   }
+
+    // Récupérer le nombre de cours par filière 
+      public function getCourseCountByFiliere() {
+        $conn = $this->db->connect();
+
+        $sql = "
+            SELECT 
+                c.id_filiere,
+               f.nom_complet AS nom_filiere,
+               COUNT(c.id_cours) AS nb_cours
+            FROM cours c
+            LEFT JOIN filiere f ON c.id_filiere = f.id_filiere
+            GROUP BY c.id_filiere
+            ORDER BY f.nom_complet
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $counts = [];
+        while ($row = $result->fetch_assoc()) {
+            $counts[] = [
+                'nom_filiere' => $row['nom_filiere'],
+                'nb_cours' => (int)$row['nb_cours']
+            ];
+        }
+
+        $stmt->close();
+        return $counts;
+    }
+
+    // Récupérer le nombre de cours pour un étudiant
+    public function getStudentCourseCount($id_etudiant) {
+        $conn = $this->db->connect();
+
+        $sql = "
+            SELECT COUNT(*) AS total
+            FROM cours c
+            JOIN etudiant e ON e.id_filiere = c.id_filiere AND e.niveau = c.niveau
+            WHERE e.id_etudiant = ?
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_etudiant);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $count = $result->fetch_assoc()['total'] ?? 0;
+        $stmt->close();
+
+        return (int)$count;
+    }
+
+    public function getTeacherStats($id_enseignant) {
+        $conn = $this->db->connect();
+
+        $sql = "
+        SELECT 
+            -- Nombre de cours de l’enseignant
+            COUNT(DISTINCT c.id_cours) AS total_cours,
+
+            -- Nombre total d'étudiants dans toutes les filières enseignées
+            (
+                SELECT COUNT(DISTINCT e.id_etudiant)
+                FROM etudiant e
+                JOIN cours c2 ON c2.id_filiere = e.id_filiere AND c2.niveau = e.niveau
+                WHERE c2.id_enseignant = ?
+            ) AS total_etudiants,
+
+            -- Nombre total de séances planifiées
+            (
+                SELECT COUNT(*)
+                FROM seance s
+                JOIN cours c3 ON c3.id_cours = s.id_cours
+                WHERE c3.id_enseignant = ?
+            ) AS total_seances
+        FROM cours c
+        WHERE c.id_enseignant = ?
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iii", $id_enseignant, $id_enseignant, $id_enseignant);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stats = $result->fetch_assoc();
+        $stmt->close();
+
+        return $stats ?: [
+            'total_cours' => 0,
+            'total_etudiants' => 0,
+            'total_seances' => 0
+        ];
+    }
+
+    public function getStudentStats($id_etudiant) {
+        $conn = $this->db->connect();
+
+        $sql = "
+        SELECT 
+            -- Nombre de cours inscrits
+            (
+                SELECT COUNT(DISTINCT c.id_cours)
+                FROM cours c
+                JOIN etudiant e ON e.id_filiere = c.id_filiere AND e.niveau = c.niveau
+                WHERE e.id_etudiant = ?
+            ) AS total_cours,
+
+            -- Nombre de séances planifiées pour les cours de l'étudiant
+            (
+                SELECT COUNT(*)
+                FROM seance s
+                JOIN cours c2 ON c2.id_cours = s.id_cours
+                JOIN etudiant e2 ON e2.id_filiere = c2.id_filiere AND e2.niveau = c2.niveau
+                WHERE e2.id_etudiant = ?
+            ) AS total_seances,
+
+            -- Total présences
+            (
+                SELECT COUNT(*)
+                FROM presence p
+                JOIN seance s2 ON s2.id_seance = p.id_seance
+                JOIN cours c3 ON c3.id_cours = s2.id_cours
+                JOIN etudiant e3 ON e3.id_filiere = c3.id_filiere AND e3.niveau = c3.niveau
+                WHERE e3.id_etudiant = ? AND p.statut = 'présent'
+            ) AS total_presences,
+
+            -- Total absences
+            (
+                SELECT COUNT(*)
+                FROM presence p2
+                JOIN seance s3 ON s3.id_seance = p2.id_seance
+                JOIN cours c4 ON c4.id_cours = s3.id_cours
+                JOIN etudiant e4 ON e4.id_filiere = c4.id_filiere AND e4.niveau = c4.niveau
+                WHERE e4.id_etudiant = ? AND p2.statut = 'absent'
+            ) AS total_absences
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iiii", $id_etudiant, $id_etudiant, $id_etudiant, $id_etudiant);
+        $stmt->execute();
+        $stats = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return $stats ?: [
+            'total_cours'     => 0,
+            'total_seances'   => 0,
+            'total_presences' => 0,
+            'total_absences'  => 0
+        ];
+    }
+}
 ?>

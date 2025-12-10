@@ -199,3 +199,36 @@ export async function deleteSession(id_seance) {
         return { success: false, message: error.message };
     }
 }
+
+
+// Récuperer les statistiques des sessions par enseignant
+export async function getStatsSessionsForTeacher() {
+    try {
+        const res = await fetch(`${API_BASE}/session/api/get_count_session_teacher.php`);
+        const data = await res.json();
+        console.log("getStatsSessionsForTeacher:", data);
+
+        if (data.success) return data.results;
+        return {};
+
+    } catch (error) {
+        console.error("Erreur getStatsSessionsForTeacher:", error);
+        return {};
+    }
+}
+
+// Récuperer les statistiques des sessions par etudiant
+export async function getStatsSessionsForStudents() {
+    try {
+        const res = await fetch(`${API_BASE}/session/api/get_count_session_student.php`);
+        const data = await res.json();
+        console.log("getStatsSessionsForStudent:", data);
+
+        if (data.success) return data.results;
+        return {};
+
+    } catch (error) {
+        console.error("Erreur getStatsSessionsForStudent:", error);
+        return {};
+    }
+}

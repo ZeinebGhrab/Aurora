@@ -165,3 +165,49 @@ export async function deletePresence(id_presence) {
         return { success: false, message: error.message };
     }
 }
+
+export async function getStatsPresence() {
+    try {
+        const res = await fetch(`${API_BASE}/presence/api/get_count_presence.php`);
+
+        const data = await res.json();
+        return data.results;
+
+    } catch (error) {
+        console.error("Erreur getStatsPresence:", error);
+        return { success: false, message: error.message };
+    }
+}
+
+// Récuperer les statistiques des présences pour enseignant
+export async function  getStatsPresencesForTeacher() {
+    try {
+        const res = await fetch(`${API_BASE}/presence/api/get_count_presence_teacher.php`);
+        const data = await res.json();
+        console.log("getStatsPresencesForTeacher:", data);
+
+        if (data.success) return data.results;
+        return {};
+
+    } catch (error) {
+        console.error("Erreur getStatsSessionsForTeacher:", error);
+        return {};
+    }
+}
+
+
+// Récuperer les statistiques des présences pour etudiant
+export async function  getStatsPresencesForStudent() {
+    try {
+        const res = await fetch(`${API_BASE}/presence/api/get_count_presence_student.php`);
+        const data = await res.json();
+        console.log("getStatsPresencesForStudent:", data);
+
+        if (data.success) return data.results;
+        return {};
+
+    } catch (error) {
+        console.error("Erreur getStatsSessionsForStudent:", error);
+        return {};
+    }
+}

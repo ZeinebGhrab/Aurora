@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMsg = document.getElementById('errorMessage');
     
     if (!form) console.error("Formulaire non trouvé !");
-    //if (!form || !errorMsg) return;
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -45,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.href = '/Aurora/front-end/interfaces/teacher-management/course-management/aurora-course.html';
                         break;
                     case 'admin':
-                        window.location.href = '/Aurora/front-end/interfaces/admin-management/teacher-management/aurora-teacher.html';
+                        window.location.href = '/Aurora/front-end/interfaces/admin-management/aurora-admin-dashboard.html';
                         break;
                     default:
                         window.location.href = '/Aurora/front-end/interfaces/aurora-landing-page.html';

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../styles/shared.css"/>
+    <link rel="stylesheet" href="../../styles/style-dashboard.css"/>
+    <script type="module" src="../../scripts/authentification/logout.js"></script>
+    <script type="module" src="../../scripts/dashboard/dashboard_stats.js"></script>
+    <title>Tableau de Bord  - Aurora</title>
+</head>
+<body>
+    <div class="dashboard">
+    <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <div class="logo">Auro<span>r</span>a</div>
+                </li>
+                <li class="nav-item">
+                    <a href="./aurora-admin-dashboard.html" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./teacher-management/aurora-teacher.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zM12 14c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z"/>
+                        </svg>
+                        Enseignants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./student-management/aurora-student.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        Étudiants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./course-management/aurora-course.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                        </svg>
+                        Cours
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./session-management/aurora-session.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                        </svg>
+                        Séances
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="./absence-management/aurora-absence.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                        </svg>
+                        Présence & Absence
+                    </a>
+                </li>
+                <!-- Bouton de déconnexion -->
+                <li>
+                    <a href="#" id="logoutBtn" class="nav-link logout-btn">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                    Déconnexion
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h2>Tableau de Bord</h2>
+                <div class="user-info">
+                    <div>
+                        <div style="font-weight: 600;" id="user-name"></div>
+                        <div style="font-size: 0.85rem; color: #666;">Administrateur</div>
+                    </div>
+                    <div class="avatar" id="user-avatar"></div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="#667eea">
+                            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zM4 18v-4h3v-3c0-1.1.9-2 2-2h2V7H9.5C8.67 7 8 6.33 8 5.5S8.67 4 9.5 4h5c.83 0 1.5.67 1.5 1.5S15.33 7 14.5 7H13v2h2c1.1 0 2 .9 2 2v3h3v4H4z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-number"></div>
+                    <div class="stat-label">Étudiants Inscrits</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="#667eea">
+                            <path d="M12 2l-5.5 9h11z"/>
+                            <circle cx="17.5" cy="17.5" r="4.5"/>
+                            <path d="m15 15 5 5"/>
+                        </svg>
+                    </div>
+                    <div class="stat-number"></div>
+                    <div class="stat-label">Enseignants</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="#667eea">
+                            <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-number"></div>
+                    <div class="stat-label">Cours Actifs</div>
+                </div>
+            </div>
+
+         <!-- Charts -->
+        <div class="content-grid">
+
+            <div class="content-card chart-container">
+                <div class="card-title">Étudiants par Filière</div>
+                <div id="studentsChart" class="chart-placeholder"></div>
+            </div>
+
+            <div class="content-card chart-container">
+                <div class="card-title">Cours par Filière</div>
+                <div id="coursesChart" class="chart-placeholder"></div>
+            </div>
+
+            <div class="content-card chart-container">
+                <div class="card-title">Enseignants par Filière</div>
+                <div id="teachersChart" class="chart-placeholder"></div>
+            </div>
+        </div>
+                
+        </main>
+    </div>
+        <!-- Footer -->
+    <footer>
+        <p>© 2025 Aurora. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+</body>
+</html>

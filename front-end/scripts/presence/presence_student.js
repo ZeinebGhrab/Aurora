@@ -1,7 +1,10 @@
-import { getPresencesByStudent } from "./presence_api.js";
-import { renderPagination } from "../utils.js";
+import { getPresencesByStudent, getStatsPresencesForStudent } from "./presence_api.js";
+import { renderPagination, initUser } from "../utils.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+    initUser();
+
     const container = document.getElementById("presences-container");
     const paginationContainer = document.getElementById("presences-pagination");
 
@@ -64,4 +67,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Charger la première page
     loadPage(1, limit);
+    loadPresenceStats();
+
+    // Fonction pour charger les stats et mettre à jour le DOM
+    async function loadPresenceStats() {
+        try {
+            const stats = await getStatsPresencesForStudent();
+            if (!stats) return;
+    
+            document.getElementById('statTotal').textContent = stats.total_seances ?? 0;
+            document.getElementById('statPresences').textContent = stats.total_presences ?? 0;
+            document.getElementById('statAbsences').textContent = stats.total_absences ?? 0;
+        } catch (error) {
+            console.error("Erreur lors du chargement des stats de présence :", error);
+        }
+    }
 });

@@ -1,11 +1,18 @@
 <?php
 require_once __DIR__ . '/../../../config/Database.php';
 require_once '../../models/teacher/TeacherManager.php';
+require_once '../auth/check_session_logic.php';
 
 header('Content-Type: application/json');
 
 $db = new Database();
 $tm = new TeacherManager($db);
+
+// Vérifier que l'utilisateur est connecté
+requireLogin();
+
+// Vérifier que l'utilisateur est admin
+requireAdmin(); 
 
 $input = json_decode(file_get_contents('php://input'), true);
 $id_enseignant = $input['id_teacher'] ?? null;

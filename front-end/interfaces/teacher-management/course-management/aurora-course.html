@@ -64,6 +64,13 @@
                         <h2><i class="fa-regular fa-address-card"></i> Mes Cours</h2>
                         <p>Gérez et consultez tous les cours que vous enseignez</p>
                     </div>
+                    <div class="user-info">
+                        <div>
+                            <div style="font-weight: 600;" id="user-name"></div>
+                            <div style="font-size: 0.85rem; color: #666;">Enseignant</div>
+                        </div>
+                        <div class="avatar" id="user-avatar"></div>
+                    </div>
                 </div>
 
                  <!-- Stats Grid -->
@@ -73,7 +80,7 @@
                         <div class="stat-header">
                             <div class="stat-icon blue"><i class="fa-solid fa-chalkboard-user"></i></div>
                             <div>
-                                <div class="stat-number">3</div>
+                                <div class="stat-number" id="statCourses">0</div>
                             </div>
                         </div>
                         <div class="stat-label">Cours Enseignés</div>
@@ -84,29 +91,17 @@
                         <div class="stat-header">
                             <div class="stat-icon green"><i class="fa-solid fa-user-group"></i></div>
                             <div>
-                                <div class="stat-number">120</div>
+                                <div class="stat-number" id="statStudents">0</div>
                             </div>
                         </div>
                         <div class="stat-label">Nombre total d’étudiants</div>
                         
                     </div>
-
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon orange"><i class="fa-solid fa-clock"></i></div>
-                            <div>
-                                <div class="stat-number">12</div>
-                            </div>
-                        </div>
-                        <div class="stat-label">Heures enseignées</div>
-                        
-                    </div>
-
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon purple"><i class="fa-solid fa-calendar-days"></i></div>
                             <div>
-                                <div class="stat-number">2</div>
+                                <div class="stat-number" id="statSessions">0</div>
                             </div>
                         </div>
                         <div class="stat-label">Séances à venir</div>

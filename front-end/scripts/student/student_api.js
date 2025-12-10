@@ -1,6 +1,6 @@
 const API_BASE = "/Aurora/back-end";
 
-export async function getAllStudents(page = 1, limit = 6, filters = {}) {
+export async function getAllStudents(page = 1, limit = 4, filters = {}) {
     try {
         console.log(filters);
         const res = await fetch(`${API_BASE}/user/api/student/get_all_students.php`, {
@@ -110,18 +110,41 @@ export async function deleteStudent(id_student) {
     }
 }
 
-export async function getAllFilieres() {
+export async function getCountStudentsByFiliere() {
     try {
-        const res = await fetch(`${API_BASE}/sector/api/get_all_sector.php`);
+        const res = await fetch(`${API_BASE}/user/api/student/get_student_count_by_filiere.php`);
         const data = await res.json();
-        console.log('Filières:', data);
+        console.log('Students:', data);
         
-        if (data.programs && Array.isArray(data.programs)) return data.programs;
+        if (data.students && Array.isArray(data.students)) return data.students;
         if (Array.isArray(data)) return data;
         return [];
         
     } catch (error) {
-        console.error('Erreur getAllFilieres:', error);
+        console.error('Erreur getCountStudents:', error);
         return [];
+    }
+}
+
+export async function getCountStudents() {
+    try {
+        const res = await fetch(`${API_BASE}/user/api/student/get_count_students.php`);
+        
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        console.log('Données brutes de l\'API:', data);
+        
+        if (data.success) {
+            return  data.students[0].total || 0;
+        }
+
+        return 0;
+        
+    } catch (error) {
+        console.error('Erreur getCountStudents:', error);
+        return 0;
     }
 }

@@ -108,18 +108,40 @@ export async function deleteTeacher(id_teacher) {
     }
 }
 
-export async function getAllFilieres() {
+export async function getCountTeachersByFiliere(){
     try {
-        const res = await fetch(`${API_BASE}/sector/api/get_all_sector.php`);
+        const res = await fetch(`${API_BASE}/user/api/teacher/get_teacher_count_by_filiere.php`);
         const data = await res.json();
-        console.log('Filières:', data);
+        console.log('Statistique des étudiants:', data);
         
-        if (data.programs && Array.isArray(data.programs)) return data.programs;
-        if (Array.isArray(data)) return data;
-        return [];
+        if (data) return data;
+        return {};
         
     } catch (error) {
-        console.error('Erreur getAllFilieres:', error);
-        return [];
+        console.error('Erreur getCountTeachersByNiveau:', error);
+        return {};
+    }
+}
+
+export async function getCountTeachers() {
+    try {
+        const res = await fetch(`${API_BASE}/user/api/teacher/get_count_teachers.php`);
+        
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        console.log('Données brutes de l\'API:', data);
+        
+        if (data.success) {
+            return data.teachers[0].total || 0;
+        }
+
+        return 0;
+        
+    } catch (error) {
+        console.error('Erreur getCountTeachers:', error);
+        return 0;
     }
 }

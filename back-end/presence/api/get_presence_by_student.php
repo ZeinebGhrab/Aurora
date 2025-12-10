@@ -6,8 +6,10 @@ require_once '../../user/api/auth/check_session_logic.php';
 header('Content-Type: application/json');
 
 try {
-    //requireLogin();
-    //requireStudent();
+
+    requireLogin();
+
+    requireStudent();
 
     $input = json_decode(file_get_contents("php://input"), true) ?? [];
 
@@ -21,7 +23,7 @@ try {
     $db = new Database();
     $pm = new PresenceManager($db);
 
-    $result = $pm->getAttendanceStatsByStudent($_SESSION['id_utilisateur'],$filters['page'],$filters['limit']);
+    $result = $pm->getStatsByStudent($_SESSION['id_utilisateur'],$filters['page'],$filters['limit']);
 
     echo json_encode([
         "success" => true,

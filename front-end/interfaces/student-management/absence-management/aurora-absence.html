@@ -77,6 +77,13 @@
                         <h2><i class="fa-solid fa-user-xmark"></i> Mes Absences</h2>
                         <p>Suivi de l'assiduité par matière.</p>
                     </div>
+                    <div class="user-info">
+                        <div>
+                            <div style="font-weight: 600;" id="user-name"></div>
+                            <div style="font-size: 0.85rem; color: #666;">Etudiant</div>
+                        </div>
+                        <div class="avatar" id="user-avatar"></div>
+                    </div>
                 </div>
 
                 <!-- Stats Grid -->
@@ -85,7 +92,7 @@
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon blue"><i class="fa-solid fa-calendar-days"></i></div>
-                            <div><div class="stat-number">95</div></div>
+                            <div><div class="stat-number" id="statTotal">0</div></div>
                         </div>
                         <div class="stat-label">Total séances</div>
                     </div>
@@ -93,7 +100,7 @@
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon green"><i class="fa-solid fa-user-check"></i></div>
-                            <div><div class="stat-number">80</div></div>
+                            <div><div class="stat-number" id="statPresences">0</div></div>
                         </div>
                         <div class="stat-label">Présences</div>
                     </div>
@@ -101,17 +108,9 @@
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon orange"><i class="fa-solid fa-user-xmark"></i></div>
-                            <div><div class="stat-number">15</div></div>
+                            <div><div class="stat-number" id="statAbsences">0</div></div>
                         </div>
                         <div class="stat-label">Absences</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon purple"><i class="fa-solid fa-chart-line"></i></div>
-                            <div><div class="stat-number">84%</div></div>
-                        </div>
-                        <div class="stat-label">Taux d’assiduité</div>
                     </div>
 
                 </div> <!-- FIN stats-grid -->

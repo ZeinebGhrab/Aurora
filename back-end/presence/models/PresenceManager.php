@@ -476,7 +476,7 @@ class PresenceManager {
     }
 
     // Nombre de présences et d'absences pour un étudiant donné (séances terminées)
-    public function getAttendanceStatsByStudent($id_etudiant, $page = 1, $limit = 3) {
+    public function getStatsByStudent($id_etudiant, $page = 1, $limit = 3) {
         $conn = $this->db->connect();
         $offset = ($page - 1) * $limit;
 
@@ -537,5 +537,85 @@ class PresenceManager {
             ]
         ];
     }
+
+    // Stats globales des présences (pour tout le tableau de bord)
+    public function getGlobalAttendanceStats() {
+        $conn = $this->db->connect();
+
+        // Total de toutes les séances terminées
+        $totalSeancesQuery = "SELECT COUNT(*) AS total_seances FROM seance WHERE statut = 'terminée'";
+        $totalSeances = $conn->query($totalSeancesQuery)->fetch_assoc()['total_seances'] ?? 0;
+
+        // Total des présences
+        $totalPresencesQuery = "SELECT COUNT(*) AS total_presences FROM presence p INNER JOIN seance s ON p.id_seance = s.id_seance WHERE p.statut = 'présent' AND s.statut = 'terminée'";
+        $totalPresences = $conn->query($totalPresencesQuery)->fetch_assoc()['total_presences'] ?? 0;
+
+        // Total des absences
+        $totalAbsencesQuery = "SELECT COUNT(*) AS total_absences FROM presence p INNER JOIN seance s ON p.id_seance = s.id_seance WHERE p.statut = 'absent' AND s.statut = 'terminée'";
+        $totalAbsences = $conn->query($totalAbsencesQuery)->fetch_assoc()['total_absences'] ?? 0;
+
+        return [
+            'total_seances'   => (int)$totalSeances,
+            'total_presences' => (int)$totalPresences,
+            'total_absences'  => (int)$totalAbsences
+        ];
+    }
+
+    // Stats par enseignant : nombre de séances, présences et absences
+    public function getAttendanceStatsByTeacher($id_enseignant) {
+        $conn = $this->db->connect();
+
+        $sql = "
+           SELECT 
+            COUNT(DISTINCT c.id_cours) AS total_courses,
+            COUNT(DISTINCT s.id_seance) AS total_seances,
+            COALESCE(SUM(CASE WHEN p.statut = 'présent' THEN 1 ELSE 0 END), 0) AS total_presences,
+            COALESCE(SUM(CASE WHEN p.statut = 'absent' THEN 1 ELSE 0 END), 0) AS total_absences
+       FROM cours c
+       LEFT JOIN seance s ON s.id_cours = c.id_cours AND s.statut = 'terminée'
+       LEFT JOIN presence p ON p.id_seance = s.id_seance
+       WHERE c.id_enseignant = ?
+        "; 
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_enseignant);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return [
+            'total_courses'   => (int)($result['total_courses'] ?? 0),
+            'total_seances'   => (int)($result['total_seances'] ?? 0),
+            'total_presences' => (int)($result['total_presences'] ?? 0),
+            'total_absences'  => (int)($result['total_absences'] ?? 0)
+        ];
+    }
+
+    public function getAttendanceStatsByStudent($id_etudiant) {
+        $conn = $this->db->connect();
+
+        $sql = "
+        SELECT 
+            COUNT(DISTINCT s.id_seance) AS total_seances,
+            COALESCE(SUM(CASE WHEN p.statut = 'présent' THEN 1 ELSE 0 END), 0) AS total_presences,
+            COALESCE(SUM(CASE WHEN p.statut = 'absent' THEN 1 ELSE 0 END), 0) AS total_absences
+        FROM seance s
+        LEFT JOIN presence p ON p.id_seance = s.id_seance AND p.id_etudiant = ?
+        WHERE s.statut = 'terminée'
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_etudiant);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return [
+            'total_seances'   => (int)($result['total_seances'] ?? 0),
+            'total_presences' => (int)($result['total_presences'] ?? 0),
+            'total_absences'  => (int)($result['total_absences'] ?? 0)
+        ];
+    }
+    
 }
 ?>

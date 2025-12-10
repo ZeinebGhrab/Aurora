@@ -294,7 +294,7 @@ class SessionManager {
         }
 
         // Pagination
-        $query .= " ORDER BY s.date_heure DESC LIMIT ?, ?";
+        $query .= " GROUP BY s.id_seance ORDER BY s.date_heure DESC LIMIT ?, ?";
         $params[] = $offset;
         $params[] = $limit;
         $types .= "ii";
@@ -591,15 +591,15 @@ class SessionManager {
         $stmt->close();
 
         // Vérifications
-        if ($this->hasConflict($data['id_cours'], $data['date_heure'], $data['duree'])) {
+        if ($this->hasConflict($data['id_cours'], $data['date_heure'], $data['duree'], $id)) {
             throw new Exception("Conflit : une séance du même cours existe déjà à cette heure.");
         }
  
-        if ($this->teacherBusy($id_enseignant, $data['date_heure'], $data['duree'])) {
+        if ($this->teacherBusy($id_enseignant, $data['date_heure'], $data['duree'], $id)) {
             throw new Exception("L'enseignant n’est pas disponible à cet horaire.");
         }
 
-        if ($this->studentsBusy($data['id_cours'], $data['date_heure'], $data['duree'])) {
+        if ($this->studentsBusy($data['id_cours'], $data['date_heure'], $data['duree'], $id)) {
             throw new Exception("Les étudiants ont déjà une autre séance à cet horaire.");
         }
 
@@ -785,6 +785,104 @@ class SessionManager {
                 }
             }
         }
+    }
+
+    public function getSessionStatsByStudent($id_etudiant) {
+        $conn = $this->db->connect();
+
+        // Séances terminées
+        $sqlTerminees = "
+            SELECT COUNT(*) AS total_terminees
+            FROM seance s
+            LEFT JOIN presence p ON s.id_seance = p.id_seance AND p.id_etudiant = ?
+            WHERE s.statut = 'terminée'
+        ";
+        $stmt = $conn->prepare($sqlTerminees);
+        $stmt->bind_param("i", $id_etudiant);
+        $stmt->execute();
+        $total_terminees = $stmt->get_result()->fetch_assoc()['total_terminees'] ?? 0;
+        $stmt->close();
+
+        // Séances en cours
+        $sqlEnCours = "
+            SELECT COUNT(*) AS total_en_cours
+            FROM seance s
+            LEFT JOIN presence p ON s.id_seance = p.id_seance AND p.id_etudiant = ?
+            WHERE s.statut = 'en cours'
+        ";
+        $stmt = $conn->prepare($sqlEnCours);
+        $stmt->bind_param("i", $id_etudiant);
+        $stmt->execute();
+        $total_en_cours = $stmt->get_result()->fetch_assoc()['total_en_cours'] ?? 0;
+        $stmt->close();
+
+        // Séances à venir
+        $sqlAVenir = "
+            SELECT COUNT(*) AS total_a_venir
+            FROM seance s
+            LEFT JOIN presence p ON s.id_seance = p.id_seance AND p.id_etudiant = ?
+            WHERE s.statut = 'à venir'
+        ";
+        $stmt = $conn->prepare($sqlAVenir);
+        $stmt->bind_param("i", $id_etudiant);
+        $stmt->execute();
+        $total_a_venir = $stmt->get_result()->fetch_assoc()['total_a_venir'] ?? 0;
+        $stmt->close();
+
+        return [
+            'terminées' => (int)$total_terminees,
+            'en_cours'  => (int)$total_en_cours,
+            'à_venir'   => (int)$total_a_venir
+        ];
+    }
+
+    public function getSessionStatsByTeacher($id_enseignant) {
+        $conn = $this->db->connect();
+
+        // Séances terminées
+        $sqlTerminees = "
+            SELECT COUNT(*) AS total_terminees
+            FROM seance s
+            INNER JOIN cours c ON s.id_cours = c.id_cours
+            WHERE c.id_enseignant = ? AND s.statut = 'terminée'
+        ";
+        $stmt = $conn->prepare($sqlTerminees);
+        $stmt->bind_param("i", $id_enseignant);
+        $stmt->execute();
+        $total_terminees = $stmt->get_result()->fetch_assoc()['total_terminees'] ?? 0;
+        $stmt->close();
+
+        // Séances en cours
+        $sqlEnCours = "
+            SELECT COUNT(*) AS total_en_cours
+            FROM seance s
+            INNER JOIN cours c ON s.id_cours = c.id_cours
+            WHERE c.id_enseignant = ? AND s.statut = 'en_cours'
+        ";
+        $stmt = $conn->prepare($sqlEnCours);
+        $stmt->bind_param("i", $id_enseignant);
+        $stmt->execute();
+        $total_en_cours = $stmt->get_result()->fetch_assoc()['total_en_cours'] ?? 0;
+        $stmt->close();
+
+        // Séances à venir
+        $sqlAVenir = "
+            SELECT COUNT(*) AS total_a_venir
+            FROM seance s
+            INNER JOIN cours c ON s.id_cours = c.id_cours
+            WHERE c.id_enseignant = ? AND s.statut = 'planifiée'
+        ";
+        $stmt = $conn->prepare($sqlAVenir);
+        $stmt->bind_param("i", $id_enseignant);
+        $stmt->execute();
+        $total_a_venir = $stmt->get_result()->fetch_assoc()['total_a_venir'] ?? 0;
+        $stmt->close();
+
+        return [
+            'terminées' => (int)$total_terminees,
+            'en_cours'  => (int)$total_en_cours,
+            'à_venir'   => (int)$total_a_venir
+        ];
     }
 }
 

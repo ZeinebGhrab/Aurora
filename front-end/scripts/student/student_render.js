@@ -20,7 +20,7 @@ export function renderStudents(students, container) {
         return;
     }
 
-    const avatarColors = ["avatar-red", "avatar-blue", "avatar-green", "avatar-purple", "avatar-orange"];
+    const avatarColors = ["purple", "blue", "green", "orange", "pink"];
 
     students.forEach((student, index) => {
         try {
@@ -28,36 +28,37 @@ export function renderStudents(students, container) {
             const avatarClass = avatarColors[index % avatarColors.length];
 
             const card = document.createElement("div");
-            card.classList.add("student-card");
+            card.classList.add("teacher-card");
+            
             card.innerHTML = `
-                <div class="student-actions">
-                    <button class="btn-edit" title="Modifier" data-id="${student.id_utilisateur}">
-                        <i class="fa-solid fa-user-pen"></i>
-                    </button>
-                    <button class="btn-delete" title="Supprimer" data-id="${student.id_utilisateur}">
-                        <i class="fa-solid fa-user-minus"></i>
-                    </button>
-                </div>
-
-                <div class="student-header">
-                    <div class="student-avatar ${avatarClass}">
+                <div class="teacher-header">
+                    <div class="teacher-avatar ${avatarClass}">
                         ${initials}
-                        ${student.statut === "actif" ? '<div class="online-indicator"></div>' : ""}
+                        ${student.statut === "activé" ? '<div class="online-indicator"></div>' : ""}
                     </div>
-                    <div class="student-info">
+                    <div class="teacher-info">
                         <h3>${student.prenom || ""} ${student.nom || ""}</h3>
-                        <div class="student-id">${student.id_utilisateur || "ID Inconnu"}</div>
-                        <span class="badge">${student.niveau || "Non défini"}</span>
+                        <div class="teacher-title">${student.niveau || "Non défini"}</div>
                     </div>
                 </div>
-
-                <div class="student-details">
-                    <div class="detail-row">
-                        <i class="fa-regular fa-envelope"></i>${student.email || "Non renseigné"}
+                <div class="teacher-details">
+                    <div class="detail-item">
+                        <i class="fa-solid fa-circle-user"></i>
+                        <span>${student.statut === "activé" ? 'Activé' : "Désactivé"}</span>
                     </div>
-                    <div class="detail-row">
-                        <i class="fa-regular fa-clock"></i>${student.filiere || "Filière inconnue"}
+                    <div class="detail-item">
+                        <i class="fa-regular fa-envelope"></i>
+                        <span>${student.email || "Non renseigné"}</span>
                     </div>
+                    <div class="detail-item">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span>${student.filiere || "Filière inconnue"}</span>
+                    </div>
+                </div>
+                <div class="teacher-actions">
+                    <button class="btn-view" data-id="${student.id_utilisateur}"><i class="fa-solid fa-eye"></i> Voir</button>
+                    <button class="btn-edit" data-id="${student.id_utilisateur}"><i class="fa-solid fa-pen"></i> Modifier</button>
+                    <button class="btn-delete" data-id="${student.id_utilisateur}"><i class="fa-solid fa-trash"></i> Supprimer</button>
                 </div>
             `;
 

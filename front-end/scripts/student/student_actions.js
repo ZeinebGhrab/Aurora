@@ -6,7 +6,7 @@ import { showNotification, renderPagination } from "../utils.js";
 // État de pagination et filtrage
 let currentState = {
     page: 1,
-    limit: 6,
+    limit: 4,
     filters: {
         search: '',
         filiere: null,
@@ -18,9 +18,9 @@ let currentState = {
 export async function loadAndRenderStudents(page = 1) {
     currentState.page = page;
 
-    const container = document.querySelector(".students-grid");
+    const container = document.querySelector(".teachers-grid");
     if (!container) {
-        console.error("Container .students-grid introuvable !");
+        console.error("Container .teachers-grid introuvable !");
         return;
     }
 
@@ -49,9 +49,9 @@ export async function loadAndRenderStudents(page = 1) {
 
 // Gérer les actions sur les étudiants
 export function handleStudentActions() {
-    const container = document.querySelector(".students-grid");
+    const container = document.querySelector(".teachers-grid");
     if (!container) {
-        console.error("Container .students-grid introuvable !");
+        console.error("Container .teachers-grid introuvable !");
         return;
     }
 

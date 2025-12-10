@@ -46,21 +46,6 @@ export async function getAllTeachers() {
     }
 }
 
-export async function getAllFilieres() {
-    try {
-        const res = await fetch(`${API_BASE}/sector/api/get_all_sector.php`);
-        const data = await res.json();
-        console.log('Filières:', data);
-        
-        if (data.programs && Array.isArray(data.programs)) return data.programs;
-        if (Array.isArray(data)) return data;
-        return [];
-        
-    } catch (error) {
-        console.error('Erreur getAllFilieres:', error);
-        return [];
-    }
-}
 
 export async function addCourse(courseData) {
     try {
@@ -167,8 +152,6 @@ export async function updateCourse(id_cours, courseData) {
     }
 }
 
-
-
 export async function deleteCourse(id_cours) {
     try {
         const res = await fetch(`${API_BASE}/course/api/delete_course.php`, {
@@ -182,5 +165,91 @@ export async function deleteCourse(id_cours) {
     } catch (error) {
         console.error('Erreur deleteCourse:', error);
         return { success: false, message: error.message };
+    }
+}
+
+export async function getCountCoursesByFiliere(){
+    try {
+        const res = await fetch(`${API_BASE}/course/api/get_course_count_by_filiere.php`);
+        const data = await res.json();
+        console.log('Statistique des étudiants:', data);
+        
+        if (data.courses) return data.courses;
+        return {};
+        
+    } catch (error) {
+        console.error('Erreur getCountCoursesByNiveau:', error);
+        return {};
+    }
+}
+
+export async function getCountCourses() {
+    try {
+        const res = await fetch(`${API_BASE}/course/api/get_count_courses.php`);
+        
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        console.log('Données brutes de l\'API:', data);
+        
+        if (data.success) {
+            return data.courses[0].total || 0;
+        }
+
+        return 0;
+        
+    } catch (error) {
+        console.error('Erreur getCountCourses:', error);
+        return 0;
+    }
+}
+
+
+export async function getStatsTeachersCourses() {
+    try {
+        const res = await fetch(`${API_BASE}/course/api/get_stats_techers.php`);
+        
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        console.log('Données brutes de l\'API:', data);
+        
+        if (data.success) {
+            return data.results;
+        }
+
+        return 0;
+        
+    } catch (error) {
+        console.error('Erreur getStatsTeachersCourses:', error);
+        return 0;
+    }
+}
+
+
+export async function getStatsStudentsCourses() {
+    try {
+        const res = await fetch(`${API_BASE}/course/api/get_stats_students.php`);
+        
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        console.log('Données brutes de l\'API:', data);
+        
+        if (data.success) {
+            return data.results;
+        }
+
+        return 0;
+        
+    } catch (error) {
+        console.error('Erreur getStatsStudentsCourses:', error);
+        return 0;
     }
 }

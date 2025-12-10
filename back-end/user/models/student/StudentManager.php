@@ -310,5 +310,32 @@ class StudentManager {
 
         return $success;
     }
+
+    // Récupérer le nombre d'étudiants par filière 
+    public function getCountStudentsByFiliere() {
+        $conn = $this->db->connect();
+
+        $sql = "
+            SELECT 
+                f.id_filiere,
+                f.nom_complet AS nom_filiere,
+                COUNT(*) AS nb_etudiants
+            FROM etudiant e
+            LEFT JOIN filiere f ON e.id_filiere = f.id_filiere
+            GROUP BY f.id_filiere
+            ORDER BY f.nom_complet
+        ";
+
+        $result = $conn->query($sql);
+
+        $counts = [];
+        while ($row = $result->fetch_assoc()) {
+            $counts[] = [
+                'nom_filiere' => $row['nom_filiere'],
+                'nb_etudiants' => (int)$row['nb_etudiants']
+            ];
+        }
+        return $counts;
+    }
 }
 ?>

@@ -1,3 +1,5 @@
+import { checkSession } from './authentification/auth.js';
+
 export function showNotification(message, type = 'info') {
     let notification = document.getElementById('notification');
     if (!notification) {
@@ -111,4 +113,15 @@ export function renderPagination(pagination, parentElement, onPageChange) {
             }
         });
     });
+}
+
+export async function initUser() {
+    const currentUser = await checkSession();
+    if (!currentUser) return;
+
+    const userNameEl = document.getElementById("user-name");
+    const userAvatarEl = document.getElementById("user-avatar");
+
+    userNameEl.textContent = `${currentUser.prenom} ${currentUser.nom}`;
+    userAvatarEl.textContent = `${currentUser.prenom[0]}${currentUser.nom[0]}`.toUpperCase();
 }

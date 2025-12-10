@@ -1,8 +1,27 @@
-import { getCourseByStudent } from "../course_api.js";
-import {  renderPagination } from "../../utils.js";
+import { getCourseByStudent, getStatsStudentsCourses } from "../course_api.js";
+import {  renderPagination, initUser } from "../../utils.js";
 import {  initViewCourseModal } from "../course_view_modal.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    
+    initUser();
+    
+    // Charger les statistiques d’un étudiant
+    async function loadStudentStats() {
+        try {
+            const stats = await getStatsStudentsCourses();
+
+            // Mettre les valeurs dans l’interface
+            document.getElementById("totalCours").textContent = stats.total_cours ?? 0;
+            document.getElementById("totalSeances").textContent = stats.total_seances ?? 0;
+            document.getElementById("totalPresences").textContent = stats.total_presences ?? 0;
+            document.getElementById("totalAbsences").textContent = stats.total_absences ?? 0;
+
+        } catch (e) {
+            console.error("Erreur chargement stats étudiant", e);
+        }
+    }
+
 
     const container = document.getElementById("coursesContainer");
     const paginationContainer = document.getElementById("courses-pagination");
@@ -80,6 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Charger la première page
+    loadStudentStats();
     loadCourses(currentPage);
 
     // Gestion de la recherche

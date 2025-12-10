@@ -297,5 +297,34 @@ class TeacherManager {
 
         return $success;
     }
+
+    // Récupérer le nombre d'enseignants par filière et par niveau
+    public function getCountTeachersByFiliereAndNiveau() {
+        $conn = $this->db->connect();
+
+        $sql = "
+            SELECT 
+                f.id_filiere,
+                f.nom_complet AS nom_filiere,
+                COUNT(DISTINCT t.id_enseignant) AS nb_enseignants
+            FROM enseignant t
+            JOIN cours c ON t.id_enseignant = c.id_enseignant
+            JOIN filiere f ON c.id_filiere = f.id_filiere
+            GROUP BY f.id_filiere
+            ORDER BY f.nom_complet
+        ";
+
+        $result = $conn->query($sql);
+
+        $counts = [];
+        while ($row = $result->fetch_assoc()) {
+            $counts[] = [
+                'id_filiere' => $row['id_filiere'],
+                'nom_filiere' => $row['nom_filiere'],
+                'nb_enseignants' => (int)$row['nb_enseignants']
+            ];
+        }
+        return $counts;
+    }
 }
 ?>

@@ -1,7 +1,10 @@
-import { getCourseByTeacher } from "../course_api.js";
-import {  renderPagination } from "../../utils.js";
+import { getCourseByTeacher, getStatsTeachersCourses } from "../course_api.js";
+import {  renderPagination, initUser } from "../../utils.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+
+    initUser();
+
     const container = document.getElementById("coursesContainer");
     const paginationContainer = document.getElementById("courses-pagination");
     const filiereSelect = document.getElementById("filiereSelect");
@@ -90,6 +93,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         }, 300);
     });
 
+    async function loadTeacherStats() {
+        try {
+            const stats = await getStatsTeachersCourses(); // API PHP
+
+            if (!stats) return;
+
+            document.getElementById("statCourses").textContent = stats.total_cours ?? 0;
+            document.getElementById("statStudents").textContent = stats.total_etudiants ?? 0;
+            document.getElementById("statSessions").textContent = stats.total_seances ?? 0;
+
+        } catch (err) {
+            console.error("Erreur stats enseignant :", err);
+        }
+    }
+
     // Charger la première page
     loadCourses(currentPage);
+    loadTeacherStats();
 });

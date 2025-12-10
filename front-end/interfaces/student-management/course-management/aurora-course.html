@@ -67,6 +67,13 @@
                         <h2><i class="fa-solid fa-book-open-reader"></i> Mes Cours</h2>
                         <p>Retrouvez ici tous vos cours publiés par vos enseignants.</p>
                     </div>
+                    <div class="user-info">
+                        <div>
+                            <div style="font-weight: 600;" id="user-name"></div>
+                            <div style="font-size: 0.85rem; color: #666;">Etudiant</div>
+                        </div>
+                        <div class="avatar" id="user-avatar"></div>
+                    </div>
             
                 </div>
 
@@ -75,9 +82,9 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon blue"><i class="fa-books"></i></div>
+                            <div class="stat-icon blue"><i class="fa-solid fa-chalkboard-user"></i></div>
                             <div>
-                                <div class="stat-number">24</div>
+                                <div class="stat-number" id="totalCours">0</div>
                             </div>
                         </div>
                         <div class="stat-label">Total Cours</div>
@@ -85,22 +92,27 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon orange"><i class="fa-solid fa-book-open"></i></div>
+                            <div class="stat-icon blue"><i class="fa-solid fa-calendar-days"></i></div>
                             <div>
-                                <div class="stat-number">10</div>
+                                <div class="stat-number" id="totalSeances">0</div>
                             </div>
                         </div>
-                        <div class="stat-label">Cours Consultés</div>
-                        
+                        <div class="stat-label">Total Séances</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon purple"><i class="fa-solid fa-sparkles"></i></div>
-                            <div>
-                                <div class="stat-number">1</div>
-                            </div>
+                            <div class="stat-icon green"><i class="fa-solid fa-user-check"></i></div>
+                            <div><div class="stat-number" id="totalPresences">0</div></div>
                         </div>
-                        <div class="stat-label">Nouveaux cours</div>
+                        <div class="stat-label">Présences</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon orange"><i class="fa-solid fa-user-xmark"></i></div>
+                            <div><div class="stat-number" id="totalAbsences">0</div></div>
+                        </div>
+                        <div class="stat-label">Absences</div>
                     </div>
                 </div>
             </div>

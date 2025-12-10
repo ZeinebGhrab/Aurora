@@ -2,18 +2,18 @@
 session_start();
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['connecte']) || $_SESSION['connecte'] !== true) {
+if (!isset($_SESSION['connect']) || $_SESSION['connect'] !== true) {
     echo json_encode([
-        'connected' => false
+        'connect' => false
     ]);
     exit();
 }
 
 // Utilisateur connecté
 echo json_encode([
-    'connecte' => true,
+    'connect' => true,
     'user' => [
-        'id' => $_SESSION['user_id'],
+        'id' => $_SESSION['id_utilisateur'],
         'nom' => $_SESSION['nom'],
         'prenom' => $_SESSION['prenom'],
         'role' => $_SESSION['role'],
