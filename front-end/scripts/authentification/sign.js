@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.success) {
                
-                window.location.href = '/Aurora/front-end/interfaces/student-management/aurora-student-dashboard.html';
+                window.location.href = '/Aurora/front-end/interfaces/student-management/course-management/aurora-course.html';
             } else {
                 // Afficher l'erreur dans la page 
                 if (errorMsg) {

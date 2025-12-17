@@ -24,12 +24,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     async function loadSessionsStats() {
         try {
             const stats = await getStatsSessionsForStudents();
-            console.log(stats);
+            console.log("stats",stats);
 
             document.getElementById("totalSeances").textContent = stats.terminées + stats.en_cours + stats.à_venir ?? 0;
-            document.getElementById("completedSeances").textContent = stats.terminées ?? 0;
-            document.getElementById("ongoingSeances").textContent = stats.en_cours ?? 0;
-            document.getElementById("upcomingSeances").textContent = stats.à_venir ?? 0;
+            document.getElementById("completedSeances").textContent = stats.terminées;
+            document.getElementById("ongoingSeances").textContent = stats.en_cours;
+            document.getElementById("upcomingSeances").textContent = stats.à_venir;
 
         } catch (err) {
             console.error("Erreur chargement stats sessions :", err);

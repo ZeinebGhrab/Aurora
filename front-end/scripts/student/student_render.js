@@ -12,7 +12,7 @@ export function renderStudents(students, container) {
     if (students.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <i class="fa-solid fa-user-graduate empty-icon"></i>
+                <i class="fa-solid fa-user-graduate empty-icon" style="font-size:4rem; color:#5299cf; margin-bottom:1.5rem; opacity:0.6; display:block;"></i>
                 <h3 class="empty-title">Aucun étudiant trouvé</h3>
                 <p class="empty-text">Cliquez sur "Nouvel Étudiant" pour en ajouter un</p>
             </div>

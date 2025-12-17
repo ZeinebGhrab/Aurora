@@ -48,7 +48,7 @@ export function renderSessions(sessions) {
 export function showEmptyState() {
     container.innerHTML = `
         <div class="empty-state">
-            <i class="fa-solid fa-calendar-xmark empty-icon"></i>
+            <i class="fa-solid fa-calendar-xmark empty-icon" class="fa-solid fa-book-open" style="font-size:4rem; color:#5299cf; margin-bottom:1.5rem; opacity:0.6; display:block;"></i>
             <h3>Aucune séance trouvée</h3>
             <p>Aucune séance ne correspond à votre recherche.</p>
         </div>
@@ -58,13 +58,13 @@ export function showEmptyState() {
 // STATUTS & BOUTONS
 
 function getStatusClass(s) {
-    return { planifiee: "status-planifiee", en_cours: "status-en-cours", terminee: "status-terminee", annulee: "status-annulee" }[s] || "";
+    return { planifiée: "status-planifiee", en_cours: "status-en-cours", terminée: "status-terminee" }[s] || "";
 }
 function getStatusText(s) {
-    return { planifiee: "Planifiée", en_cours: "En cours", terminee: "Terminée", annulee: "Annulée" }[s] || s;
+    return { planifiée: "Planifiée", en_cours: "En cours", terminée: "Terminée" }[s] || s;
 }
 function getStatusIcon(s) {
-    return { planifiee: "fa-calendar-plus", en_cours: "fa-spinner fa-spin", terminee: "fa-check-circle", annulee: "fa-times-circle" }[s] || "fa-circle";
+    return { planifiée: "fa-calendar-plus", en_cours: "fa-spinner fa-spin", terminée: "fa-check-circle" }[s] || "fa-circle";
 }
 function getActionButtons(s) {
     if (s.statut === 'en_cours') return `<button class="btn-action btn-view" onclick="managePresence(${s.id_seance})"><i class="fa-solid fa-user-check"></i></button>`;

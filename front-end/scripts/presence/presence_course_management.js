@@ -7,10 +7,12 @@ export async function loadCourses(getCoursesByTeacher, isAdmin = false, page = 1
 
     if (!container) return console.error("Container 'coursesContainer' introuvable");
 
-    container.innerHTML = `<div class="loading" style="text-align: center; padding: 2rem; color: #6B7280;">
-        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-        <p>Chargement des cours...</p>
-    </div>`;
+    container.innerHTML = `<div class="empty-state" style="text-align: center; display: flex; justify-content: center; align-items: center; min-height: 400px; width: 100%;">
+                <div style="text-align: center; color: #6B7280; max-width: 500px;">
+                    <i class="fa-solid fa-book-open" style="font-size: 4rem; color: #5299cf; margin-bottom: 1.5rem; opacity: 0.6; display: block;"></i>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #374151; margin-bottom: 0.5rem;">Aucun cours disponible</h3>
+                </div>
+            </div>`;
 
     try {
         const res = await getCoursesByTeacher(page, limit);
@@ -18,7 +20,12 @@ export async function loadCourses(getCoursesByTeacher, isAdmin = false, page = 1
         const pagination = res.pagination || {};
 
         if (courses.length === 0) {
-            container.innerHTML = `<p class="no-data" style="text-align: center; padding: 2rem; color: #6B7280;">Aucun cours trouvé.</p>`;
+            container.innerHTML = `<div class="empty-state" style="text-align: center; display: flex; justify-content: center; align-items: center; min-height: 400px; width: 100%;">
+                <div style="text-align: center; color: #6B7280; max-width: 500px;">
+                    <i class="fa-solid fa-book-open" style="font-size: 4rem; color: #5299cf; margin-bottom: 1.5rem; opacity: 0.6; display: block;"></i>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #374151; margin-bottom: 0.5rem;">Aucun cours disponible</h3>
+                </div>
+            </div>`;
             return;
         }
 

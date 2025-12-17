@@ -14,8 +14,22 @@ export function openUploadModal(seanceData) {
         : '-';
     document.getElementById('uploadTeacher').textContent = `${seanceData.nom_enseignant || ''} ${seanceData.prenom_enseignant || ''}`.trim() || '-';
 
+    const submitBtn = document.getElementById("submitPresenceBtn");
+
+    // Désactiver si déjà présent
+    if (seanceData.statut_presence === "présent") {
+        submitBtn.disabled = true;
+        submitBtn.classList.add("disabled-btn");
+        submitBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Présence déjà enregistrée';
+    } else {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("disabled-btn");
+        submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Confirmer la Présence';
+    }
+
     uploadModal.classList.add('active');
 }
+
 
 // Fermer modal
 document.querySelectorAll('#uploadModal .modal-close, #uploadModal .btn-cancel')
