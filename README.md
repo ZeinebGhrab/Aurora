@@ -143,7 +143,7 @@ MAIL_PASSWORD=your-app-password
 MAIL_ENCRYPTION=tls
 MAIL_PORT=587
 MAIL_FROM=your-email@gmail.com
-MAIL_FROM_NAME=AlloCovoit
+MAIL_FROM_NAME=Aurora
 ```
 6. Access the app:
 
